@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_background.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
+import '../../../../core/di/dependency_injection.dart';
+import '../cubit/on_boarding_cubit.dart';
 import '../model/on_boarding_model.dart';
 import '../widget/onboarding_view.dart';
 
@@ -35,6 +37,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   _gotoAuthOptions() {
+    sl<OnBoardingCubit>().setOnBoarding();
     context.goNamed(AppRoutesName.authOptionScreenRoute);
   }
 
