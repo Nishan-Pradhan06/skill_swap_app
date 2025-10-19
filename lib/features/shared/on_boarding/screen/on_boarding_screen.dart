@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_background.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 import '../model/on_boarding_model.dart';
 import '../widget/onboarding_view.dart';
 
@@ -28,12 +30,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         curve: Curves.ease,
       );
     } else {
-      _gotoLoginSignUp();
+      _gotoAuthOptions();
     }
   }
 
-  _gotoLoginSignUp() {
-    // Navigator.pushNamed(context, AppRoutes.introLogin);
+  _gotoAuthOptions() {
+    context.goNamed(AppRoutesName.authOptionScreenRoute);
   }
 
   @override

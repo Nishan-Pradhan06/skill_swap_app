@@ -1,9 +1,10 @@
 class AppRoutesName {
   //#---------------GLOBAL ROUTES NANE--------------##
   static const String splashScreenRoute = 'splashScreenRoute';
+  static const String onBoardingScreen = 'onBoardingScreen';
+  static const String authOptionScreenRoute = 'authOptionScreenRoute';
   static const String loginScreenRoute = 'loginScreenRoute';
   static const String signUpScreenRoute = 'signUpScreenRoute';
-  static const String onBoardingScreen = 'onBoardingScreen';
 
   //#---------------USER ROUTES NAME--------------##
   static const String userBottomNavBarRoute = 'userBottomNavBarRoute';
