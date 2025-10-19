@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     if (mounted) {
       context.goNamed(AppRoutesName.onBoardingScreen);
     }
