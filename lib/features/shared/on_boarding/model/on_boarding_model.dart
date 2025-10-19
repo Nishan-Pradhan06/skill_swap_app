@@ -65,22 +65,22 @@ class OnboardingModel {
 class OnboardingData {
   static List<OnboardingModel> items = [
     OnboardingModel(
-      imageUrl: 'AppImages.onboarding1',
-      headline: 'Browse all the category',
+      imageUrl: 'assets/svg/on_boarding/on_boarding1.svg',
+      headline: 'Turn Your \nPassion into a Purpose !',
       description:
-          'In aliquip aute exercitation ut et nisi ut mollit. Deserunt dolor elit pariatur aute .',
+          'Discover, share, and grow your skills with people who inspire you - all from one place!',
     ),
     OnboardingModel(
-      imageUrl: 'assets/svg/on_boarding/on_boarding1.png',
-      headline: 'Amazing Discounts & Offers',
+      imageUrl: 'assets/svg/on_boarding/on_boarding1.svg',
+      headline: 'Learn New Skill,\nTeach What you love',
       description:
-          'In aliquip aute exercitation ut et nisi ut mollit. Deserunt dolor elit pariatur aute .',
+          'Exchange your talents — find learners for what you teach and mentors for what you seek to learn.',
     ),
     OnboardingModel(
-      imageUrl: 'AppImages.onboarding3',
-      headline: 'Delivery in 30 Min',
+      imageUrl: 'assets/svg/on_boarding/on_boarding1.svg',
+      headline: 'Connect.\nCollaborate.\nGrow Together.',
       description:
-          'In aliquip aute exercitation ut et nisi ut mollit. Deserunt dolor elit pariatur aute .',
+          'Join a global community where you can swap skills, earn experience, and empower each other to achieve more.',
     ),
   ];
 }

@@ -50,23 +50,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Spacer(),
-            Expanded(
-              flex: 8,
-              child: PageView.builder(
-                onPageChanged: onPageChange,
-                itemCount: items.length,
-                controller: controller,
-                itemBuilder: (context, index) {
-                  return OnboardingView(data: items[index]);
-                },
-              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 8,
+            child: PageView.builder(
+              onPageChanged: onPageChange,
+              itemCount: items.length,
+              controller: controller,
+              itemBuilder: (context, index) {
+                return OnboardingView(data: items[index]);
+              },
             ),
-            const Spacer(),
-            Stack(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40.0),
+            child: Stack(
               alignment: AlignmentDirectional.center,
               children: [
                 TweenAnimationBuilder(
@@ -77,25 +77,36 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   curve: Curves.easeInOutBack,
                   builder: (context, double value, _) => SizedBox(
-                    height: 70,
-                    width: 70,
+                    height: 100,
+                    width: 100,
                     child: CircularProgressIndicator(
                       value: value,
-                      strokeWidth: 6,
+                      strokeWidth: 2,
                       // backgroundColor: AppColors.cardColor,
                       // color: AppColors.primary,
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: _gotoNextPage,
-                  style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-                  child: SvgPicture.asset('assets/svg/icons/arrow_forward.svg'),
+                // CustomButton(text: '', onPressed: () {},),
+                SizedBox(
+                  height: 75,
+                  width: 75,
+                  child: ElevatedButton(
+                    onPressed: _gotoNextPage,
+
+                    style: ElevatedButton.styleFrom(
+                      // : EdgeInsets.all(20),
+                      shape: const CircleBorder(),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/svg/icons/arrow-right-long.svg',
+                    ),
+                  ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
