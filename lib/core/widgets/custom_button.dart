@@ -55,31 +55,27 @@ class CustomButton extends StatelessWidget {
 
     return AbsorbPointer(
       absorbing: isDisabled || isLoading,
-      child: SizedBox(
+      child: Container(
         width: width,
         height: height,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: gradient,
-            color: gradient == null ? effectiveColor : null,
+        decoration: BoxDecoration(
+          gradient: gradient,
+          color: gradient == null ? effectiveColor : null,
+          borderRadius: borderRadius,
+          border: borderColor != null
+              ? Border.all(color: borderColor!, width: borderWidth)
+              : null,
+          boxShadow: boxShadow,
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          borderRadius: borderRadius,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
             borderRadius: borderRadius,
-            border: borderColor != null
-                ? Border.all(color: borderColor!, width: borderWidth)
-                : null,
-            boxShadow: boxShadow,
-          ),
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(borderRadius: borderRadius),
-              padding: EdgeInsets.zero,
-              minimumSize: Size(width ?? 0, height ?? 0),
-            ),
-            child: Align(
-              // ✅ ensures vertical + horizontal centering
-              alignment: Alignment.center,
+            onTap: onPressed,
+            splashColor: Colors.white.withValues(alpha: 0.15),
+            child: Center(
               child: Padding(
                 padding: padding,
                 child: isLoading
@@ -94,7 +90,6 @@ class CustomButton extends StatelessWidget {
                     : Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           if (leadingIcon != null) ...[
                             leadingIcon!,
