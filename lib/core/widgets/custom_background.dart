@@ -11,7 +11,7 @@ class CustomBackground extends StatelessWidget {
   const CustomBackground({
     super.key,
     required this.child,
-    this.colors = const [Color(0xffF9F7FF), Color(0xFFFFFFFF)],
+    this.colors = const [Color(0xFFE6E1FF), Color(0xFFFFFFFF)],
     this.begin = Alignment.topLeft,
     this.end = Alignment.bottomRight,
   });

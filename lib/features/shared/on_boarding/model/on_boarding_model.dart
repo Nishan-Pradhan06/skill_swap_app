@@ -65,7 +65,7 @@ class OnboardingModel {
 class OnboardingData {
   static List<OnboardingModel> items = [
     OnboardingModel(
-      imageUrl: 'assets/svg/on_boarding/on_boarding1.svg',
+      imageUrl: 'assets/svg/on_boarding/on_boarding2.svg',
       headline: 'Turn Your \nPassion into a Purpose !',
       description:
           'Discover, share, and grow your skills with people who inspire you - all from one place!',
@@ -77,7 +77,7 @@ class OnboardingData {
           'Exchange your talents — find learners for what you teach and mentors for what you seek to learn.',
     ),
     OnboardingModel(
-      imageUrl: 'assets/svg/on_boarding/on_boarding1.svg',
+      imageUrl: 'assets/svg/on_boarding/on_boarding3.svg',
       headline: 'Connect.\nCollaborate.\nGrow Together.',
       description:
           'Join a global community where you can swap skills, earn experience, and empower each other to achieve more.',

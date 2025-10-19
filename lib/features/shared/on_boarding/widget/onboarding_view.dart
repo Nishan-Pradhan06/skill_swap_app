@@ -10,18 +10,18 @@ class OnboardingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPadding(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SafeArea(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              child: SvgPicture.asset(data.imageUrl, fit: BoxFit.contain),
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SafeArea(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width,
+            child: SvgPicture.asset(data.imageUrl, fit: BoxFit.contain),
           ),
-          Column(
+        ),
+        CustomPadding(
+          child: Column(
             spacing: 20,
             // mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,8 +42,8 @@ class OnboardingView extends StatelessWidget {
               ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

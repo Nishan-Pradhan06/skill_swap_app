@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/config/env_config.dart';
 import 'router/app_router.dart';
 
@@ -20,6 +21,7 @@ class SkillSwap extends StatelessWidget {
       title: 'Skill Swap',
       debugShowCheckedModeBanner: false,
       routerConfig: appRoute,
+      theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
     );
   }
 }
