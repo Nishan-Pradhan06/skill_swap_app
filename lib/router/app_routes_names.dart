@@ -3,6 +3,7 @@ class AppRoutesName {
   static const String splashScreenRoute = 'splashScreenRoute';
   static const String loginScreenRoute = 'loginScreenRoute';
   static const String signUpScreenRoute = 'signUpScreenRoute';
+  static const String onBoardingScreen = 'onBoardingScreen';
 
   //#---------------USER ROUTES NAME--------------##
   static const String userBottomNavBarRoute = 'userBottomNavBarRoute';
