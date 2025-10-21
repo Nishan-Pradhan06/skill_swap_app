@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_background.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 class AuthOptionScreen extends StatelessWidget {
   const AuthOptionScreen({super.key});
@@ -39,7 +41,9 @@ class AuthOptionScreen extends StatelessWidget {
               ),
               CustomButton(
                 text: 'Continue with Email',
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(AppRoutesName.authSignInScreenRoute);
+                },
                 backgroundColor: Color(0XFF272c29),
               ),
               CustomButton(
