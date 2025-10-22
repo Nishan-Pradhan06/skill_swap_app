@@ -134,6 +134,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   : TextInputType.text),
           onChanged: widget.onChanged,
           validator: widget.validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: widget.hintStyle,

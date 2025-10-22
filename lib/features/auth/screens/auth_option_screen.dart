@@ -56,7 +56,9 @@ class AuthOptionScreen extends StatelessWidget {
               textColor: Theme.of(context).brightness == Brightness.dark
                   ? AppTheme.backgroundLight
                   : Theme.of(context).colorScheme.primary,
-              onPressed: () {},
+              onPressed: () {
+                context.pushNamed(AppRoutesName.authSignUpScreenRoute);
+              },
               backgroundColor: Theme.of(context).brightness == Brightness.dark
                   ? const Color(0XFF272c29)
                   : Colors.white,

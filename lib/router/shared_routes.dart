@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/common/extension/extension.dart';
 import 'package:skill_swap/features/auth/screens/sign_in_screen.dart';
+import 'package:skill_swap/features/auth/screens/sign_up_screen.dart';
 import 'package:skill_swap/features/shared/on_boarding/screen/on_boarding_screen.dart';
 import '../core/di/dependency_injection.dart';
 import '../core/services/once_cache_service.dart';
@@ -36,5 +37,10 @@ List<GoRoute> sharedAppRoutes = [
     path: AppRoutesName.authSignInScreenRoute.path,
     name: AppRoutesName.authSignInScreenRoute,
     builder: (context, state) => SignInScreen(),
+  ),
+  GoRoute(
+    path: AppRoutesName.authSignUpScreenRoute.path,
+    name: AppRoutesName.authSignUpScreenRoute,
+    builder: (context, state) => SignUpScreen(),
   ),
 ];

@@ -48,7 +48,7 @@ class InputValidator {
     String? originalPassword,
   ) {
     if (value == null || value.trim().isEmpty) {
-      return 'Confirm your password';
+      return 'Enter your confirm your password';
     } else if (value != originalPassword) {
       return 'Passwords do not match';
     }
