@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_appbar.dart';
@@ -6,6 +7,7 @@ import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 import '../../../core/helpers/validation_helpers.dart';
 import '../../../core/services/cache_service.dart';
@@ -68,9 +70,9 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Handle login button press
   Future<void> _handleSignIn() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: Call your API and get auth token
       const fakeToken = 'dummy_token_123'; // Replace with real token
       await CacheServices.saveToken(fakeToken);
+      context.goNamed(AppRoutesName.profileSetupScreenRoute);
 
       CustomToast.showSuccess('Login Successful');
       // Navigate to next screen or home

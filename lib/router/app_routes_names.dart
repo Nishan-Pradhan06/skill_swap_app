@@ -7,13 +7,8 @@ class AppRoutesName {
   static const String authSignUpScreenRoute = 'authSignUpScreenRoute';
 
   //#---------------USER ROUTES NAME--------------##
-  static const String userBottomNavBarRoute = 'userBottomNavBarRoute';
-  static const String billingDetailsScreen = 'billingDetailsScreen';
-  static const String createJourneyEntriesScreen = 'createJourneyEntriesScreen';
-  static const String journeyEntriesDetailsScreen = 'journeyEntriesDetailsScreen';
-  static const String meditationsScreenRoute = 'meditationsScreenRoute';
-  static const String guidanceArchiveScreenRoute = 'guidanceArchiveScreenRoute';
-  static const String guidanceArchiveDetailScreenRoute = 'guidanceArchiveDetailScreenRoute';
+  static const String profileSetupScreenRoute = 'profileSetupScreenRoute';
+
 
   //#--------------ADMIN ROUTES NAME-------------##
   static const String adminBottomNavBarRoute = 'adminBottomNavBarRoute';
