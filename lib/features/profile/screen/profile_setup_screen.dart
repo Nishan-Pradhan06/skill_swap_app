@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
   const ProfileSetupFlow({super.key});
@@ -22,6 +24,9 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
   String location = '';
   List<String> skillsOffered = [];
   List<String> skillsWanted = [];
+
+  final _profileTitleController = TextEditingController();
+  final _profileDesController = TextEditingController();
 
   void _nextPage() {
     if (_currentPage < _totalPages - 1) {
@@ -65,8 +70,8 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       ),
                       decoration: BoxDecoration(
                         color: index <= _currentPage
-                            ? Colors.teal
-                            : Colors.grey[300],
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.grey[400],
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -76,161 +81,32 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
             ),
             // Page Content
             Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                children: [
-                  _buildProfileInfoPage(),
-                  _buildPhoneVerificationPage(),
-                  _buildBasicInfoPage(),
-                  _buildSkillsOfferedPage(),
-                  _buildSkillsWantedPage(),
-                ],
+              child: CustomPadding(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  children: [
+                    ProfileInfoScreen(
+                      profileTitleController: _profileTitleController,
+                      profileDesController: _profileDesController,
+                      onPressedSkip: () => _skipPage(),
+                      onPressedDone: () => _nextPage(),
+                    ),
+                    _buildPhoneVerificationPage(),
+                    _buildBasicInfoPage(),
+                    _buildSkillsOfferedPage(),
+                    _buildSkillsWantedPage(),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Page 1: Profile Information
-  Widget _buildProfileInfoPage() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Add Profile Information',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Join us to connect, create, and grow: sign up now and take the first step to success!',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          Center(
-            child: Stack(
-              children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.teal[50],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.camera_alt, size: 50, color: Colors.teal),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                // Handle image upload
-              },
-              child: const Text(
-                'Upload Profile Picture',
-                style: TextStyle(color: Colors.teal),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Profile Title',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const Text('*', style: TextStyle(color: Colors.red)),
-          const SizedBox(height: 8),
-          TextField(
-            onChanged: (value) => profileTitle = value,
-            decoration: InputDecoration(
-              hintText: 'Enter your profile title',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Description',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[300]!),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  'Optional',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            onChanged: (value) => description = value,
-            maxLines: 5,
-            decoration: InputDecoration(
-              hintText: 'Enter your profile description',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _skipPage,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Skip'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Done'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
