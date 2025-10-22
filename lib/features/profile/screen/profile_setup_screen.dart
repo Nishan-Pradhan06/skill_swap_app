@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/features/profile/screen/phone_verification_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
@@ -27,6 +28,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
 
   final _profileTitleController = TextEditingController();
   final _profileDesController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
   void _nextPage() {
     if (_currentPage < _totalPages - 1) {
@@ -97,7 +99,11 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       onPressedSkip: () => _skipPage(),
                       onPressedDone: () => _nextPage(),
                     ),
-                    _buildPhoneVerificationPage(),
+                    PhoneVerificationScreen(
+                      phoneNumberController: _phoneNumberController,
+                      onPressedDone: _nextPage,
+                      onPressedSkip: _skipPage,
+                    ),
                     _buildBasicInfoPage(),
                     _buildSkillsOfferedPage(),
                     _buildSkillsWantedPage(),
@@ -107,112 +113,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Page 2: Phone Verification
-  Widget _buildPhoneVerificationPage() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Phone Verification',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'You must provide phone number for identity verification.',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              'Add your Phone number here, you will get a otp on your number.',
-              style: TextStyle(fontSize: 14),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Phone Number',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Text('+977'),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  onChanged: (value) => phoneNumber = value,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your phone number',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '10 Characters Left',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _skipPage,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Skip'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Done'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
