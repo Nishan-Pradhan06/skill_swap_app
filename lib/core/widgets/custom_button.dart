@@ -46,12 +46,14 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color defaultEnabledColor = Color(0xFF6B48FF);
-    const Color defaultDisabledColor = Color.fromARGB(87, 107, 70, 193);
+    // Use app theme’s primary color (Red theme)
+    final Color themePrimary = Theme.of(context).colorScheme.primary;
+    final Color themeDisabled = Theme.of(
+      context,
+    ).disabledColor.withValues(alpha: 0.4);
 
     final Color effectiveColor =
-        backgroundColor ??
-        (isDisabled ? defaultDisabledColor : defaultEnabledColor);
+        backgroundColor ?? (isDisabled ? themeDisabled : themePrimary);
 
     return AbsorbPointer(
       absorbing: isDisabled || isLoading,

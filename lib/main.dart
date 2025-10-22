@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:skill_swap/core/theme/app_theme.dart';
 import 'core/config/env_config.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/services/once_cache_service.dart';
@@ -31,7 +31,9 @@ class SkillSwap extends StatelessWidget {
         title: 'Skill Swap',
         debugShowCheckedModeBanner: false,
         routerConfig: appRoute,
-        theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
       ),
     );
   }

@@ -80,14 +80,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class CustomBackButton extends StatelessWidget {
-  final String svgAssetPath;
   final double size;
   final Color? color;
   final VoidCallback? onPressed;
 
   const CustomBackButton({
     super.key,
-    required this.svgAssetPath,
     this.size = 24,
     this.color,
     this.onPressed,
@@ -95,22 +93,15 @@ class CustomBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: SvgPicture.asset(
-        svgAssetPath,
-        width: size,
-        height: size,
-        colorFilter: color != null
-            ? ColorFilter.mode(color!, BlendMode.srcIn)
-            : null,
-      ),
-      onPressed:
+    return GestureDetector(
+      onTap:
           onPressed ??
           () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             }
           },
+      child: Icon(Icons.arrow_back, size: size, color: color),
     );
   }
 }
