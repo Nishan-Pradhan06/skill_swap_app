@@ -3,6 +3,7 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/profile/screen/basic_info_screen.dart';
 import 'package:skill_swap/features/profile/screen/phone_verification_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
+import 'package:skill_swap/features/profile/screen/skill_wanted_screen.dart';
 import 'package:skill_swap/features/profile/screen/skilled_offered_screen.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
@@ -27,7 +28,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
   String location = '';
   List<String> skillsOffered = [];
   List<String> skillsWanted = [];
-``
+
   final List<String> availableSkills = [
     'Programming',
     'Design',
@@ -142,6 +143,11 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               }
                             });
                           },
+                          side: BorderSide(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.6),
+                          ),
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.background,
@@ -155,127 +161,45 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       onPressedDone: () => _nextPage(),
                     ),
 
-                    _buildSkillsWantedPage(),
+                    SkilledWantedScreen(
+                      skillOfferedController: _skillOfferedController,
+                      children: availableSkills.map((skill) {
+                        final isSelected = skillsOffered.contains(skill);
+                        return FilterChip(
+                          label: Text(skill),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                skillsOffered.add(skill);
+                              } else {
+                                skillsOffered.remove(skill);
+                              }
+                            });
+                          },
+                          side: BorderSide(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.6),
+                          ),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.background,
+                          selectedColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.6),
+                          checkmarkColor: Theme.of(context).colorScheme.primary,
+                        );
+                      }).toList(),
+                      onPressedSkip: () => _previousPage(),
+                      onPressedDone: () {},
+                    ),
                   ],
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Page 5: Skills Wanted
-  Widget _buildSkillsWantedPage() {
-    final List<String> availableSkills = [
-      'Programming',
-      'Design',
-      'Writing',
-      'Marketing',
-      'Photography',
-      'Video Editing',
-      'Music',
-      'Teaching',
-      'Cooking',
-      'Gardening',
-    ];
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Skills You Want to Learn',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Select the skills you want to learn from the community',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: availableSkills.map((skill) {
-              final isSelected = skillsWanted.contains(skill);
-              return FilterChip(
-                label: Text(skill),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      skillsWanted.add(skill);
-                    } else {
-                      skillsWanted.remove(skill);
-                    }
-                  });
-                },
-                backgroundColor: Colors.grey[100],
-                selectedColor: Colors.teal[100],
-                checkmarkColor: Colors.teal,
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Add custom skill',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.add_circle, color: Colors.teal),
-                onPressed: () {
-                  // Add custom skill logic
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _previousPage,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Back'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Complete profile setup
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile setup completed!')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Complete'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
