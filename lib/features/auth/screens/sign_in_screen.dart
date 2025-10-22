@@ -55,6 +55,8 @@ class _SignInScreenState extends State<SignInScreen> {
         final token = await CacheServices.getToken();
         if (token != null) {
           CustomToast.showSuccess('Authentication Successful');
+          context.goNamed(AppRoutesName.profileSetupScreenRoute);
+
           // Navigate to next screen or home
         } else {
           CustomToast.showError('No saved session found. Please login.');

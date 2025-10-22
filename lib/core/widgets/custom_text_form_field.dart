@@ -85,15 +85,46 @@ class _CustomTextFieldState extends State<CustomTextField> {
             Text(widget.label!, style: Theme.of(context).textTheme.bodyLarge),
           const SizedBox(height: 5),
           DropdownButtonFormField<String>(
-            initialValue: _dropdownValue,
+            initialValue: widget.dropdownItems!.contains(_dropdownValue)
+                ? _dropdownValue
+                : null,
             decoration: InputDecoration(
               filled: true,
               fillColor: widget.fillColor ?? AppTheme.surfaceLight,
               contentPadding: widget.contentPadding,
-              border: OutlineInputBorder(
+              border: widget.noBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderSide: BorderSide(
+                        color: widget.borderColor ?? Colors.red,
+                      ),
+                    ),
+              enabledBorder: widget.noBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderSide: BorderSide(
+                        color: widget.borderColor ?? Colors.grey,
+                      ),
+                    ),
+              focusedBorder: widget.noBorder
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                      borderSide: BorderSide(
+                        color: widget.borderColor ?? Colors.blue,
+                        width: 2,
+                      ),
+                    ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
+              disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 borderSide: BorderSide(
-                  color: widget.borderColor ?? Colors.grey,
+                  color: widget.borderColor ?? Colors.grey.shade400,
                 ),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/features/profile/screen/basic_info_screen.dart';
 import 'package:skill_swap/features/profile/screen/phone_verification_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
 
@@ -104,7 +105,13 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       onPressedDone: _nextPage,
                       onPressedSkip: _skipPage,
                     ),
-                    _buildBasicInfoPage(),
+                    BasicInfoScreen(
+                      profileTitleController: _phoneNumberController,
+                      profileDesController: _phoneNumberController,
+                      onPressedSkip: _skipPage,
+                      onPressedDone: _nextPage,
+                    ),
+
                     _buildSkillsOfferedPage(),
                     _buildSkillsWantedPage(),
                   ],
@@ -113,116 +120,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Page 3: Basic Information
-  Widget _buildBasicInfoPage() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Basic Information',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Complete your profile with basic details',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          const Text(
-            'Full Name',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            onChanged: (value) => name = value,
-            decoration: InputDecoration(
-              hintText: 'Enter your full name',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Bio',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            onChanged: (value) => bio = value,
-            maxLines: 4,
-            decoration: InputDecoration(
-              hintText: 'Tell us about yourself',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Text(
-            'Location',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            onChanged: (value) => location = value,
-            decoration: InputDecoration(
-              hintText: 'Enter your location',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              suffixIcon: const Icon(Icons.location_on_outlined),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _skipPage,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Skip'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Done'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
