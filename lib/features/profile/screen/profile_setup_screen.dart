@@ -3,6 +3,7 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/profile/screen/basic_info_screen.dart';
 import 'package:skill_swap/features/profile/screen/phone_verification_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
+import 'package:skill_swap/features/profile/screen/skilled_offered_screen.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
   const ProfileSetupFlow({super.key});
@@ -26,10 +27,24 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
   String location = '';
   List<String> skillsOffered = [];
   List<String> skillsWanted = [];
+``
+  final List<String> availableSkills = [
+    'Programming',
+    'Design',
+    'Writing',
+    'Marketing',
+    'Photography',
+    'Video Editing',
+    'Music',
+    'Teaching',
+    'Cooking',
+    'Gardening',
+  ];
 
   final _profileTitleController = TextEditingController();
   final _profileDesController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+  final _skillOfferedController = TextEditingController();
 
   void _nextPage() {
     if (_currentPage < _totalPages - 1) {
@@ -111,8 +126,35 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       onPressedSkip: _skipPage,
                       onPressedDone: _nextPage,
                     ),
+                    SkilledOfferedScreen(
+                      skillOfferedController: _skillOfferedController,
+                      children: availableSkills.map((skill) {
+                        final isSelected = skillsOffered.contains(skill);
+                        return FilterChip(
+                          label: Text(skill),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                skillsOffered.add(skill);
+                              } else {
+                                skillsOffered.remove(skill);
+                              }
+                            });
+                          },
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.background,
+                          selectedColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.6),
+                          checkmarkColor: Theme.of(context).colorScheme.primary,
+                        );
+                      }).toList(),
+                      onPressedSkip: () => _skipPage(),
+                      onPressedDone: () => _nextPage(),
+                    ),
 
-                    _buildSkillsOfferedPage(),
                     _buildSkillsWantedPage(),
                   ],
                 ),
@@ -120,115 +162,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Page 4: Skills Offered
-  Widget _buildSkillsOfferedPage() {
-    final List<String> availableSkills = [
-      'Programming',
-      'Design',
-      'Writing',
-      'Marketing',
-      'Photography',
-      'Video Editing',
-      'Music',
-      'Teaching',
-      'Cooking',
-      'Gardening',
-    ];
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Skills You Offer',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Select the skills you can offer to the community',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: availableSkills.map((skill) {
-              final isSelected = skillsOffered.contains(skill);
-              return FilterChip(
-                label: Text(skill),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      skillsOffered.add(skill);
-                    } else {
-                      skillsOffered.remove(skill);
-                    }
-                  });
-                },
-                backgroundColor: Colors.grey[100],
-                selectedColor: Colors.teal[100],
-                checkmarkColor: Colors.teal,
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Add custom skill',
-              filled: true,
-              fillColor: Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.add_circle, color: Colors.teal),
-                onPressed: () {
-                  // Add custom skill logic
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _skipPage,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Skip'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Done'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
