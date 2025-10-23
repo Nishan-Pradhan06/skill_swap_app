@@ -57,6 +57,7 @@ dependencies:
   lottie: ^3.3.2
   google_fonts: ^6.3.2
   local_auth: ^3.0.0
+  skeletonizer: ^2.1.0+1
 
 dev_dependencies:
   flutter_test:
@@ -97,6 +98,7 @@ flutter:
     - assets/svg/icons/
     - assets/logo/
     - assets/lottie/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

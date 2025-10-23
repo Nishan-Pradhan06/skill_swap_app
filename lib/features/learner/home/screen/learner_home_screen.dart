@@ -1,13 +1,41 @@
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/custom_scrollable_padding.dart';
+import '../widgets/custom_profile_header.dart';
 
-class LearnerHomeScreen extends StatelessWidget {
+class LearnerHomeScreen extends StatefulWidget {
   const LearnerHomeScreen({super.key});
+
+  @override
+  State<LearnerHomeScreen> createState() => _LearnerHomeScreenState();
+}
+
+class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
+  bool isLoading = false;
+
+  Future<void> _handleRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    // Simulate API call or actual data fetching
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Home Screen', style: TextTheme.of(context).headlineLarge),
+      body: SafeArea(
+        child: ScrollableRefreshablePadding(
+          onRefresh: _handleRefresh,
+          child: Column(
+            spacing: 10,
+            children: [CustomProfileHeader(isLoading: isLoading)],
+          ),
+        ),
       ),
     );
   }
