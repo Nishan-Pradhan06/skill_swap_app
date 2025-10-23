@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Professional wallet app theme with red as the primary color
 /// Designed for trust, security, and modern aesthetics
@@ -46,7 +47,7 @@ class AppTheme {
   static final ThemeData light = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-
+    fontFamily: GoogleFonts.poppins().fontFamily,
     colorScheme: const ColorScheme.light(
       primary: primaryRed,
       primaryContainer: Color(0xFFFFCDD2),
@@ -412,7 +413,7 @@ class AppTheme {
   static final ThemeData dark = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-
+    fontFamily: GoogleFonts.poppins().fontFamily,
     colorScheme: const ColorScheme.dark(
       primary: primaryRedLight,
       primaryContainer: primaryRedDark,
