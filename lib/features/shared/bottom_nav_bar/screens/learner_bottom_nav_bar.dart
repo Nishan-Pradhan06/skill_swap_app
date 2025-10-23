@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
 import '../../../../core/widgets/double_press_to_exit.dart';
 
 class LearnerBottomNavBarScreen extends StatefulWidget {
@@ -38,29 +36,24 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/svg/home.svg'),
-                activeIcon: SvgPicture.asset('assets/svg/home_bold.svg'),
+                icon: Icon(Icons.home_rounded),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/svg/journal.svg'),
-                activeIcon: SvgPicture.asset('assets/svg/journal_bold.svg'),
-                label: 'Journal',
+                icon: Icon(Icons.search_rounded),
+                label: 'Search',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/svg/library.svg'),
-                activeIcon: SvgPicture.asset('assets/svg/library_bold.svg'),
-                label: 'Library',
+                icon: Icon(Icons.swap_horiz_rounded),
+                label: 'Swap',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/svg/session.svg'),
-                activeIcon: SvgPicture.asset('assets/svg/session_bold.svg'),
-                label: 'Session',
+                icon: Icon(Icons.play_circle_fill_rounded),
+                label: 'My Learning',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset('assets/svg/profile.svg'),
-                activeIcon: SvgPicture.asset('assets/svg/profile_bold.svg'),
-                label: 'Profile',
+                icon: Icon(Icons.apps_rounded),
+                label: 'Menu',
               ),
             ],
           ),
