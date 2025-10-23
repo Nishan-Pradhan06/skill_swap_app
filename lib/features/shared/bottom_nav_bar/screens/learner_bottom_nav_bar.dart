@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/features/learner/home/screen/learner_home_screen.dart';
+import 'package:skill_swap/features/learner/menu/screen/learner_menu_screen.dart';
+import 'package:skill_swap/features/learner/my_learning/screen/learner_my_learning_screen.dart';
+import 'package:skill_swap/features/learner/search/screen/learner_search_screen.dart';
+import 'package:skill_swap/features/learner/swap/screen/learner_swap_screen.dart';
 import '../../../../core/widgets/double_press_to_exit.dart';
 
 class LearnerBottomNavBarScreen extends StatefulWidget {
@@ -12,11 +17,11 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    Center(child: Text('home')),
-    Center(child: Text('home')),
-    Center(child: Text('home')),
-    Center(child: Text('home')),
-    Center(child: Text('home')),
+    LearnerHomeScreen(),
+    LearnerSearchScreen(),
+    LearnerSwapScreen(),
+    LearnerMyLearningScreen(),
+    LearnerMenuScreen(),
   ];
 
   @override
