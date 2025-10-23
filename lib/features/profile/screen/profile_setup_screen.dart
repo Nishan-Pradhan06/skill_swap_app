@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/profile/screen/basic_info_screen.dart';
 import 'package:skill_swap/features/profile/screen/phone_verification_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_info_screen.dart';
 import 'package:skill_swap/features/profile/screen/skill_wanted_screen.dart';
 import 'package:skill_swap/features/profile/screen/skilled_offered_screen.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
   const ProfileSetupFlow({super.key});
@@ -192,7 +194,9 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                         );
                       }).toList(),
                       onPressedSkip: () => _previousPage(),
-                      onPressedDone: () {},
+                      onPressedDone: () {
+                        context.goNamed(AppRoutesName.learnerBottomNavBar);
+                      },
                     ),
                   ],
                 ),

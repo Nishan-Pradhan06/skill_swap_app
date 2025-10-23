@@ -3,13 +3,14 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/widgets/double_press_to_exit.dart';
 
-class UserBottomNavBarScreen extends StatefulWidget {
-  const UserBottomNavBarScreen({super.key});
+class LearnerBottomNavBarScreen extends StatefulWidget {
+  const LearnerBottomNavBarScreen({super.key});
   @override
-  State<UserBottomNavBarScreen> createState() => _UserBottomNavBarScreenState();
+  State<LearnerBottomNavBarScreen> createState() =>
+      _LearnerBottomNavBarScreenState();
 }
 
-class _UserBottomNavBarScreenState extends State<UserBottomNavBarScreen> {
+class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -24,12 +25,10 @@ class _UserBottomNavBarScreenState extends State<UserBottomNavBarScreen> {
   Widget build(BuildContext context) {
     return DoubleBackToExit(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         body: IndexedStack(index: _currentIndex, children: _screens),
         bottomNavigationBar: Material(
           elevation: 8,
           child: BottomNavigationBar(
-            backgroundColor: Color(0xFFFFFFFF),
             type: BottomNavigationBarType.fixed,
             currentIndex: _currentIndex,
             onTap: (index) {
