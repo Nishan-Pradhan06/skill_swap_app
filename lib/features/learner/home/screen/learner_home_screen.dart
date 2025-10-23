@@ -33,7 +33,23 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           onRefresh: _handleRefresh,
           child: Column(
             spacing: 10,
-            children: [CustomProfileHeader(isLoading: isLoading)],
+            children: [
+              CustomProfileHeader(isLoading: isLoading),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                height: 140,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 10,
+                color: Theme.of(context).colorScheme.surface,
+              ),
+            ],
           ),
         ),
       ),

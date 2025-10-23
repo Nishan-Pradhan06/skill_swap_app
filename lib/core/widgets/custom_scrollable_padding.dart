@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skill_swap/core/widgets/custom_padding.dart';
 
 class ScrollableRefreshablePadding extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -19,7 +18,7 @@ class ScrollableRefreshablePadding extends StatelessWidget {
       onRefresh: onRefresh,
       child: SingleChildScrollView(
         physics: physics ?? const AlwaysScrollableScrollPhysics(),
-        child: CustomPadding(child: SafeArea(child: child)),
+        child: SafeArea(child: child),
       ),
     );
   }
