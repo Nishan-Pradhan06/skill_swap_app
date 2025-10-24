@@ -141,13 +141,20 @@ class _SignInScreenState extends State<SignInScreen> {
                       ? const Color(0XFF272c29)
                       : AppTheme.surfaceLight,
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Forget Password?',
-                    style: TextTheme.of(
-                      context,
-                    ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(
+                      AppRoutesName.authForgetPasswordScreenRoute,
+                    );
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'Forget Password?',
+                      style: TextTheme.of(
+                        context,
+                      ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
 

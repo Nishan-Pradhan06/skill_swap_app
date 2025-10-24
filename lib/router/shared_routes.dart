@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/common/extension/extension.dart';
+import 'package:skill_swap/features/auth/screens/forget_password_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_in_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_up_screen.dart';
 import 'package:skill_swap/features/shared/on_boarding/screen/on_boarding_screen.dart';
@@ -42,5 +43,10 @@ List<GoRoute> sharedAppRoutes = [
     path: AppRoutesName.authSignUpScreenRoute.path,
     name: AppRoutesName.authSignUpScreenRoute,
     builder: (context, state) => SignUpScreen(),
+  ),
+  GoRoute(
+    path: AppRoutesName.authForgetPasswordScreenRoute.path,
+    name: AppRoutesName.authForgetPasswordScreenRoute,
+    builder: (context, state) => ForgetPasswordScreen(),
   ),
 ];
