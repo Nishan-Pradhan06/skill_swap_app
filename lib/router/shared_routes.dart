@@ -3,6 +3,7 @@ import 'package:skill_swap/common/extension/extension.dart';
 import 'package:skill_swap/features/auth/screens/forget_password_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_in_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_up_screen.dart';
+import 'package:skill_swap/features/profile/screen/profile_screen.dart';
 import 'package:skill_swap/features/shared/on_boarding/screen/on_boarding_screen.dart';
 import '../core/di/dependency_injection.dart';
 import '../core/services/once_cache_service.dart';
@@ -48,5 +49,10 @@ List<GoRoute> sharedAppRoutes = [
     path: AppRoutesName.authForgetPasswordScreenRoute.path,
     name: AppRoutesName.authForgetPasswordScreenRoute,
     builder: (context, state) => ForgetPasswordScreen(),
+  ),
+  GoRoute(
+    path: AppRoutesName.profileScreenRoute.path,
+    name: AppRoutesName.profileScreenRoute,
+    builder: (context, state) => ProfileScreen(),
   ),
 ];

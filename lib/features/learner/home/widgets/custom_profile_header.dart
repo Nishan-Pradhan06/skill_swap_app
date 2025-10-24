@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class CustomProfileHeader extends StatelessWidget {
@@ -21,9 +23,14 @@ class CustomProfileHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 10,
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://media.licdn.com/dms/image/v2/D4D03AQFnlTDji6hFzw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1703435442674?e=1762992000&v=beta&t=hPkwUus4-obeAXp7s1Wm_belXU6dQenEbQgJYpWgXFk',
+                GestureDetector(
+                  onTap: () {
+                    context.pushNamed(AppRoutesName.profileScreenRoute);
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      'https://media.licdn.com/dms/image/v2/D4D03AQFnlTDji6hFzw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1703435442674?e=1762992000&v=beta&t=hPkwUus4-obeAXp7s1Wm_belXU6dQenEbQgJYpWgXFk',
+                    ),
                   ),
                 ),
                 Column(

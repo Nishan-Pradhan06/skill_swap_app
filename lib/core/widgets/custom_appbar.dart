@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 /// Enum to control title alignment in CustomAppBar
 enum TitleAlignment { center, left }
@@ -8,7 +7,7 @@ enum TitleAlignment { center, left }
 /// Supports title, actions, leading, background color, elevation, optional height, title alignment, and automatically adding back button.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final double elevation;
   final List<Widget>? actions;
   final Widget? leading;
@@ -19,8 +18,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
-    this.backgroundColor = Colors.white,
-    this.elevation = 0.01,
+    this.backgroundColor,
+    this.elevation = 0.5,
     this.actions,
     this.leading,
     this.height,
@@ -33,6 +32,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     Widget? leadingWidget = leading;
 
     // Automatically add a back button if implied and possible
@@ -41,12 +43,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Navigator.canPop(context)) {
       leadingWidget = IconButton(
         onPressed: () => Navigator.pop(context),
-        icon: SvgPicture.asset('assets/icons/back.svg'),
+        icon: Icon(Icons.arrow_back),
       );
     }
 
     return Material(
-      color: backgroundColor,
+      color: backgroundColor ?? colorScheme.primary,
       elevation: elevation,
       child: SafeArea(
         child: Container(
@@ -62,10 +64,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       : Alignment.centerLeft,
                   child: Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF6B48FF),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22,
                     ),
                   ),
                 ),
@@ -79,6 +81,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+/// A reusable back button matching the AppTheme style.
 class CustomBackButton extends StatelessWidget {
   final double size;
   final Color? color;
@@ -93,6 +96,8 @@ class CustomBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap:
           onPressed ??
@@ -101,7 +106,11 @@ class CustomBackButton extends StatelessWidget {
               Navigator.pop(context);
             }
           },
-      child: Icon(Icons.arrow_back, size: size, color: color),
+      child: Icon(
+        Icons.arrow_back,
+        size: size,
+        color: color ?? colorScheme.onPrimary,
+      ),
     );
   }
 }

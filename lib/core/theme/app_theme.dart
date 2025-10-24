@@ -75,22 +75,22 @@ class AppTheme {
 
     // AppBar Theme
     appBarTheme: const AppBarTheme(
-      backgroundColor: primaryRed,
-      foregroundColor: Colors.white,
+      backgroundColor: surfaceLight,
+      foregroundColor: backgroundDark,
       elevation: 0,
       centerTitle: true,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.dark,
       ),
       titleTextStyle: TextStyle(
-        color: Colors.white,
+        color: Colors.black,
         fontSize: 20,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.15,
       ),
-      iconTheme: IconThemeData(color: Colors.white, size: 24),
+      iconTheme: IconThemeData(color: backgroundDark, size: 24),
     ),
 
     // Card Theme
