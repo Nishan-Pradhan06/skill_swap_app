@@ -80,20 +80,12 @@ class _AppearanceModeSelectorState extends State<AppearanceModeSelector> {
 
     return GestureDetector(
       onTap: () {
-        // 🔁 Update Cubit instead of setState only
         setState(() => _selectedMode = mode);
         context.read<ThemeAppearanceCubit>().setTheme(
           _mapAppearanceToThemeMode(mode),
         );
 
         widget.onModeChanged?.call(mode);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Selected: ${mode.name}'),
-            duration: const Duration(seconds: 1),
-          ),
-        );
       },
       child: Column(
         children: [
