@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnceCacheService {
@@ -14,5 +15,17 @@ class OnceCacheService {
   Future<String?> getOnBoardingCache() async {
     final data = _prefs.getString('onboarding_completed');
     return data;
+  }
+
+  // Theme
+  Future<void> setThemeCache(ThemeMode mode) async {
+    String modeString = 'system';
+    if (mode == ThemeMode.light) modeString = 'light';
+    if (mode == ThemeMode.dark) modeString = 'dark';
+    await _prefs.setString('theme_mode', modeString);
+  }
+
+  Future<String?> getThemeCache() async {
+    return _prefs.getString('theme_mode');
   }
 }

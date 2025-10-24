@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
+import 'package:skill_swap/features/profile/cubit/theme_appearance_cubit.dart';
 import 'core/config/env_config.dart';
 import 'core/di/dependency_injection.dart';
 import 'core/services/once_cache_service.dart';
@@ -26,14 +27,24 @@ class SkillSwap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => sl<OnBoardingCubit>())],
-      child: MaterialApp.router(
-        title: 'Skill Swap',
-        debugShowCheckedModeBanner: false,
-        routerConfig: appRoute,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
+      providers: [
+        BlocProvider(create: (context) => sl<OnBoardingCubit>()),
+        BlocProvider(
+          create: (_) =>
+              ThemeAppearanceCubit(onceCacheService: sl<OnceCacheService>()),
+        ),
+      ],
+      child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Skill Swap',
+            debugShowCheckedModeBanner: false,
+            routerConfig: appRoute,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: state.selectedThemeMode,
+          );
+        },
       ),
     );
   }
