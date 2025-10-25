@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_scrollable_padding.dart';
 import '../../../core/widgets/custom_appearance_mode_selector.dart';
@@ -24,10 +25,26 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Nishan Pradhan',
-                style: Theme.of(context).textTheme.headlineSmall,
+              Skeletonizer(
+                enabled: false,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'NISHAN PRADHAN',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    CircleAvatar(
+                      minRadius: 45,
+                      backgroundImage: NetworkImage(
+                        'https://media.licdn.com/dms/image/v2/D4D03AQFnlTDji6hFzw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1703435442674?e=1762992000&v=beta&t=hPkwUus4-obeAXp7s1Wm_belXU6dQenEbQgJYpWgXFk',
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
               const SizedBox(height: 16),
               ListTile(
                 contentPadding: EdgeInsets.zero,
