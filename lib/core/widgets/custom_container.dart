@@ -15,6 +15,7 @@ class CustomContainer extends StatelessWidget {
   final void Function()? onTap;
   final EdgeInsetsGeometry? margin;
   final BorderRadiusGeometry? borderRadius;
+  final BorderRadiusGeometry? clipRRectBorderRadius;
 
   /// NEW: Wrap with IntrinsicHeight when true
   final bool useIntrinsicHeight;
@@ -35,6 +36,7 @@ class CustomContainer extends StatelessWidget {
     this.useIntrinsicHeight = false, // default off
     this.margin,
     this.borderRadius,
+    this.clipRRectBorderRadius,
   });
 
   @override
@@ -69,7 +71,7 @@ class CustomContainer extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: clipRRectBorderRadius ?? BorderRadius.circular(20),
           child: Stack(
             children: [
               // Main content
