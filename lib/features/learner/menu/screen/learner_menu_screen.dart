@@ -58,6 +58,11 @@ class LearnerMenuScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               AppearanceModeSelector(),
+              const SizedBox(height: 80),
+              Text(
+                'SkillSwap v1.0.0',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),
