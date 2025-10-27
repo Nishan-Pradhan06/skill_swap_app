@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 
-import '../../../core/helpers/validation_helpers.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/custom_button.dart';
+import '../../../../core/helpers/validation_helpers.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/custom_button.dart';
 
-class SkilledWantedScreen extends StatelessWidget {
+class SkilledOfferedScreen extends StatelessWidget {
   final List<Widget> children;
   final void Function() onPressedSkip;
   final void Function() onPressedDone;
   final TextEditingController skillOfferedController;
 
-  const SkilledWantedScreen({
+  const SkilledOfferedScreen({
     super.key,
     required this.children,
     required this.onPressedDone,
@@ -28,14 +28,14 @@ class SkilledWantedScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Skills You Want to Learn',
+              'Skills You Offer',
               style: Theme.of(
                 context,
               ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             Text(
-              'Select the skills you want to learn from the community',
+              'Select the skills you can offer to the community',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -72,12 +72,12 @@ class SkilledWantedScreen extends StatelessWidget {
           children: [
             Expanded(
               child: CustomOutlineButton(
-                text: 'Previous',
+                text: 'Skip',
                 onPressed: onPressedSkip,
               ),
             ),
             Expanded(
-              child: CustomButton(text: 'Completed', onPressed: onPressedDone),
+              child: CustomButton(text: 'Done', onPressed: onPressedDone),
             ),
           ],
         ),

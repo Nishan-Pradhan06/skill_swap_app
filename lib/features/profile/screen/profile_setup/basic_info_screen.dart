@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/helpers/validation_helpers.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/custom_button.dart';
-import '../../../core/widgets/custom_text_form_field.dart';
+import '../../../../core/helpers/validation_helpers.dart';
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_text_form_field.dart';
 
 class BasicInfoScreen extends StatelessWidget {
   final TextEditingController profileTitleController;

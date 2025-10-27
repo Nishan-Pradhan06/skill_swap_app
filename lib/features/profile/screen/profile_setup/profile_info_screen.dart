@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 
-import '../../../core/helpers/validation_helpers.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../../core/helpers/validation_helpers.dart';
+import '../../../../core/theme/app_theme.dart';
 
 class ProfileInfoScreen extends StatelessWidget {
   final TextEditingController profileTitleController;
