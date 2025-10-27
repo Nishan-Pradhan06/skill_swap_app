@@ -12,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
     return DefaultTabController(
       animationDuration: Duration(milliseconds: 800),
       length: 2,
+
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
@@ -113,8 +114,13 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(height: 100),
                   // TabBar
                   TabBar(
+                    isScrollable: true,
+                    splashBorderRadius: BorderRadius.all(Radius.circular(8)),
+                    tabAlignment: TabAlignment.start,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 15),
                     dividerColor: Theme.of(context).colorScheme.surface,
-                    labelColor: Colors.blue,
+                    labelColor: Theme.of(context).colorScheme.primary,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: 'About'),
@@ -128,42 +134,27 @@ class ProfileScreen extends StatelessWidget {
                     child: TabBarView(
                       children: [
                         // About Tab
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              spacing: 20,
-                              children: [
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 20,
+                            children: [
+                              CustomPadding(
+                                child: Text(
+                                  'I\'m a Flutter developer and tech enthusiast passionate about creating fast, responsive, and elegant mobile apps. My journey began with hands-on practice and internships, and I continue learning new tools while sharing insights and engaging with the tech community on LinkedIn.',
                                 ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                                Text(
-                                  'Hi! I’m Nishan Pradhan, a passionate Flutter developer and UI/UX enthusiast. '
-                                  'I love building modern mobile apps with clean design and smooth user experiences.',
-                                ),
-                              ],
-                            ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height: 10,
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                              Text(
+                                'Skill & Expertise',
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ),
 
