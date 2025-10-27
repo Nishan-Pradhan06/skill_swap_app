@@ -79,7 +79,11 @@ class ProfileScreen extends StatelessWidget {
                     child: TabBarView(
                       children: [
                         // About Tab
-                        AboutTabBarView(availableSkills: availableSkills),
+                        SingleChildScrollView(
+                          child: AboutTabBarView(
+                            availableSkills: availableSkills,
+                          ),
+                        ),
 
                         // Portfolio Tab
                         PortfolioTabBarView(),

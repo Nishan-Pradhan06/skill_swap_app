@@ -20,6 +20,9 @@ class CustomContainer extends StatelessWidget {
   /// NEW: Wrap with IntrinsicHeight when true
   final bool useIntrinsicHeight;
 
+  /// NEW: Wrap with IntrinsicWidth when true
+  final bool useIntrinsicWidth;
+
   const CustomContainer({
     super.key,
     required this.child,
@@ -33,7 +36,8 @@ class CustomContainer extends StatelessWidget {
     this.showSvgOverlay = false,
     this.svgOverlayPath = 'assets/svg/overlay.svg',
     this.onTap,
-    this.useIntrinsicHeight = false, // default off
+    this.useIntrinsicHeight = false,
+    this.useIntrinsicWidth = false, // default off
     this.margin,
     this.borderRadius,
     this.clipRRectBorderRadius,
@@ -41,14 +45,16 @@ class CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final container = GestureDetector(
+    Widget container = GestureDetector(
       onTap: onTap,
       child: Container(
         margin: margin,
         height: useIntrinsicHeight
-            ? null // let IntrinsicHeight handle it
+            ? null
             : (height ?? MediaQuery.sizeOf(context).height / 4.5),
-        width: width ?? MediaQuery.sizeOf(context).width,
+        width: useIntrinsicWidth
+            ? null
+            : (width ?? MediaQuery.sizeOf(context).width),
         decoration: BoxDecoration(
           borderRadius: borderRadius ?? BorderRadius.circular(20),
           gradient: isGradient
@@ -95,6 +101,15 @@ class CustomContainer extends StatelessWidget {
       ),
     );
 
-    return useIntrinsicHeight ? IntrinsicHeight(child: container) : container;
+    // Apply IntrinsicWidth and/or IntrinsicHeight
+    if (useIntrinsicHeight && useIntrinsicWidth) {
+      container = IntrinsicHeight(child: IntrinsicWidth(child: container));
+    } else if (useIntrinsicHeight) {
+      container = IntrinsicHeight(child: container);
+    } else if (useIntrinsicWidth) {
+      container = IntrinsicWidth(child: container);
+    }
+
+    return container;
   }
 }
