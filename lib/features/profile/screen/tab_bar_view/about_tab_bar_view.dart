@@ -125,45 +125,79 @@ class AboutTabBarView extends StatelessWidget {
                   context,
                 ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              Row(
-                spacing: 8,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
+              WorkingExprienceList(
+                imageUrl:
                     'https://media.licdn.com/dms/image/v2/D4D0BAQG_g0d95Eh5Sg/img-crop_100/img-crop_100/0/1721912200053?e=1762992000&v=beta&t=ymhfRIRDWP6xzpbzZeaAAepcXg8DZbr9ChpoawryhXA',
-                    height: 60,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Junior Flutter Mobile App Developer',
-                        style: TextTheme.of(context).bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text('Lunar I.T. Solution Pvt. Ltd'),
-                      Text(
-                        'Itahari, Nepal',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      Text(
-                        '2 Years of Experience',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                title: 'Junior Flutter Mobile App Developer',
+                companyName: 'Lunar I.T. Solution Pvt. Ltd',
+                location: 'Itahari, Nepal',
+                experience: '6 month of Experience',
+              ),
+              Divider(),
+              WorkingExprienceList(
+                imageUrl:
+                    'https://media.licdn.com/dms/image/v2/D4D0BAQGDa4MdEnwpiw/company-logo_100_100/company-logo_100_100/0/1732850527682/sainotech010_logo?e=1762992000&v=beta&t=rWI6snyJ5t3E7tRhTv-EisdDOi4hkiRTv9QknjYAnM4',
+                title: 'Flutter Mobile App Developer',
+                companyName: 'Saino Tech Pvt. Ltd',
+                location: 'Itahari, Nepal',
+                experience: '2 Years of Experience',
               ),
             ],
           ),
         ),
         SizedBox(height: 50),
+      ],
+    );
+  }
+}
+
+class WorkingExprienceList extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String companyName;
+  final String location;
+  final String experience;
+
+  const WorkingExprienceList({
+    super.key,
+    required this.imageUrl,
+    required this.title,
+    required this.companyName,
+    required this.location,
+    required this.experience,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.network(imageUrl, height: 60),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextTheme.of(
+                context,
+              ).bodyLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text(companyName),
+            Text(
+              location,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+            ),
+            Text(
+              experience,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+            ),
+          ],
+        ),
       ],
     );
   }
