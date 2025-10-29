@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/custom_scrollable_padding.dart';
 import '../widgets/custom_profile_header.dart';
 
@@ -27,6 +30,8 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: ScrollableRefreshablePadding(
@@ -35,6 +40,18 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
             spacing: 10,
             children: [
               CustomProfileHeader(isLoading: isLoading),
+              CustomPadding(
+                vertical: 0,
+                child: CustomTextField(
+                  hint: 'Search',
+                  borderColor: Colors.transparent,
+                  borderRadius: 18,
+                  type: CustomTextFieldType.search,
+                  fillColor: darkTextTheme
+                      ? const Color(0XFF272c29)
+                      : AppTheme.surfaceLight,
+                ),
+              ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 height: 140,

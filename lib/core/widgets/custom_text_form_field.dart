@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:skill_swap/features/learner/home/screen/search_screen.dart';
 import '../theme/app_theme.dart';
 
-enum CustomTextFieldType { text, email, password, number, phone, dropdown }
+enum CustomTextFieldType {
+  text,
+  email,
+  password,
+  number,
+  phone,
+  dropdown,
+  search,
+}
 
 class CustomTextField extends StatefulWidget {
   final String? label;
@@ -74,9 +82,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
     }
   }
 
+  Future<void> _openSearchPage(BuildContext context) async {
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (_) => const SearchScreen()),
+    );
+
+    if (result != null && widget.controller != null) {
+      setState(() => widget.controller!.text = result);
+      widget.onChanged?.call(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Dropdown type
+    // Dropdown Field
     if (widget.type == CustomTextFieldType.dropdown) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,61 +108,47 @@ class _CustomTextFieldState extends State<CustomTextField> {
             initialValue: widget.dropdownItems!.contains(_dropdownValue)
                 ? _dropdownValue
                 : null,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: widget.fillColor ?? AppTheme.surfaceLight,
-              contentPadding: widget.contentPadding,
-              border: widget.noBorder
-                  ? InputBorder.none
-                  : OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      borderSide: BorderSide(
-                        color: widget.borderColor ?? Colors.red,
-                      ),
-                    ),
-              enabledBorder: widget.noBorder
-                  ? InputBorder.none
-                  : OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      borderSide: BorderSide(
-                        color: widget.borderColor ?? Colors.grey,
-                      ),
-                    ),
-              focusedBorder: widget.noBorder
-                  ? InputBorder.none
-                  : OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
-                      borderSide: BorderSide(
-                        color: widget.borderColor ?? Colors.blue,
-                        width: 2,
-                      ),
-                    ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                borderSide: const BorderSide(color: Colors.red),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
-                borderSide: BorderSide(
-                  color: widget.borderColor ?? Colors.grey.shade400,
-                ),
-              ),
-            ),
+            decoration: _buildDecoration(),
             items: widget.dropdownItems
                 ?.map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
             onChanged: (value) {
               setState(() => _dropdownValue = value);
-              if (widget.onDropdownChanged != null) {
-                widget.onDropdownChanged!(value);
-              }
+              widget.onDropdownChanged?.call(value);
             },
           ),
         ],
       );
     }
 
-    // TextField type
+    // Search Field
+    if (widget.type == CustomTextFieldType.search) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.label != null)
+            Text(widget.label!, style: Theme.of(context).textTheme.bodyLarge),
+          const SizedBox(height: 5),
+          GestureDetector(
+            onTap: () => _openSearchPage(context),
+            child: AbsorbPointer(
+              child: TextFormField(
+                controller: widget.controller,
+                readOnly: true,
+                decoration: _buildDecoration().copyWith(
+                  hintText: widget.hint ?? 'Search...',
+                  prefixIcon:
+                      widget.leading ?? const Icon(Icons.search_rounded),
+                  suffixIcon: widget.trailing,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Normal Text Field
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -166,12 +172,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           onChanged: widget.onChanged,
           validator: widget.validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
+          maxLines: widget.maxLines,
+          decoration: _buildDecoration().copyWith(
             hintText: widget.hint,
             hintStyle: widget.hintStyle,
-            filled: true,
-            fillColor: widget.fillColor ?? Colors.white,
-            contentPadding: widget.contentPadding,
             prefixIcon: widget.leading,
             suffixIcon:
                 widget.trailing ??
@@ -183,46 +187,46 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         onPressed: () => setState(() => _obscure = !_obscure),
                       )
                     : null),
-
-            border: widget.noBorder
-                ? InputBorder.none
-                : OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: widget.borderColor ?? Colors.red,
-                    ),
-                  ),
-            enabledBorder: widget.noBorder
-                ? InputBorder.none
-                : OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: widget.borderColor ?? Colors.grey,
-                    ),
-                  ),
-            focusedBorder: widget.noBorder
-                ? InputBorder.none
-                : OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: widget.borderColor ?? Colors.blue,
-                      width: 2,
-                    ),
-                  ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(
-                color: widget.borderColor ?? Colors.grey.shade400,
-              ),
-            ),
           ),
-          maxLines: widget.maxLines,
         ),
       ],
+    );
+  }
+
+  InputDecoration _buildDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: widget.fillColor ?? AppTheme.surfaceLight,
+      contentPadding: widget.contentPadding,
+      border: widget.noBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: BorderSide(color: widget.borderColor ?? Colors.grey),
+            ),
+      enabledBorder: widget.noBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: BorderSide(color: widget.borderColor ?? Colors.grey),
+            ),
+      focusedBorder: widget.noBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: BorderSide(
+                color: widget.borderColor ?? Colors.blue,
+                width: 2,
+              ),
+            ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        borderSide: BorderSide(color: Colors.grey.shade400),
+      ),
     );
   }
 }
