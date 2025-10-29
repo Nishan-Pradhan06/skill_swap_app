@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/core/widgets/custom_appbar.dart';
+
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/custom_padding.dart';
+import '../../../../core/widgets/custom_text_form_field.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -40,34 +45,42 @@ class _SearchPageState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Search')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Type to search...',
-                border: OutlineInputBorder(),
+      body: SafeArea(
+        child: CustomPadding(
+          child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomBackButton(),
+              CustomTextField(
+                hint: 'Search',
+                borderColor: Colors.transparent,
+                borderRadius: 18,
+                leading: Icon(Icons.search),
+                controller: _searchController,
+                type: CustomTextFieldType.text,
+                fillColor: darkTextTheme
+                    ? const Color(0XFF272c29)
+                    : AppTheme.surfaceLight,
               ),
-            ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _filteredItems.length,
+                  itemBuilder: (_, index) {
+                    final item = _filteredItems[index];
+                    return ListTile(
+                      title: Text(item),
+                      onTap: () => Navigator.pop(context, item),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredItems.length,
-              itemBuilder: (_, index) {
-                final item = _filteredItems[index];
-                return ListTile(
-                  title: Text(item),
-                  onTap: () => Navigator.pop(context, item),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
