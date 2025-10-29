@@ -28,6 +28,23 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
     });
   }
 
+  final List<String> filterCategory = [
+    'All',
+    'Programming',
+    'Design',
+    'Writing',
+    'Marketing',
+    'Photography',
+    'Video Editing',
+    'Music',
+    'Teaching',
+    'Cooking',
+    'Gardening',
+  ];
+
+  List<String> category = [];
+  String selectedCategory = 'All';
+
   @override
   Widget build(BuildContext context) {
     final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
@@ -52,20 +69,62 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                       : AppTheme.surfaceLight,
                 ),
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                height: 140,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  color: Theme.of(context).colorScheme.primary,
+              
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    spacing: 10,
+                    children: filterCategory.map((category) {
+                      final isSelected = category.contains(category);
+                      return FilterChip(
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(20),
+                        ),
+                        label: Text(
+                          category,
+                          style: TextTheme.of(context).bodyMedium?.copyWith(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.surface
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        selected: isSelected,
+                        onSelected: (selected) {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.background,
+                        selectedColor: Theme.of(context).colorScheme.primary,
+                        chipAnimationStyle: ChipAnimationStyle(
+                          selectAnimation: AnimationStyle(),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                height: 10,
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              // Container(
+              //   margin: EdgeInsets.symmetric(horizontal: 20),
+              //   height: 140,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(18),
+              //     color: Theme.of(context).colorScheme.primary,
+              //   ),
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   height: 10,
+              //   color: Theme.of(context).colorScheme.surface,
+              // ),
             ],
           ),
         ),
