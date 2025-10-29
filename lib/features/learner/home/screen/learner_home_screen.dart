@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/custom_scrollable_padding.dart';
 import '../widgets/custom_filter_chip.dart';
 import '../widgets/custom_profile_header.dart';
+import '../widgets/custom_skill_card.dart';
 
 class LearnerHomeScreen extends StatefulWidget {
   const LearnerHomeScreen({super.key});
@@ -80,6 +81,8 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                   });
                 },
               ),
+
+              CustomSkillCard(),
               // Container(
               //   margin: EdgeInsets.symmetric(horizontal: 20),
               //   height: 140,
