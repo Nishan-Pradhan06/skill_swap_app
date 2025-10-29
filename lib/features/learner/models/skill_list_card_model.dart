@@ -40,7 +40,6 @@ class SkillCardModel {
   }
 }
 
-
 final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Monkey D. Luffy',
@@ -60,7 +59,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Roronoa Zoro',
     userProfileUrl:
-        'https://i.pinimg.com/736x/18/2a/84/182a847c5bfb51df4b9f92c188b8c8f9.jpg',
+        'https://static.wikia.nocookie.net/glad-you-came/images/a/a2/Zoro.png/revision/latest?cb=20230710081928',
     categoryTitle: 'Fitness & Wellness',
     skillTitle: 'Martial Arts, Swordsmanship, Discipline',
     skillDescription:
@@ -70,7 +69,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Nami',
     userProfileUrl:
-        'https://i.pinimg.com/736x/9e/7b/63/9e7b63b2e0f2e7a52b3a4e6d911c49b3.jpg',
+        'https://static.wikia.nocookie.net/onepiece-fairytail/images/d/dd/Nami.png/revision/latest?cb=20160806203305',
     categoryTitle: 'Business & Finance',
     skillTitle: 'Budgeting, Trading, Map Design',
     skillDescription:
@@ -80,7 +79,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Sanji',
     userProfileUrl:
-        'https://i.pinimg.com/736x/d7/52/84/d75284b29ed59b41a4e83d09c08cc7e7.jpg',
+        'https://imgs.search.brave.com/HrBitYrFQjQ33Pt6ks2Nby_BNR8F_Y1GGB4zmKtmdl8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hdmF0/YXJmaWxlcy5hbHBo/YWNvZGVycy5jb20v/MzI4L3RodW1iLTM1/MC0zMjg2ODgud2Vi/cA',
     categoryTitle: 'Culinary Arts',
     skillTitle: 'Cooking, Nutrition, Food Presentation',
     skillDescription:
@@ -90,7 +89,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Tony Tony Chopper',
     userProfileUrl:
-        'https://i.pinimg.com/736x/ab/20/da/ab20dafb2c9dbb1eb2291474d2365f0d.jpg',
+        'https://imgs.search.brave.com/tc1WjJzzOLPd02_DQPlGqYHRme7vFMshMI3nl9Po5zI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wcmV2/aWV3LnJlZGQuaXQv/b25lLXBpZWNlLXNl/YXNvbi0yLWNob3Bw/ZXItZmlyc3QtbG9v/ay1uZXRmbGl4LXYw/LWIzZjZzNG13NTg0/ZjEuanBlZz93aWR0/aD03ODMmYXV0bz13/ZWJwJnM9Y2QyMTNm/ZWYxOWE4NmY0MTdh/ODE2N2QzNGNjYzUz/NWQ1NGRhMGY0Ng',
     categoryTitle: 'Health & Medicine',
     skillTitle: 'First Aid, Anatomy, Caregiving',
     skillDescription:
@@ -100,7 +99,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Nico Robin',
     userProfileUrl:
-        'https://i.pinimg.com/736x/a1/3e/0b/a13e0bfa24e6cc03a01c9b009db9e20a.jpg',
+        'https://imgs.search.brave.com/a8ALFS_xf8CWJ_xO9L83McRkoGf22jtx4Wl3vHPCjbI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wcmV2/aWV3LnJlZGQuaXQv/bmljby1yb2Jpbi1p/cy10aGUtbW9zdC1i/ZWF1dGlmdWwtZ2ly/bC1pbi1vbmUtcGll/Y2UtcHJvdmUtbWUt/djAtZGVraGN0bXIy/aDBmMS5qcGVnP3dp/ZHRoPTczNiZhdXRv/PXdlYnAmcz0zNmEy/NWRlODkzZWY2OTU1/ZDllNjNkNTBlMDMw/NGViNWQzZjNkYzdl',
     categoryTitle: 'Education & Research',
     skillTitle: 'History, Archaeology, Research',
     skillDescription:
@@ -116,7 +115,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Franky',
     userProfileUrl:
-        'https://i.pinimg.com/736x/8e/21/6a/8e216ac0f7f0b29b11a97a86b8f99b39.jpg',
+        'https://imgs.search.brave.com/w-CXV1nMvD9LrOR7z00whMqCVfio-a0uzUDzU1FryD0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wcmV2/aWV3LnJlZGQuaXQv/YW55Ym9keS1lbHNl/LXRoaW5rcy1wb3N0/LXRpbWVza2lwLWZy/YW5reS1pcy1hLWJp/dC10b28tdjAtdmYy/emt6N2ZldmFlMS5w/bmc_d2lkdGg9MTA4/MCZhdXRvPXdlYnAm/cz0xNGZhZDk3ZGY2/MmE2NWY1ZWVjMTQx/M2IxOTIyMDRjNWNk/ODhiN2Mx',
     categoryTitle: 'Engineering & Robotics',
     skillTitle: 'Mechanical Design, Robotics, Innovation',
     skillDescription:
@@ -126,7 +125,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Usopp',
     userProfileUrl:
-        'https://i.pinimg.com/736x/bd/df/d5/bddfd5b1b2f4ff4a3f8129ab907a5bdb.jpg',
+        'https://imgs.search.brave.com/c4CtTS7Jv1h2SBiG58kRdCNCehcsHLvwp_Ue2EZpsGI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWNnLnNwb3J0c2tl/ZWRhLmNvbS9lZGl0/b3IvMjAyNS8wMy9j/NTgwZS0xNzQzNDEx/MjIyNDYzMy5wbmc',
     categoryTitle: 'Arts & Crafts',
     skillTitle: 'Painting, Storytelling, Creativity',
     skillDescription:
@@ -136,7 +135,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Brook',
     userProfileUrl:
-        'https://i.pinimg.com/736x/22/f3/4c/22f34cb9a78df88a99b5b99128e50a73.jpg',
+        'https://imgs.search.brave.com/W6ZCgk8xHnHokZp5WZ43Goh-ilxLtxmy5HzZSimbeb8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2Y1LzAx/L2QxL2Y1MDFkMTYy/ZGEzYmM0NzY1N2Nl/YmU1ZmQ1ZTZjMDVi/LmpwZw',
     categoryTitle: 'Music & Performance',
     skillTitle: 'Music, Singing, Stage Performance',
     skillDescription:
@@ -146,7 +145,7 @@ final List<SkillCardModel> skillCards = [
   SkillCardModel(
     userName: 'Jinbe',
     userProfileUrl:
-        'https://i.pinimg.com/736x/3a/83/35/3a8335b5869a6ddf07dd60cf380e5f58.jpg',
+        'https://imgs.search.brave.com/3_K7-hg0xZw0fWA_dR8jKgZJDZpjbi2SGu5MXn1sK28/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wcmV2/aWV3LnJlZGQuaXQv/amltYmUtYXBwcmVj/aWF0aW9uLXBvc3Qt/djAtNG04ZTE0dHJy/MnpkMS5qcGVnP3dp/ZHRoPTEzNDkmYXV0/bz13ZWJwJnM9MmQ0/ZDZhYTZiMTI3MWRj/MGI1MTM3OTI1ODlm/ZTg4Zjg5YTZlNzg2/OA',
     categoryTitle: 'Leadership & Mentorship',
     skillTitle: 'Teamwork, Mentorship, Conflict Resolution',
     skillDescription:
