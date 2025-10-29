@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../../../core/widgets/custom_container.dart';
 import '../../../../core/widgets/custom_padding.dart';
+import 'custom_cateogry_chip.dart';
 
 class CustomSkillCard extends StatelessWidget {
-  const CustomSkillCard({super.key});
+  final String userName;
+  final String userProfileUrl;
+  final String categoryTitle;
+  final String skillTitle;
+  final String skillDescription;
+  final List<Widget> skillList;
+  const CustomSkillCard({
+    super.key,
+    required this.userName,
+    required this.userProfileUrl,
+    required this.categoryTitle,
+    required this.skillTitle,
+    required this.skillDescription,
+    required this.skillList,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomPadding(
+      vertical: 0,
       child: CustomContainer(
         backgroundColor: Theme.of(context).colorScheme.surface,
         useIntrinsicHeight: true,
@@ -27,16 +43,14 @@ class CustomSkillCard extends StatelessWidget {
                       height: 35,
                       width: 35,
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          'https://miro.medium.com/0*j7sVnq-dE0XWdS12.jpeg',
-                        ),
+                        backgroundImage: NetworkImage(userProfileUrl),
                       ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Monkey D. Luffy',
+                          userName,
                           style: TextTheme.of(context).bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w900,
@@ -47,31 +61,11 @@ class CustomSkillCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'Programming & Tech',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
+                CustomCategoryChip(chipText: categoryTitle),
               ],
             ),
             Text(
-              'Graphics Design, Digital Arts, Arts',
+              skillTitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextTheme.of(
@@ -79,7 +73,7 @@ class CustomSkillCard extends StatelessWidget {
               ).bodyLarge?.copyWith(fontSize: 17, fontWeight: FontWeight.bold),
             ),
             Text(
-              'I have been learning and practicing Graphics Design, Digital Arts, and Arts for a year, gaining hands-on experience with design tools and creative techniques. I can help teach and guide others in creating digital illustrations, visual content, and designs while sharing practical tips I\'ve learned. I am comfortable with using color theory, composition, typography, and multimedia tools to bring ideas to life. I am open to exchanging this skill in return for learning other skills, making it a mutual learning experience. I enjoy collaborating and sharing knowledge while improving my own abilities. My goal is to help others develop their creative skills while continuing to grow as a designer',
+              skillDescription,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.justify,
@@ -91,118 +85,7 @@ class CustomSkillCard extends StatelessWidget {
                 context,
               ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'Programming & Tech',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'Coding',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'Flutter',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'SOLID',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  child: Text(
-                    'Mobile App Dev',
-                    style: TextTheme.of(context).bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            Wrap(spacing: 6, runSpacing: 6, children: skillList),
           ],
         ),
       ),
