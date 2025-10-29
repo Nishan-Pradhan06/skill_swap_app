@@ -27,7 +27,7 @@ class _CategoryFilterChipsState extends State<CategoryFilterChips> {
       child: Padding(
         padding: const EdgeInsets.only(left: 20),
         child: Row(
-          spacing: 10,
+          spacing: 6,
           children: widget.categories.map((category) {
             final isSelected = category == widget.selectedCategory;
 
@@ -44,19 +44,8 @@ class _CategoryFilterChipsState extends State<CategoryFilterChips> {
                   color: isSelected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: theme.colorScheme.primary),
-                  boxShadow: isSelected
-                      ? [
-                          BoxShadow(
-                            color: theme.colorScheme.primary.withValues(
-                              alpha: 0.4,
-                            ),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
-                      : [],
                 ),
                 child: AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),

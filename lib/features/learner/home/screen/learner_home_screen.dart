@@ -3,6 +3,7 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/custom_scrollable_padding.dart';
+import '../widgets/custom_filter_chip.dart';
 import '../widgets/custom_profile_header.dart';
 
 class LearnerHomeScreen extends StatefulWidget {
@@ -56,6 +57,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           child: Column(
             spacing: 10,
             children: [
+              SizedBox(height: 20),
               CustomProfileHeader(isLoading: isLoading),
               CustomPadding(
                 vertical: 0,
@@ -69,47 +71,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                       : AppTheme.surfaceLight,
                 ),
               ),
-              
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Row(
-                    spacing: 10,
-                    children: filterCategory.map((category) {
-                      final isSelected = category.contains(category);
-                      return FilterChip(
-                        shape: ContinuousRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(20),
-                        ),
-                        label: Text(
-                          category,
-                          style: TextTheme.of(context).bodyMedium?.copyWith(
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.surface
-                                : Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                        },
-                        side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.background,
-                        selectedColor: Theme.of(context).colorScheme.primary,
-                        chipAnimationStyle: ChipAnimationStyle(
-                          selectAnimation: AnimationStyle(),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+              CategoryFilterChips(
+                categories: filterCategory,
+                selectedCategory: selectedCategory,
+                onCategorySelected: (category) {
+                  setState(() {
+                    selectedCategory = category;
+                  });
+                },
               ),
               // Container(
               //   margin: EdgeInsets.symmetric(horizontal: 20),

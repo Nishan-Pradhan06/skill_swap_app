@@ -15,6 +15,7 @@ class CustomProfileHeader extends StatelessWidget {
     return Skeletonizer(
       enabled: isLoading,
       child: CustomPadding(
+        vertical: 0,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
