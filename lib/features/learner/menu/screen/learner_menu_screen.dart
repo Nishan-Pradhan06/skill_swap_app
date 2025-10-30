@@ -13,6 +13,7 @@ class LearnerMenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
+        scrolledUnderElevation: 0,
         centerTitle: false,
         actions: [
           IconButton(
