@@ -45,8 +45,8 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search_rounded),
-                label: 'Search',
+                icon: Icon(Icons.comment_rounded),
+                label: 'Converstation',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.swap_horiz_rounded),
