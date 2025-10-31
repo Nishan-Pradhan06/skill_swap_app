@@ -11,6 +11,7 @@ class CustomSkillCard extends StatelessWidget {
   final String skillDescription;
   final List<Widget> skillList;
   final void Function()? onTap;
+  final String point;
   const CustomSkillCard({
     super.key,
     required this.userName,
@@ -19,6 +20,7 @@ class CustomSkillCard extends StatelessWidget {
     required this.skillTitle,
     required this.skillDescription,
     required this.skillList,
+    required this.point,
     this.onTap,
   });
 
@@ -59,7 +61,20 @@ class CustomSkillCard extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        Text('Learner', style: TextTheme.of(context).bodySmall),
+                        // Text('Learner', style: TextTheme.of(context).bodySmall),
+                        Row(
+                          spacing: 2,
+                          children: [
+                            Text(
+                              point,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                              style: TextTheme.of(context).bodySmall,
+                            ),
+                            Image.asset('assets/images/coin.png', height: 10),
+                          ],
+                        ),
                       ],
                     ),
                   ],

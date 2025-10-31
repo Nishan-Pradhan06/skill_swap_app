@@ -4,6 +4,7 @@ class SkillCardModel {
   final String categoryTitle;
   final String skillTitle;
   final String skillDescription;
+  final String point;
   final List<String> skillList;
 
   SkillCardModel({
@@ -13,6 +14,7 @@ class SkillCardModel {
     required this.skillTitle,
     required this.skillDescription,
     required this.skillList,
+    required this.point,
   });
 
   // Optional: for converting from JSON
@@ -24,6 +26,7 @@ class SkillCardModel {
       skillTitle: json['skillTitle'],
       skillDescription: json['skillDescription'],
       skillList: List<String>.from(json['skillList']),
+      point: json['point'],
     );
   }
 
@@ -36,6 +39,7 @@ class SkillCardModel {
       'skillTitle': skillTitle,
       'skillDescription': skillDescription,
       'skillList': skillList,
+      'point': point,
     };
   }
 }
@@ -55,6 +59,7 @@ final List<SkillCardModel> skillCards = [
       'SOLID',
       'Mobile App Dev',
     ],
+    point: '30',
   ),
   SkillCardModel(
     userName: 'Roronoa Zoro',
@@ -65,6 +70,7 @@ final List<SkillCardModel> skillCards = [
     skillDescription:
         'I have trained in swordsmanship and physical fitness for several years, focusing on discipline and endurance. I can teach self-defense techniques and structured workout routines.',
     skillList: ['Fitness', 'Discipline', 'Focus', 'Training', 'Health'],
+    point: '40',
   ),
   SkillCardModel(
     userName: 'Nami',
@@ -74,6 +80,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'Budgeting, Trading, Map Design',
     skillDescription:
         'I have experience managing trade routes and finances. I can help with financial planning, map visualization, and digital navigation systems.',
+    point: '20',
     skillList: ['Finance', 'Trading', 'Planning', 'Navigation', 'Management'],
   ),
   SkillCardModel(
@@ -84,6 +91,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'Cooking, Nutrition, Food Presentation',
     skillDescription:
         'With years of experience as a chef, I specialize in creating healthy, visually appealing dishes. I can teach cooking basics, recipe design, and plating techniques.',
+    point: '15',
     skillList: ['Cooking', 'Nutrition', 'Presentation', 'Creativity', 'Health'],
   ),
   SkillCardModel(
@@ -94,6 +102,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'First Aid, Anatomy, Caregiving',
     skillDescription:
         'I have studied human and animal medicine and can provide guidance on first aid, wellness routines, and understanding the basics of anatomy and care.',
+    point: '50',
     skillList: ['Medicine', 'First Aid', 'Wellness', 'Anatomy', 'Biology'],
   ),
   SkillCardModel(
@@ -111,6 +120,7 @@ final List<SkillCardModel> skillCards = [
       'Documentation',
       'Analysis',
     ],
+    point: '20',
   ),
   SkillCardModel(
     userName: 'Franky',
@@ -120,6 +130,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'Mechanical Design, Robotics, Innovation',
     skillDescription:
         'I build and modify mechanical systems and robots. I can teach basic mechanical engineering concepts, innovation, and creative construction.',
+    point: '44',
     skillList: ['Engineering', 'Robotics', 'Innovation', 'Design', 'Mechanics'],
   ),
   SkillCardModel(
@@ -130,6 +141,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'Painting, Storytelling, Creativity',
     skillDescription:
         'As a creative artist and storyteller, I enjoy painting, model crafting, and narrating stories. I can help others express creativity through art.',
+    point: '45',
     skillList: ['Art', 'Storytelling', 'Creativity', 'Model Making', 'Design'],
   ),
   SkillCardModel(
@@ -140,6 +152,7 @@ final List<SkillCardModel> skillCards = [
     skillTitle: 'Music, Singing, Stage Performance',
     skillDescription:
         'I am passionate about music and live performance. I can guide others on stage presence, singing techniques, and musical composition.',
+    point: '60',
     skillList: ['Music', 'Singing', 'Performance', 'Creativity', 'Confidence'],
   ),
   SkillCardModel(
@@ -157,5 +170,6 @@ final List<SkillCardModel> skillCards = [
       'Discipline',
       'Teamwork',
     ],
+    point: '50',
   ),
 ];
