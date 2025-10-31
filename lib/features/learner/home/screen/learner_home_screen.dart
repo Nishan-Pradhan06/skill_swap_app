@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/custom_scrollable_padding.dart';
 import '../../models/skill_list_card_model.dart';
@@ -112,6 +114,9 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           skillList: skill.skillList
                               .map((text) => CustomCategoryChip(chipText: text))
                               .toList(),
+                          onTap: () {
+                            context.pushNamed(AppRoutesName.skillCardDetails);
+                          },
                         ),
                       ),
                     );

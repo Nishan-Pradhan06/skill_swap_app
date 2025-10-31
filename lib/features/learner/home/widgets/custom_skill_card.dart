@@ -10,6 +10,7 @@ class CustomSkillCard extends StatelessWidget {
   final String skillTitle;
   final String skillDescription;
   final List<Widget> skillList;
+  final void Function()? onTap;
   const CustomSkillCard({
     super.key,
     required this.userName,
@@ -18,6 +19,7 @@ class CustomSkillCard extends StatelessWidget {
     required this.skillTitle,
     required this.skillDescription,
     required this.skillList,
+    this.onTap,
   });
 
   @override
@@ -25,6 +27,7 @@ class CustomSkillCard extends StatelessWidget {
     return CustomPadding(
       vertical: 0,
       child: CustomContainer(
+        onTap: onTap,
         backgroundColor: Theme.of(context).colorScheme.surface,
         useIntrinsicHeight: true,
         child: Column(

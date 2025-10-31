@@ -11,6 +11,7 @@ class AppRoutesName {
   //#---------------LEARNER ROUTES NAME--------------##
   static const String profileSetupScreenRoute = 'profileSetupScreenRoute';
   static const String learnerBottomNavBar = 'learnerBottomNavBar';
+  static const String skillCardDetails = 'skillCardDetails';
 
 
   //#--------------ADMIN ROUTES NAME-------------##
