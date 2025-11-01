@@ -45,16 +45,16 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.comment_rounded),
-                label: 'Converstation',
+                icon: Icon(Icons.play_circle_fill_rounded),
+                label: 'My Learning',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.swap_horiz_rounded),
                 label: 'Swap',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.play_circle_fill_rounded),
-                label: 'My Learning',
+                icon: Icon(Icons.comment_rounded),
+                label: 'Conversation',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.apps_rounded),
