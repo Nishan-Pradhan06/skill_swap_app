@@ -52,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
                     profileImageUrl:
                         'https://media.licdn.com/dms/image/v2/D4D16AQE8xmB0L5j7LA/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1701923438567?e=1762992000&v=beta&t=7G4pAW71dyKnd8JDYopx_EFr-X8HO1cTMq3VPX31po8',
                     coverImageUrl:
-                        'https://scontent.fbdp2-1.fna.fbcdn.net/v/t51.82787-15/515764552_18129396769445947_5870609763188483489_n.webp?stp=dst-jpg_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=NS9Hwig0IJYQ7kNvwFq101n&_nc_oc=AdmtjSPbdYlvcRU5kWOkVUlOY85crmHdEyDeL9iM2Hyd3OepQbMDH1b-NYNW4L7TDVXzPHUlRtGb7W-H4TL1hSp9&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_gid=z_tg5bRSC2vLyWbXwGU1sw&oh=00_AfcMEvMxi89cLkJoU7lEWDle9JjyxhhlO0Kj5XMlnhkaOw&oe=6903FEAD',
+                        'https://scontent.fbdp2-1.fna.fbcdn.net/v/t39.30808-6/357720692_1633633700482790_3750526617895490452_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHWAq9_r27J3XQrlPQ-b_JUEyGQJfikjFsTIZAl-KSMWwbH_DyL0jlSK7OS8xPX9HAgOLME2YwNnxveoY-R8waL&_nc_ohc=jTaUJfge-bcQ7kNvwEImS61&_nc_oc=Adk0WAWO0epSZa-eY1J9Jb_G4hcLn0I2jvTO7trHCqUtD0x4qZpIrSOHg0pclDc_C7JdLjnVtaCT40ll49cajZha&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_gid=SiEn8qgUaybLk1TnaPlm7A&oh=00_AfcnfwUHNF1WmrTukeM4nGSZHGmqFQLP9xiUNKfpgpuQRg&oe=690BE537',
                     userName: 'Nishan Pradhan',
                     userTitle: 'Flutter Developer | UI/UX Enthusiast',
                   ),
