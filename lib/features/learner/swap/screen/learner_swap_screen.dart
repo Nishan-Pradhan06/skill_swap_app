@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/features/learner/swap/screen/pending_swaps_tab.dart';
 
 class LearnerSwapScreen extends StatelessWidget {
   const LearnerSwapScreen({super.key});
@@ -29,9 +30,9 @@ class LearnerSwapScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            Center(child: Text('Pending Swaps')),
+            PendingSwaps(),
             Center(child: Text('Active Swaps')),
             Center(child: Text('Completed Swaps')),
           ],
