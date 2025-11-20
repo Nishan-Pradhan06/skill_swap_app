@@ -5,7 +5,6 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/custom_scrollable_padding.dart';
 import '../models/skill_list_card_model.dart';
 import '../widgets/custom_cateogry_chip.dart';
 import '../widgets/custom_filter_chip.dart';
@@ -54,6 +53,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
+
     final filteredSkills = selectedCategory == 'All'
         ? skillCards
         : skillCards
@@ -63,68 +63,92 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                 ),
               )
               .toList();
+
     return Scaffold(
       body: SafeArea(
-        child: ScrollableRefreshablePadding(
+        child: RefreshIndicator(
           onRefresh: _handleRefresh,
-          child: CustomPadding(
-            horizontal: 0,
-            child: Column(
-              spacing: 10,
-              children: [
-                CustomProfileHeader(isLoading: isLoading),
-                CustomPadding(
-                  vertical: 0,
-                  child: CustomTextField(
-                    hint: 'Search',
-                    borderColor: Colors.transparent,
-                    borderRadius: 18,
-                    type: CustomTextFieldType.search,
-                    fillColor: darkTextTheme
-                        ? const Color(0XFF272c29)
-                        : AppTheme.surfaceLight,
-                  ),
-                ),
-                CategoryFilterChips(
-                  categories: filterCategory,
-                  selectedCategory: selectedCategory,
-                  onCategorySelected: (category) {
-                    setState(() {
-                      selectedCategory = category;
-                    });
-                  },
-                ),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                expandedHeight: 180,
+                elevation: 0,
+                floating: true,
+                snap: true,
+                pinned: false,
+                scrolledUnderElevation: 0,
+                forceElevated: false,
 
-                ListView.builder(
-                  itemCount: filteredSkills.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final skill = filteredSkills[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: Skeletonizer(
-                        enabled: isLoading,
-                        child: CustomSkillCard(
-                          userName: skill.userName,
-                          userProfileUrl: skill.userProfileUrl,
-                          categoryTitle: skill.categoryTitle,
-                          skillTitle: skill.skillTitle,
-                          skillDescription: skill.skillDescription,
-                          skillList: skill.skillList
-                              .map((text) => CustomCategoryChip(chipText: text))
-                              .toList(),
-                          point: skill.point,
-                          onTap: () {
-                            context.pushNamed(AppRoutesName.skillCardDetails);
-                          },
+                flexibleSpace: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomPadding(
+                              horizontal: 0,
+                              child: CustomProfileHeader(isLoading: isLoading),
+                            ),
+                            CustomPadding(
+                              vertical: 0,
+                              child: CustomTextField(
+                                hint: 'Search',
+                                borderColor: Colors.transparent,
+                                borderRadius: 18,
+                                type: CustomTextFieldType.search,
+                                fillColor: darkTextTheme
+                                    ? const Color(0XFF272c29)
+                                    : AppTheme.surfaceLight,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            CategoryFilterChips(
+                              categories: filterCategory,
+                              selectedCategory: selectedCategory,
+                              onCategorySelected: (category) {
+                                setState(() {
+                                  selectedCategory = category;
+                                });
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
                   },
                 ),
-              ],
-            ),
+              ),
+
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final skill = filteredSkills[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: Skeletonizer(
+                      enabled: isLoading,
+                      child: CustomSkillCard(
+                        userName: skill.userName,
+                        userProfileUrl: skill.userProfileUrl,
+                        categoryTitle: skill.categoryTitle,
+                        skillTitle: skill.skillTitle,
+                        skillDescription: skill.skillDescription,
+                        skillList: skill.skillList
+                            .map((text) => CustomCategoryChip(chipText: text))
+                            .toList(),
+                        point: skill.point,
+                        onTap: () {
+                          context.pushNamed(AppRoutesName.skillCardDetails);
+                        },
+                      ),
+                    ),
+                  );
+                }, childCount: filteredSkills.length),
+              ),
+            ],
           ),
         ),
       ),
