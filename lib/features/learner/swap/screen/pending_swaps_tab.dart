@@ -9,17 +9,21 @@ class PendingSwaps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPadding(
+      vertical: 0,
+
       child: ScrollableRefreshablePadding(
         onRefresh: () async {},
         child: Column(
           spacing: 10,
           children: [
+            SizedBox(height: 10),
             SwapCardWidget(),
             SwapCardWidget(),
             SwapCardWidget(),
             SwapCardWidget(),
 
             SwapCardWidget(),
+            SizedBox(height: 10),
           ],
         ),
       ),

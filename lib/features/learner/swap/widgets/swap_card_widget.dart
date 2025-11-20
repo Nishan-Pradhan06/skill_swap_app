@@ -12,10 +12,33 @@ class SwapCardWidget extends StatelessWidget {
       enabled: false,
       child: Material(
         borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+        child: GestureDetector(
+          // borderRadius: BorderRadius.circular(20),
           onTap: () {},
-          onLongPress: () {},
+          onLongPressStart: (details) {
+            final position = RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              MediaQuery.of(context).size.width - details.globalPosition.dx,
+              MediaQuery.of(context).size.height - details.globalPosition.dy,
+            );
+
+            showMenu(
+              context: context,
+              position: position,
+              items: [
+                PopupMenuItem(value: 'accept', child: Text('Accept')),
+                PopupMenuItem(value: 'reject', child: Text('Reject')),
+              ],
+            ).then((value) {
+              if (value == 'accept') {
+                // accept logic
+              } else if (value == 'reject') {
+                // reject logic
+              }
+            });
+          },
+
           child: Ink(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
