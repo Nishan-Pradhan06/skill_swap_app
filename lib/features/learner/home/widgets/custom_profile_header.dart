@@ -30,7 +30,7 @@ class CustomProfileHeader extends StatelessWidget {
                   },
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      'https://scontent.fbdp2-1.fna.fbcdn.net/v/t39.30808-6/357720692_1633633700482790_3750526617895490452_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHWAq9_r27J3XQrlPQ-b_JUEyGQJfikjFsTIZAl-KSMWwbH_DyL0jlSK7OS8xPX9HAgOLME2YwNnxveoY-R8waL&_nc_ohc=jTaUJfge-bcQ7kNvwEImS61&_nc_oc=Adk0WAWO0epSZa-eY1J9Jb_G4hcLn0I2jvTO7trHCqUtD0x4qZpIrSOHg0pclDc_C7JdLjnVtaCT40ll49cajZha&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_gid=SiEn8qgUaybLk1TnaPlm7A&oh=00_AfcnfwUHNF1WmrTukeM4nGSZHGmqFQLP9xiUNKfpgpuQRg&oe=690BE537',
+                      'https://media.licdn.com/dms/image/v2/D4D03AQFnlTDji6hFzw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1703435442674?e=1765411200&v=beta&t=9KAhsZ9MVLXNeH8CZp-79dZdxjTnqZsY69ljoiecrJI',
                     ),
                   ),
                 ),

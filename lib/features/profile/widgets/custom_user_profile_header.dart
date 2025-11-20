@@ -27,7 +27,7 @@ class CustomUserProfileHeader extends StatelessWidget {
           clipRRectBorderRadius: BorderRadius.circular(0),
           useIntrinsicHeight: true,
           borderRadius: BorderRadius.circular(0),
-          child: Image.network(profileImageUrl, fit: BoxFit.cover),
+          child: Image.network(coverImageUrl, fit: BoxFit.cover),
         ),
         CustomPadding(
           horizontal: 12,
@@ -62,7 +62,7 @@ class CustomUserProfileHeader extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.background,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(coverImageUrl),
+                  backgroundImage: NetworkImage(profileImageUrl),
                 ),
               ),
               const SizedBox(width: 16),
