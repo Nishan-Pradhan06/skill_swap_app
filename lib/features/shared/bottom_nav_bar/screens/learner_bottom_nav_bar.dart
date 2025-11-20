@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:skill_swap/features/learner/home/screen/learner_home_screen.dart';
 import 'package:skill_swap/features/learner/menu/screen/learner_menu_screen.dart';
 import 'package:skill_swap/features/learner/my_learning/screen/learner_my_learning_screen.dart';
-import 'package:skill_swap/features/learner/search/screen/learner_search_screen.dart';
 import 'package:skill_swap/features/learner/swap/screen/learner_swap_screen.dart';
 import '../../../../core/widgets/double_press_to_exit.dart';
+import '../../../learner/converstation/screen/learner_search_screen.dart';
 
 class LearnerBottomNavBarScreen extends StatefulWidget {
   const LearnerBottomNavBarScreen({super.key});
@@ -18,9 +18,9 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
 
   final List<Widget> _screens = [
     LearnerHomeScreen(),
-    LearnerSearchScreen(),
-    LearnerSwapScreen(),
     LearnerMyLearningScreen(),
+    LearnerSwapScreen(),
+    ConverstationScreen(),
     LearnerMenuScreen(),
   ];
 
