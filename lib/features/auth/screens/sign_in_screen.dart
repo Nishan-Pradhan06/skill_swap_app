@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_auth/local_auth.dart';
+// import 'package:local_auth/local_auth.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
-import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
-
 import '../../../core/helpers/validation_helpers.dart';
-import '../../../core/services/cache_service.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -25,7 +22,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  final LocalAuthentication _localAuth = LocalAuthentication();
+  // final LocalAuthentication _localAuth = LocalAuthentication();
 
   @override
   void dispose() {
@@ -35,50 +32,50 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-  Future<void> _handleBiometricAuth() async {
-    try {
-      final isAvailable =
-          await _localAuth.canCheckBiometrics &&
-          await _localAuth.isDeviceSupported();
+  // Future<void> _handleBiometricAuth() async {
+  //   try {
+  //     final isAvailable =
+  //         await _localAuth.canCheckBiometrics &&
+  //         await _localAuth.isDeviceSupported();
 
-      if (!isAvailable) {
-        CustomToast.showError('Biometric authentication not available');
-        return;
-      }
+  //     if (!isAvailable) {
+  //       CustomToast.showError('Biometric authentication not available');
+  //       return;
+  //     }
 
-      final didAuthenticate = await _localAuth.authenticate(
-        localizedReason: 'Authenticate to continue',
-        biometricOnly: true,
-      );
+  //     final didAuthenticate = await _localAuth.authenticate(
+  //       localizedReason: 'Authenticate to continue',
+  //       biometricOnly: true,
+  //     );
 
-      if (didAuthenticate) {
-        final token = await CacheServices.getToken();
-        if (token != null) {
-          CustomToast.showSuccess('Authentication Successful');
-          context.goNamed(AppRoutesName.profileSetupScreenRoute);
+  //     if (didAuthenticate) {
+  //       final token = await CacheServices.getToken();
+  //       if (token != null) {
+  //         CustomToast.showSuccess('Authentication Successful');
+  //         context.goNamed(AppRoutesName.profileSetupScreenRoute);
 
-          // Navigate to next screen or home
-        } else {
-          CustomToast.showError('No saved session found. Please login.');
-        }
-      } else {
-        CustomToast.showError('Biometric authentication failed');
-      }
-    } catch (e) {
-      CustomToast.showError('Error: $e');
-    }
-  }
+  //         // Navigate to next screen or home
+  //       } else {
+  //         CustomToast.showError('No saved session found. Please login.');
+  //       }
+  //     } else {
+  //       CustomToast.showError('Biometric authentication failed');
+  //     }
+  //   } catch (e) {
+  //     CustomToast.showError('Error: $e');
+  //   }
+  // }
 
   /// Handle login button press
   Future<void> _handleSignIn() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      const fakeToken = 'dummy_token_123'; // Replace with real token
-      await CacheServices.saveToken(fakeToken);
-      context.goNamed(AppRoutesName.profileSetupScreenRoute);
+    // if (_formKey.currentState?.validate() ?? false) {
+    //   const fakeToken = 'dummy_token_123'; // Replace with real token
+    //   await CacheServices.saveToken(fakeToken);
+    //   context.goNamed(AppRoutesName.profileSetupScreenRoute);
 
-      CustomToast.showSuccess('Login Successful');
-      // Navigate to next screen or home
-    }
+    //   CustomToast.showSuccess('Login Successful');
+    //   // Navigate to next screen or home
+    // }
   }
 
   @override
@@ -184,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: _handleBiometricAuth,
+                          onTap: (){},
                           borderRadius: BorderRadius.circular(20),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
