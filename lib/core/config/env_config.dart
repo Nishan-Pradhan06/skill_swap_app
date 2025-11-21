@@ -1,25 +1,21 @@
+import 'env_secrete_config.dart';
 
 enum Environment { development, production }
 
 class EnvConfig {
   final Environment environment;
+  final String apiBaseUrl;
   final bool enableLogging;
-  final bool enableDarkTheme;
-  final bool isShrinkDownVersion;
 
   EnvConfig({
     required this.environment,
+    required this.apiBaseUrl,
     required this.enableLogging,
-    this.enableDarkTheme = false,
-
-    /// If false then we need to uncomment real package from pubspec.yaml
-    /// and also need to remove fake_image_picker.dart and faker_image_compressor.dart from stubs.dart
-    /// and need to pub get image picker packages in pubspec.yaml
-    this.isShrinkDownVersion = true,
   });
 
   factory EnvConfig.development() {
     return EnvConfig(
+      apiBaseUrl: EnvSecreteConfig.instance.apiBaseUrl,
       environment: Environment.development,
       enableLogging: true,
     );
@@ -27,6 +23,7 @@ class EnvConfig {
 
   factory EnvConfig.production() {
     return EnvConfig(
+      apiBaseUrl: EnvSecreteConfig.instance.apiBaseUrl,
       environment: Environment.production,
       enableLogging: false,
     );

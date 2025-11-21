@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/features/profile/cubit/theme_appearance_cubit.dart';
 import 'core/config/env_config.dart';
@@ -11,7 +14,11 @@ import 'router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  EnvConfig.initialize(Environment.development);
+  await dotenv.load(fileName: '.env');
+
+  EnvConfig.initialize(Environment.production);
+
+  log(EnvConfig.instance.apiBaseUrl);
 
   await setupServiceLocator();
 
