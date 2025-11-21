@@ -15,7 +15,7 @@ class AppDioInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final String? token = await CacheServices.getToken();
+    final String? token = await CacheServices.instance.getAuthToken();
     options.headers['Authorization'] = 'Bearer $token';
 
     return handler.next(options);
