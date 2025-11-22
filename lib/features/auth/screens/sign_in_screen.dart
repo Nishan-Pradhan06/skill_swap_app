@@ -16,6 +16,7 @@ import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/models/sign_in_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../core/helpers/validation_helpers.dart';
+import '../../../core/services/cache_service.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -75,15 +76,14 @@ class _SignInScreenState extends State<SignInScreen> {
   // }
 
   /// Handle login button press
-  Future<void> _handleSignIn() async {
-    // if (_formKey.currentState?.validate() ?? false) {
-    //   const fakeToken = 'dummy_token_123'; // Replace with real token
-    //   await CacheServices.saveToken(fakeToken);
-    //   context.goNamed(AppRoutesName.profileSetupScreenRoute);
-
-    //   CustomToast.showSuccess('Login Successful');
-    //   // Navigate to next screen or home
-    // }
+  Future<void> _handleNavigation() async {
+    final isProfileCompleted =
+        await CacheServices.instance.getProfileSetupCompleted() ?? false;
+    if (!isProfileCompleted) {
+      context.goNamed(AppRoutesName.profileSetupScreenRoute);
+    } else {
+      context.goNamed(AppRoutesName.learnerBottomNavBar);
+    }
   }
 
   @override
@@ -171,8 +171,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       failure: (failure) {
                         CustomToast.showError(failure.message);
                       },
-                      loaded: (data) {
-                        context.goNamed(AppRoutesName.learnerBottomNavBar);
+                      loaded: (data) async {
+                        _handleNavigation();
                         CustomToast.showSuccess('Sign In Successful');
                       },
                     );
