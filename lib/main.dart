@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
+import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 import 'package:skill_swap/features/profile/cubit/theme_appearance_cubit.dart';
 import 'core/config/env_config.dart';
 import 'core/di/dependency_injection.dart';
@@ -46,6 +47,7 @@ class SkillSwap extends StatelessWidget {
               ThemeAppearanceCubit(onceCacheService: sl<OnceCacheService>()),
         ),
         BlocProvider(create: (_) => sl<SignInBloc>()),
+        BlocProvider(create: (_) => sl<SignUpBloc>()),
       ],
       child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
         builder: (context, state) {

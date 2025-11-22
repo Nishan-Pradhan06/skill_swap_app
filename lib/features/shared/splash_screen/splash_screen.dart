@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import '../../../core/services/cache_service.dart';
 import '../../../router/app_routes_names.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -47,10 +48,32 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  // ...existing code...
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
-    if (mounted) {
-      context.goNamed(AppRoutesName.onBoardingScreen);
+    if (!mounted) return;
+
+    final token = await CacheServices.instance.getAuthToken();
+    final isProfileCompleted =
+        await CacheServices.instance.getProfileSetupCompleted() ?? false;
+
+    // Not signed in → show onboarding/login
+    if (token == null || token.isEmpty) {
+      if (mounted) {
+        context.goNamed(AppRoutesName.onBoardingScreen);
+      }
+      return;
+    }
+
+    // Signed in → check profile completion
+    if (!isProfileCompleted) {
+      if (mounted) {
+        context.goNamed(AppRoutesName.profileSetupScreenRoute);
+      }
+    } else {
+      if (mounted) {
+        context.goNamed(AppRoutesName.learnerBottomNavBar);
+      }
     }
   }
 

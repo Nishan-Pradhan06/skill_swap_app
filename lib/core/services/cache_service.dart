@@ -76,6 +76,25 @@ class CacheServices {
     }
   }
 
+   // ===== Profile setup flag =====
+  Future<void> setProfileSetupCompleted(bool value) async {
+    try {
+      await _prefs.setBool('profile_setup_completed', value);
+    } catch (e) {
+      dLog.d('Error saving profile setup flag: $e');
+    }
+  }
+
+  Future<bool?> getProfileSetupCompleted() async {
+    try {
+      if (!_prefs.containsKey('profile_setup_completed')) return null;
+      return _prefs.getBool('profile_setup_completed');
+    } catch (e) {
+      dLog.d('Error reading profile setup flag: $e');
+      return null;
+    }
+  }
+
   /// Clears all session-related cache (used during logout)
   Future<void> clearAll() async {
     await clearAuthToken();

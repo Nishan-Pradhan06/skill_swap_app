@@ -1,4 +1,3 @@
-
 class SignUpModel {
   final String email;
   final String password;
@@ -13,7 +12,7 @@ class SignUpModel {
     return <String, dynamic>{
       'email': email,
       'password': password,
-      'confirmPassword': confirmPassword,
+      'confirm_password': confirmPassword,
     };
   }
 }

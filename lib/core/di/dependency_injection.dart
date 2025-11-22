@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:retry/retry.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
+import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 
 import '../../features/auth/repository/auth_repository.dart';
 import '../../features/shared/on_boarding/cubit/on_boarding_cubit.dart';
@@ -18,6 +19,7 @@ Future<void> setupServiceLocator() async {
 
   //###---------------BLOC---------------------###
   sl.registerLazySingleton(() => SignInBloc(repo: sl()));
+  sl.registerLazySingleton(() => SignUpBloc(repo: sl()));
 
   //###---------------CUBIT--------------------###
 
