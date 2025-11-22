@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:skill_swap/common/logger.dart';
 import 'package:skill_swap/common/typedef/either_type.dart';
 import 'package:skill_swap/core/network/api_services.dart';
 
@@ -24,9 +25,11 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     return response.fold((failure) => Left(failure), (data) async {
-      final token = data['token']['access'];
+      final authData = data['data'];
+      final token = authData['token']['access'];
+      dLog.d(token);
       await CacheServices.instance.setAuthToken(token);
-      return Right(token);
+      return Right("Sign in successful");
     });
   }
 
@@ -38,9 +41,10 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     return response.fold((failure) => Left(failure), (data) async {
-      final token = data['token']['access'];
+      final authData = data['data'];
+      final token = authData['token']['access'];
       await CacheServices.instance.setAuthToken(token);
-      return Right(token);
+      return Right("Sign up successful");
     });
   }
 }

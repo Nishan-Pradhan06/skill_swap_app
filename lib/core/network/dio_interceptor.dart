@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:dio/dio.dart';
 import '../../common/logger.dart';
 import '../../router/app_routes_names.dart';
@@ -6,32 +5,47 @@ import '../services/cache_service.dart';
 import '../services/navigation_service.dart';
 
 class AppDioInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    _attachTokenToRequest(options, handler);
-  }
+  final List<String> _noAuthPaths = [
+    "auth/login/",
+    "auth/signup/",
+    "auth/forgot-password/",
+  ];
 
-  Future<void> _attachTokenToRequest(
+  @override
+  void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    final String path = options.uri.path;
+
+    // Skip adding token for auth endpoints
+    if (_noAuthPaths.any((e) => path.contains(e))) {
+      return handler.next(options);
+    }
+
+    // Add token for all other endpoints
     final String? token = await CacheServices.instance.getAuthToken();
-    options.headers['Authorization'] = 'Bearer $token';
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
+    }
 
     return handler.next(options);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final int? statusCode = err.response?.statusCode;
     final String path = err.requestOptions.uri.path;
-    dLog.d(
-      "[Error] Interceptor caught an error for '/$path': ${err.response?.statusCode}",
-    );
 
-    if (err.response?.statusCode == 401) {
-      NavigationService navigationService = NavigationService();
-      navigationService.goNamed(AppRoutesName.authSignInScreenRoute);
+    dLog.d("[Error] $statusCode on $path");
+
+    if (statusCode == 401) {
+      // Token expired → logout user
+      await CacheServices.instance.clearAll();
+
+      NavigationService().goNamed(AppRoutesName.authSignInScreenRoute);
     }
+
     return handler.next(err);
   }
 }
