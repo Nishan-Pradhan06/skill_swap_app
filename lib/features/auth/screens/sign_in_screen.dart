@@ -1,11 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skill_swap/common/logger.dart';
+import 'package:skill_swap/core/di/dependency_injection.dart';
 // import 'package:local_auth/local_auth.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
+import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
+import 'package:skill_swap/features/auth/models/sign_in_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../core/helpers/validation_helpers.dart';
 
@@ -122,6 +130,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 CustomTextField(
                   hint: 'Email Address',
                   borderColor: Colors.transparent,
+                  controller: _emailController,
                   type: CustomTextFieldType.email,
                   validator: InputValidator.validateEmail,
                   fillColor: Theme.of(context).brightness == Brightness.dark
@@ -130,6 +139,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 CustomTextField(
                   hint: 'Password',
+                  controller: _passwordController,
                   borderColor: Colors.transparent,
                   type: CustomTextFieldType.password,
                   validator: InputValidator.validatePassword,
@@ -155,7 +165,38 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
 
-                CustomButton(text: 'Sign In', onPressed: _handleSignIn),
+                BlocConsumer<SignInBloc, SignInState>(
+                  listener: (context, state) {
+                    state.whenOrNull(
+                      failure: (failure) {
+                        CustomToast.showError(failure.message);
+                      },
+                      loaded: (data) {
+                        context.goNamed(AppRoutesName.learnerBottomNavBar);
+                        CustomToast.showSuccess('Sign In Successful');
+                      },
+                    );
+                  },
+                  builder: (context, state) {
+                    return CustomButton(
+                      text: 'Sign In',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          sl<SignInBloc>().add(
+                            SignInEvent.signIn(
+                              SignInModel(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            ),
+                          );
+                          dLog.d(_emailController.text);
+                          dLog.d(_passwordController.text);
+                        }
+                      },
+                    );
+                  },
+                ),
 
                 Row(
                   children: [
@@ -181,7 +222,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           borderRadius: BorderRadius.circular(20),
                           child: Padding(
                             padding: const EdgeInsets.all(20),

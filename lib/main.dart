@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
+import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/profile/cubit/theme_appearance_cubit.dart';
 import 'core/config/env_config.dart';
 import 'core/di/dependency_injection.dart';
+import 'core/services/cache_service.dart';
 import 'core/services/once_cache_service.dart';
 import 'features/shared/on_boarding/cubit/on_boarding_cubit.dart';
 import 'router/app_router.dart';
@@ -21,6 +23,9 @@ void main() async {
   log(EnvConfig.instance.apiBaseUrl);
 
   await setupServiceLocator();
+
+  //Global SharedPreferences
+  await CacheServices.instance.init();
 
   await sl<OnceCacheService>().init();
 
@@ -40,6 +45,7 @@ class SkillSwap extends StatelessWidget {
           create: (_) =>
               ThemeAppearanceCubit(onceCacheService: sl<OnceCacheService>()),
         ),
+        BlocProvider(create: (_) => sl<SignInBloc>()),
       ],
       child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
         builder: (context, state) {

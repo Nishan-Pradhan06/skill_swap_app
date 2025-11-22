@@ -7,7 +7,7 @@ class DioClient {
   late final Dio _dio;
 
   final BaseOptions _baseOptions = BaseOptions(
-    // baseUrl: EnvConfig.instance.apiBaseUrl,
+    baseUrl: EnvConfig.instance.apiBaseUrl,
     connectTimeout: const Duration(seconds: 120),
     receiveTimeout: const Duration(seconds: 120),
     sendTimeout: const Duration(seconds: 120),

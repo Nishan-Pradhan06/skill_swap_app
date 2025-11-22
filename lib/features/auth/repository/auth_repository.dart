@@ -9,10 +9,10 @@ abstract interface class AuthRepository {
   FutureEither<String> signIn({required SignInModel signInModel});
 }
 
-class AuthRepositoryImp implements AuthRepository {
+class AuthRepositoryImpl implements AuthRepository {
   final ApiService _apiService;
 
-  AuthRepositoryImp({required ApiService apiService})
+  AuthRepositoryImpl({required ApiService apiService})
     : _apiService = apiService;
   @override
   FutureEither<String> signIn({required SignInModel signInModel}) async {
@@ -22,10 +22,9 @@ class AuthRepositoryImp implements AuthRepository {
     );
 
     return response.fold((failure) => Left(failure), (data) async {
-      final authData = data['data'];
       final token = data['token']['access'];
       await CacheServices.instance.setAuthToken(token);
-      return Right(authData);
+      return Right(token);
     });
   }
 }

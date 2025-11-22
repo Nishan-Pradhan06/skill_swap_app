@@ -206,7 +206,7 @@ return signIn(_that.signInModel);case _:
 
 
 class _SignInE implements SignInEvent {
-  const _SignInE({required this.signInModel});
+  const _SignInE(this.signInModel);
   
 
 @override final  SignInModel signInModel;
@@ -260,7 +260,7 @@ class __$SignInECopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? signInModel = null,}) {
   return _then(_SignInE(
-signInModel: null == signInModel ? _self.signInModel : signInModel // ignore: cast_nullable_to_non_nullable
+null == signInModel ? _self.signInModel : signInModel // ignore: cast_nullable_to_non_nullable
 as SignInModel,
   ));
 }
