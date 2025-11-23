@@ -6,9 +6,18 @@ import '../../../../core/widgets/custom_readmore_text.dart';
 import '../../widgets/certificate_container_widget.dart';
 
 class AboutTabBarView extends StatelessWidget {
-  const AboutTabBarView({super.key, required this.availableSkills});
-
   final List<String> availableSkills;
+  // final List<String> certifications;
+  // final List<String> workingExprienceList;
+  final String aboutBio;
+
+  const AboutTabBarView({
+    super.key,
+    required this.availableSkills,
+    // required this.certifications,
+    // required this.workingExprienceList,
+    required this.aboutBio,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +42,7 @@ class AboutTabBarView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        CustomPadding(
-          child: CustomReadMoreText(
-            text:
-                'I\'m a Flutter developer and tech enthusiast passionate about creating fast, responsive, and elegant mobile apps. My journey began with hands-on practice and internships, and I continue learning new tools while sharing insights and engaging with the tech community on LinkedIn.',
-          ),
-        ),
+        CustomPadding(child: CustomReadMoreText(text: aboutBio)),
         CustomBorder(),
         CustomPadding(
           vertical: 5,

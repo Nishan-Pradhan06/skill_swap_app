@@ -18,7 +18,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
     final response = await _apiService.get('profile/me/');
 
     return response.fold((failure) => Left(failure), (data) {
-      final profileData = data['data'];
+      final profileData = data;
       final profileModel = ProfileDataModel.fromMap(profileData);
       return Right(profileModel);
     });
