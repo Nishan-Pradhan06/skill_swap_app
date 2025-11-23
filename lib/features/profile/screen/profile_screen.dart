@@ -4,6 +4,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/core/widgets/custom_scrollable_padding.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/features/profile/widgets/custom_user_profile_header.dart';
 import 'tab_bar_view/about_tab_bar_view.dart';
 import 'tab_bar_view/portfolio_tab_bar_view.dart';
@@ -57,17 +58,13 @@ class ProfileScreen extends StatelessWidget {
       onRefresh: () async {
         sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
       },
-      child: _buildProfileContent(
-        context,
-        null, // Pass null data for skeleton
-        isLoading: isLoading,
-      ),
+      child: _buildProfileContent(context, null, isLoading: isLoading),
     );
   }
 
   Widget _buildProfileContent(
     BuildContext context,
-    dynamic data, {
+    ProfileDataModel? data, {
     required bool isLoading,
   }) {
     return Skeletonizer(

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
+import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/custom_scrollable_padding.dart';
 
 class CustomProfileHeader extends StatelessWidget {
   final bool isLoading;
@@ -12,6 +17,46 @@ class CustomProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<GetProfileBloc, GetProfileState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => _buildProfileSkeletonUI(context, isLoading: true),
+          loading: () => _buildProfileSkeletonUI(context, isLoading: true),
+          failure: (failure) => Center(
+            child: Text(
+              'Error: ${failure.message}',
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+          loaded: (data) {
+            return _buildProfileMethodConent(
+              context,
+              data,
+              isLoading: isLoading,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileSkeletonUI(
+    BuildContext context, {
+    required bool isLoading,
+  }) {
+    return ScrollableRefreshablePadding(
+      onRefresh: () async {
+        sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
+      },
+      child: _buildProfileMethodConent(context, null, isLoading: isLoading),
+    );
+  }
+
+  Widget _buildProfileMethodConent(
+    BuildContext context,
+    ProfileDataModel? data, {
+    required bool isLoading,
+  }) {
     return Skeletonizer(
       enabled: isLoading,
       child: CustomPadding(
@@ -29,16 +74,14 @@ class CustomProfileHeader extends StatelessWidget {
                     context.pushNamed(AppRoutesName.profileScreenRoute);
                   },
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://media.licdn.com/dms/image/v2/D4D03AQFnlTDji6hFzw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1703435442674?e=1765411200&v=beta&t=9KAhsZ9MVLXNeH8CZp-79dZdxjTnqZsY69ljoiecrJI',
-                    ),
+                    backgroundImage: NetworkImage(data?.profileImage ?? ''),
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Nishan Pradhan',
+                      data?.fullName ?? '',
                       style: TextTheme.of(context).bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w900,
