@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 class UserProfileSetUpModel {
-  final String? profileImage;
+  final File? profileImage;
   final String? profileTitle;
   final String? profileDescription;
   final String? phoneNumber;
@@ -24,7 +27,6 @@ class UserProfileSetUpModel {
   /// ---------- FROM JSON ----------
   factory UserProfileSetUpModel.fromJson(Map<String, dynamic> json) {
     return UserProfileSetUpModel(
-      profileImage: json["profile_image"],
       profileTitle: json["profile_title"],
       profileDescription: json["profile_description"],
       phoneNumber: json["phone_number"],
@@ -39,7 +41,6 @@ class UserProfileSetUpModel {
   /// ---------- TO JSON ----------
   Map<String, dynamic> toJson() {
     return {
-      "profile_image": profileImage,
       "profile_title": profileTitle,
       "profile_description": profileDescription,
       "phone_number": phoneNumber,
@@ -54,7 +55,6 @@ class UserProfileSetUpModel {
   /// ---------- FROM MAP ----------
   factory UserProfileSetUpModel.fromMap(Map<String, dynamic> map) {
     return UserProfileSetUpModel(
-      profileImage: map["profile_image"],
       profileTitle: map["profile_title"],
       profileDescription: map["profile_description"],
       phoneNumber: map["phone_number"],
@@ -69,16 +69,23 @@ class UserProfileSetUpModel {
   /// ---------- TO MAP ----------
   Map<String, dynamic> toMap() {
     return {
-      "profile_image": profileImage,
       "profile_title": profileTitle,
       "profile_description": profileDescription,
       "phone_number": phoneNumber,
       "full_name": fullName,
       "bio": bio,
       "location_province": locationProvince,
-      "skill_you_offer": skillYouOffer,
-      "skill_you_want_to_learn": skillYouWantToLearn,
+      "skill_you_offer": skillYouOffer != null
+          ? jsonEncode(skillYouOffer)
+          : "[]",
+      "skill_you_want_to_learn": skillYouWantToLearn != null
+          ? jsonEncode(skillYouWantToLearn)
+          : "[]",
     };
+  }
+
+  Map<String, String> listToMap(List<String>? list) {
+    return {for (var e in list ?? []) e: e};
   }
 
   /// ---------- HELPERS ----------

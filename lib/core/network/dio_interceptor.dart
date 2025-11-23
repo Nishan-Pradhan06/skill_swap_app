@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 import '../../common/logger.dart';
 import '../../router/app_routes_names.dart';
 import '../services/cache_service.dart';
@@ -42,6 +43,7 @@ class AppDioInterceptor extends Interceptor {
     if (statusCode == 401) {
       // Token expired → logout user
       await CacheServices.instance.clearAll();
+      CustomToast.showError("Session Expired !!! Please Login again.");
 
       NavigationService().goNamed(AppRoutesName.authSignInScreenRoute);
     }

@@ -6,15 +6,19 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_form_field.dart';
 
 class BasicInfoScreen extends StatelessWidget {
-  final TextEditingController profileTitleController;
-  final TextEditingController profileDesController;
+  final TextEditingController fullNameController;
+  final TextEditingController bioController;
+  final TextEditingController provincesController;
+  final List<String> provinces;
   final void Function() onPressedSkip;
   final void Function() onPressedDone;
 
   const BasicInfoScreen({
     super.key,
-    required this.profileDesController,
-    required this.profileTitleController,
+    required this.fullNameController,
+    required this.bioController,
+    required this.provincesController,
+    required this.provinces,
     required this.onPressedDone,
     required this.onPressedSkip,
   });
@@ -22,15 +26,6 @@ class BasicInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
-    final List<String> provinces = [
-      'Koshi Province',
-      'Madhesh Province',
-      'Bagmati Province',
-      'Gandaki Province',
-      'Lumbini Province',
-      'Karnali Province',
-      'Sudurpashchim Province',
-    ];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -60,7 +55,7 @@ class BasicInfoScreen extends StatelessWidget {
               hint: 'Enter your full name',
               borderColor: Colors.transparent,
               type: CustomTextFieldType.text,
-              controller: profileTitleController,
+              controller: fullNameController,
               // onChanged: (value) => profileTitle = value,
               validator: InputValidator.validateName,
               fillColor: darkTextTheme
@@ -72,7 +67,7 @@ class BasicInfoScreen extends StatelessWidget {
               hint: 'Tell us about yourself',
               borderColor: Colors.transparent,
               type: CustomTextFieldType.text,
-              controller: profileDesController,
+              controller: bioController,
               maxLines: 5,
               // onChanged: (value) => description = value,
               validator: InputValidator.validateName,
@@ -89,10 +84,12 @@ class BasicInfoScreen extends StatelessWidget {
               hint: 'Enter your location',
               borderColor: Colors.transparent,
               // type: CustomTextFieldType.text,
-              controller: profileDesController,
+              controller: provincesController,
+
               // maxLines: 5,
-              // onChanged: (value) => description = value,
-              
+              onDropdownChanged: (value) {
+                return provincesController.text = value!;
+              },
               validator: InputValidator.validateName,
               fillColor: darkTextTheme
                   ? const Color(0XFF272c29)

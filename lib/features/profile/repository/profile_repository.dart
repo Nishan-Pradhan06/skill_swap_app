@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
 
 import '../../../common/typedef/either_type.dart';
 import '../../../core/network/api_services.dart';
-import '../../../core/services/cache_service.dart';
 import '../model/profile_setup_model.dart';
 
 abstract interface class ProfileRepository {
@@ -33,13 +33,21 @@ class ProfileRepositoryImpl implements ProfileRepository {
   FutureEither<String> setUpProfile({
     required UserProfileSetUpModel profileSetUpModel,
   }) async {
+    FormData formData = FormData.fromMap({
+      ...profileSetUpModel.toMap(),
+      'profile_image': profileSetUpModel.profileImage == null
+          ? null
+          : await MultipartFile.fromFile(
+              profileSetUpModel.profileImage!.path,
+              filename: profileSetUpModel.profileImage!.path.split('/').last,
+            ),
+    });
     final response = await _apiService.post<Map>(
       'profile/setup/',
-      data: {...profileSetUpModel.toMap()},
+      data: formData,
     );
 
     return response.fold((failure) => Left(failure), (data) async {
-      await CacheServices.instance.setProfileSetupCompleted(true);
       return Right(data['message']);
     });
   }
