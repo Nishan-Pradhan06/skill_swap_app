@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-
 /// Profile data model
 class ProfileDataModel {
   final String? profileImage;
-  final String? profileTitle;
+  final String profileTitle;
   final String? profileDescription;
   final String? phoneNumber;
   final bool? phoneVerified;
-  final String? fullName;
+  final String fullName;
   final String? bio;
   final String? locationProvince;
   final List<String> skillYouOffer;
@@ -22,11 +21,11 @@ class ProfileDataModel {
 
   ProfileDataModel({
     this.profileImage,
-    this.profileTitle,
+    required this.profileTitle,
     this.profileDescription,
     this.phoneNumber,
     this.phoneVerified,
-    this.fullName,
+    required this.fullName,
     this.bio,
     this.locationProvince,
     List<String>? skillYouOffer,
@@ -74,11 +73,11 @@ class ProfileDataModel {
 
     return ProfileDataModel(
       profileImage: map['profile_image'] as String?,
-      profileTitle: map['profile_title'] as String?,
+      profileTitle: map['profile_title'],
       profileDescription: map['profile_description'] as String?,
       phoneNumber: map['phone_number'] as String?,
       phoneVerified: map['phone_verified'] as bool? ?? false,
-      fullName: map['full_name'] as String?,
+      fullName: map['full_name'],
       bio: map['bio'] as String?,
       locationProvince: map['location_province'] as String?,
       skillYouOffer: parseStringList(map['skill_you_offer']),

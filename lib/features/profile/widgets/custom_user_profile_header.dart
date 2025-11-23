@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/custom_container.dart';
@@ -27,7 +28,13 @@ class CustomUserProfileHeader extends StatelessWidget {
           clipRRectBorderRadius: BorderRadius.circular(0),
           useIntrinsicHeight: true,
           borderRadius: BorderRadius.circular(0),
-          child: Image.network(coverImageUrl, fit: BoxFit.cover),
+          child: CachedNetworkImage(
+            useOldImageOnUrlChange: true,
+            errorWidget: (context, url, error) {
+              return Image.asset('assets/images/banner.png');
+            },
+            imageUrl: coverImageUrl,
+          ),
         ),
         CustomPadding(
           horizontal: 12,
@@ -62,7 +69,13 @@ class CustomUserProfileHeader extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.background,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(profileImageUrl),
+                  child: CachedNetworkImage(
+                    errorWidget: (context, url, error) {
+                      return Image.asset('assets/images/default_profile.png');
+                    },
+                    fit: BoxFit.cover,
+                    imageUrl: profileImageUrl,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),

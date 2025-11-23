@@ -78,8 +78,8 @@ class ProfileScreen extends StatelessWidget {
             CustomUserProfileHeader(
               profileImageUrl: data?.profileImage ?? '',
               coverImageUrl: data?.bannerImage ?? '',
-              userName: data?.fullName?.toString() ?? 'Loading Name',
-              userTitle: data?.profileTitle?.toString() ?? 'Loading Title',
+              userName: data?.fullName??'',
+              userTitle: data?.profileTitle??'',
             ),
             SizedBox(height: 100),
             // TabBar
@@ -104,8 +104,8 @@ class ProfileScreen extends StatelessWidget {
                   // About Tab
                   SingleChildScrollView(
                     child: AboutTabBarView(
-                      availableSkills: data?.skillYouOffer ?? [],
-                      aboutBio: data?.bio?.toString() ?? 'Loading bio...',
+                      availableSkills: data?.skillYouOffer??[],
+                      aboutBio: data?.bio ?? 'No Bio',
                     ),
                   ),
                   // Portfolio Tab
