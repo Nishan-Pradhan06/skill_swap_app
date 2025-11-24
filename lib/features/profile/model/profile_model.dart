@@ -8,6 +8,7 @@ class ProfileDataModel {
   final String? phoneNumber;
   final bool? phoneVerified;
   final String fullName;
+  final int? points; // fixed type
   final String? bio;
   final String? locationProvince;
   final List<String> skillYouOffer;
@@ -25,6 +26,7 @@ class ProfileDataModel {
     this.profileDescription,
     this.phoneNumber,
     this.phoneVerified,
+    this.points,
     required this.fullName,
     this.bio,
     this.locationProvince,
@@ -73,11 +75,14 @@ class ProfileDataModel {
 
     return ProfileDataModel(
       profileImage: map['profile_image'] as String?,
-      profileTitle: map['profile_title'],
+      profileTitle: map['profile_title']?.toString() ?? '',
       profileDescription: map['profile_description'] as String?,
       phoneNumber: map['phone_number'] as String?,
+      points: map['points'] is int
+          ? map['points'] as int
+          : int.tryParse(map['points']?.toString() ?? ''),
       phoneVerified: map['phone_verified'] as bool? ?? false,
-      fullName: map['full_name'],
+      fullName: map['full_name']?.toString() ?? '',
       bio: map['bio'] as String?,
       locationProvince: map['location_province'] as String?,
       skillYouOffer: parseStringList(map['skill_you_offer']),
@@ -98,6 +103,7 @@ class ProfileDataModel {
       'profile_description': profileDescription,
       'phone_number': phoneNumber,
       'phone_verified': phoneVerified,
+      'points': points,
       'full_name': fullName,
       'bio': bio,
       'location_province': locationProvince,
@@ -119,6 +125,7 @@ class ProfileDataModel {
     String? profileTitle,
     String? profileDescription,
     String? phoneNumber,
+    int? points,
     bool? phoneVerified,
     String? fullName,
     String? bio,
@@ -137,6 +144,7 @@ class ProfileDataModel {
       profileTitle: profileTitle ?? this.profileTitle,
       profileDescription: profileDescription ?? this.profileDescription,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      points: points ?? this.points,
       phoneVerified: phoneVerified ?? this.phoneVerified,
       fullName: fullName ?? this.fullName,
       bio: bio ?? this.bio,
@@ -155,6 +163,6 @@ class ProfileDataModel {
 
   @override
   String toString() {
-    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, phone: $phoneNumber)';
+    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, phone: $phoneNumber, points: $points)';
   }
 }

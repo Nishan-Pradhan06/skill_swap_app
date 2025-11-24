@@ -112,7 +112,7 @@ class CustomProfileHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '120',
+                      (data?.points ?? 0).toString(),
                       style: TextTheme.of(context).bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
