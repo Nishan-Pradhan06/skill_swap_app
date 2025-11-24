@@ -49,12 +49,12 @@ class PhoneVerificationScreen extends StatelessWidget {
                   child: CustomTextField(
                     hint: '+977',
                     readOnly: true,
-                    enabled: false,
+                    enabled: true,
                     borderColor: Colors.transparent,
                     type: CustomTextFieldType.text,
                     controller: TextEditingController(text: '+977'),
                     // onChanged: (value) => description = value,
-                    validator: InputValidator.validateName,
+                    // validator: InputValidator.validateName,
                     fillColor: darkTextTheme
                         ? const Color(0XFF272c29)
                         : AppTheme.surfaceLight,
@@ -69,7 +69,7 @@ class PhoneVerificationScreen extends StatelessWidget {
                     type: CustomTextFieldType.text,
                     controller: phoneNumberController,
                     // onChanged: (value) => description = value,
-                    validator: InputValidator.validateName,
+                    validator: InputValidator.validatePhone,
                     fillColor: Theme.of(context).brightness == Brightness.dark
                         ? const Color(0XFF272c29)
                         : AppTheme.surfaceLight,

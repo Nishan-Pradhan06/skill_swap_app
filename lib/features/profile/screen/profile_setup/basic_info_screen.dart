@@ -70,7 +70,7 @@ class BasicInfoScreen extends StatelessWidget {
               controller: bioController,
               maxLines: 5,
               // onChanged: (value) => description = value,
-              validator: InputValidator.validateName,
+              validator: InputValidator.validateDescription,
               fillColor: Theme.of(context).brightness == Brightness.dark
                   ? const Color(0XFF272c29)
                   : AppTheme.surfaceLight,

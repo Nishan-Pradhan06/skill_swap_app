@@ -107,6 +107,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 BlocConsumer<SignUpBloc, SignUpState>(
                   listener: (context, state) {
                     state.whenOrNull(
+                      failure: (failure) {
+                        CustomToast.showError(failure.message);
+                      },
                       loaded: (data) {
                         context.goNamed(AppRoutesName.profileSetupScreenRoute);
                         CustomToast.showSuccess("Register Successful !!!");

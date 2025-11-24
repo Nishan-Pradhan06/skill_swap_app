@@ -78,4 +78,17 @@ class InputValidator {
     }
     return null;
   }
+
+  static String? validateDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter a description';
+    } else if (value.trim().length < 10) {
+      return 'Description must be at least 10 characters';
+    } else if (value.trim().length > 500) {
+      return 'Description must not exceed 500 characters';
+    } else if (RegExp(r"\s{3,}").hasMatch(value)) {
+      return 'Description contains too many spaces';
+    }
+    return null;
+  }
 }

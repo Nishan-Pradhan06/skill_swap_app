@@ -47,7 +47,6 @@ class ErrorHandler {
         final statusCode = exception.response?.statusCode;
         final responseData = exception.response?.data;
 
-        // Handle different status codes
         if (statusCode == 401 || statusCode == 403) {
           return AuthFailure(
             message:
@@ -74,9 +73,11 @@ class ErrorHandler {
             statusCode: statusCode,
             exception: exception,
           );
-        } else if (statusCode == 422) {
+        } else if (statusCode == 422 || statusCode == 400) {
           return ValidationFailure(
-            message: 'Validation failed.',
+            message:
+                _extractFieldErrors(responseData)?.values.first ??
+                'Validation Failed!',
             fieldErrors: _extractFieldErrors(responseData),
             exception: exception,
           );
@@ -143,24 +144,32 @@ class ErrorHandler {
     return null;
   }
 
-  /// Extracts field-specific validation errors
+  /// Extracts field-specific validation errors (dynamic keys)
   static Map<String, String>? _extractFieldErrors(dynamic responseData) {
     if (responseData == null) return null;
 
     try {
       if (responseData is Map && responseData.containsKey('errors')) {
         final errors = responseData['errors'];
+
         if (errors is Map) {
-          return errors.map((key, value) {
-            final errorMessage = value is List
-                ? value.first.toString()
-                : value.toString();
-            return MapEntry(key.toString(), errorMessage);
+          final Map<String, String> extractedErrors = {};
+
+          errors.forEach((key, value) {
+            if (value is List && value.isNotEmpty) {
+              extractedErrors[key.toString()] = value.first.toString();
+            } else if (value is String) {
+              extractedErrors[key.toString()] = value;
+            } else {
+              extractedErrors[key.toString()] = 'Invalid value';
+            }
           });
+
+          return extractedErrors.isNotEmpty ? extractedErrors : null;
         }
       }
     } catch (_) {
-      // If parsing fails, return null
+      return null;
     }
 
     return null;

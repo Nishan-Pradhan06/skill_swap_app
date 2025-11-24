@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
+import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
@@ -21,7 +22,7 @@ void main() async {
 
   await dotenv.load(fileName: '.env');
 
-  EnvConfig.initialize(Environment.production);
+  EnvConfig.initialize(Environment.development);
 
   log(EnvConfig.instance.apiBaseUrl);
 
@@ -52,6 +53,7 @@ class SkillSwap extends StatelessWidget {
         BlocProvider(create: (_) => sl<SignUpBloc>()),
         BlocProvider(create: (_) => sl<ProfileSetupBloc>()),
         BlocProvider(create: (_) => sl<GetProfileBloc>()),
+        BlocProvider(create: (_) => sl<SignOutBloc>()),
       ],
       child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
         builder: (context, state) {
