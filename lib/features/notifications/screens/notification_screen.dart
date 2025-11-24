@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:skill_swap/core/utils/time_ago_utils.dart';
 
 import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
 
@@ -9,36 +10,8 @@ import '../../../core/widgets/custom_scrollable_padding.dart';
 import '../models/notifications_model.dart';
 import '../widgets/notification_card_widget.dart';
 
-class NotificationsPage extends StatefulWidget {
+class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
-
-  @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
-}
-
-class _NotificationsPageState extends State<NotificationsPage> {
-  // void markAsRead(int id) {
-  //   setState(() {
-  //     final index = notifications.indexWhere((n) => n.id == id);
-  //     if (index != -1) {
-  //       notifications[index].isRead = true;
-  //     }
-  //   });
-  // }
-
-  // void markAllAsRead() {
-  //   setState(() {
-  //     for (var notification in notifications) {
-  //       notification.isRead = true;
-  //     }
-  //   });
-  // }
-
-  // void deleteNotification(int id) {
-  //   setState(() {
-  //     notifications.removeWhere((n) => n.id == id);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -142,21 +115,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Widget _buildNotificationContent(
     BuildContext context,
+
     NotificationModel? data, {
     required bool isLoading,
   }) {
+    final timeAgo = data?.createdAt != null
+        ? TimeAgo.format(data!.createdAt)
+        : "N/A";
     return NotificationCard(
       title: data?.title.toString() ?? '',
       message: data?.message ?? '',
       isRead: data?.isRead ?? false,
-      createdAt: data?.createdAt.toString() ?? '',
+      createdAt: timeAgo.toString(),
       onTap: () {},
     );
   }
 }
-
-
-
-// notifications.isEmpty
-//           ? 
-//           :
