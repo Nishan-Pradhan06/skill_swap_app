@@ -21,7 +21,7 @@ void main() async {
 
   await dotenv.load(fileName: '.env');
 
-  EnvConfig.initialize(Environment.development);
+  EnvConfig.initialize(Environment.production);
 
   log(EnvConfig.instance.apiBaseUrl);
 

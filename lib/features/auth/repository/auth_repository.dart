@@ -10,6 +10,7 @@ import '../models/sign_up_model.dart';
 abstract interface class AuthRepository {
   FutureEither<String> signIn({required SignInModel signInModel});
   FutureEither<String> signUp({required SignUpModel signUpModel});
+  FutureEither<String> signOut();
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -46,5 +47,12 @@ class AuthRepositoryImpl implements AuthRepository {
       await CacheServices.instance.setAuthToken(token);
       return Right("Sign up successful");
     });
+  }
+
+  @override
+  FutureEither<String> signOut() async {
+    await CacheServices.instance.clearAuthToken();
+    
+    return Right("Logout Successfully!!!");
   }
 }
