@@ -7,6 +7,7 @@ import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
 import 'package:skill_swap/features/profile/cubit/theme_appearance_cubit.dart';
@@ -54,6 +55,7 @@ class SkillSwap extends StatelessWidget {
         BlocProvider(create: (_) => sl<ProfileSetupBloc>()),
         BlocProvider(create: (_) => sl<GetProfileBloc>()),
         BlocProvider(create: (_) => sl<SignOutBloc>()),
+        BlocProvider(create: (_) => sl<GetNotificationBloc>()),
       ],
       child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
         builder: (context, state) {

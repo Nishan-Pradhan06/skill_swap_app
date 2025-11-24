@@ -4,6 +4,8 @@ import 'package:retry/retry.dart';
 import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
+import 'package:skill_swap/features/notifications/repository/notification_repository.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';
@@ -23,6 +25,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => SignInBloc(repo: sl()));
   sl.registerLazySingleton(() => SignUpBloc(repo: sl()));
   sl.registerLazySingleton(() => SignOutBloc(repo: sl()));
+  sl.registerLazySingleton(() => GetNotificationBloc(repo: sl()));
 
   //###---------------BLOC---------------------###
 
@@ -37,6 +40,9 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(apiService: sl()),
+  );
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(apiService: sl()),
   );
 
   //###---------------EXTERNAL REPOSITORY SERVICES---------------###

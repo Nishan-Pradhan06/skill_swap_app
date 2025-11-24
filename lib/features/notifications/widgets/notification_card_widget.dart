@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../models/notifications_model.dart';
 
 class NotificationCard extends StatelessWidget {
-  final NotificationModel notification;
-  final String timeAgo;
+  // final NotificationModel notification;
+  final String title;
+  final String message;
+  final String createdAt;
+  final bool isRead;
   final VoidCallback onTap;
 
   const NotificationCard({
     super.key,
-    required this.notification,
-    required this.timeAgo,
     required this.onTap,
+    required this.title,
+    required this.message,
+    required this.createdAt,
+    required this.isRead,
   });
 
   @override
@@ -21,7 +25,7 @@ class NotificationCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: notification.isRead
+          color: isRead
               ? ColorScheme.of(context).background
               : Colors.red.withValues(alpha: 0.1),
           border: Border(
@@ -36,14 +40,14 @@ class NotificationCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: notification.isRead
+                  color: isRead
                       ? Colors.grey[200]
                       : ColorScheme.of(context).primary.withValues(alpha: 0.8),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.notifications,
-                  color: notification.isRead
+                  color: isRead
                       ? Colors.grey[600]
                       : ColorScheme.of(context).surface,
                   size: 24,
@@ -58,16 +62,16 @@ class NotificationCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notification.title,
+                            title,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: notification.isRead
+                              fontWeight: isRead
                                   ? FontWeight.normal
                                   : FontWeight.bold,
                             ),
                           ),
                         ),
-                        if (!notification.isRead)
+                        if (!isRead)
                           Container(
                             width: 8,
                             height: 8,
@@ -80,12 +84,12 @@ class NotificationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      notification.message,
+                      message,
                       style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      timeAgo,
+                      createdAt,
                       style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                     ),
                   ],

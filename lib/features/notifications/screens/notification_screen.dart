@@ -1,117 +1,162 @@
-// import 'package:flutter/material.dart';
-
-// import 'package:skill_swap/core/theme/app_theme.dart';
-
-// import '../models/notifications_model.dart';
-// import '../widgets/notification_card_widget.dart';
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class NotificationsPage extends StatelessWidget {
+import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
+
+import '../../../core/di/dependency_injection.dart';
+import '../../../core/widgets/custom_scrollable_padding.dart';
+import '../models/notifications_model.dart';
+import '../widgets/notification_card_widget.dart';
+
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
   @override
+  State<NotificationsPage> createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+  // void markAsRead(int id) {
+  //   setState(() {
+  //     final index = notifications.indexWhere((n) => n.id == id);
+  //     if (index != -1) {
+  //       notifications[index].isRead = true;
+  //     }
+  //   });
+  // }
+
+  // void markAllAsRead() {
+  //   setState(() {
+  //     for (var notification in notifications) {
+  //       notification.isRead = true;
+  //     }
+  //   });
+  // }
+
+  // void deleteNotification(int id) {
+  //   setState(() {
+  //     notifications.removeWhere((n) => n.id == id);
+  //   });
+  // }
+
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+      ),
+      body: BlocBuilder<GetNotificationBloc, GetNotificationState>(
+        builder: (context, state) {
+          return state.when(
+            initial: () => _buildSkeletonUI(context, isLoading: true),
+            loading: () => _buildSkeletonUI(context, isLoading: true),
+            failure: (failure) => Center(
+              child: Text(
+                'Error: ${failure.message}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+
+            loaded: (data) {
+              if (data.isEmpty) {
+                // Show empty state
+                return ScrollableRefreshablePadding(
+                  onRefresh: () async {
+                    sl<GetNotificationBloc>().add(
+                      GetNotificationEvent.getNotification(),
+                    );
+                  },
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.notifications_off_outlined, size: 80),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No notifications',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              // Non-empty state
+              return RefreshIndicator(
+                onRefresh: () async {
+                  sl<GetNotificationBloc>().add(
+                    GetNotificationEvent.getNotification(),
+                  );
+                },
+                child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final notification = data[index];
+                    return Dismissible(
+                      key: Key(notification.id.toString()),
+                      background: Container(
+                        color: ColorScheme.of(context).primary,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        // deleteNotification(notification.id);
+                      },
+                      child: _buildNotificationContent(
+                        context,
+                        data[index],
+                        isLoading: false,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSkeletonUI(BuildContext context, {required bool isLoading}) {
+    return ScrollableRefreshablePadding(
+      onRefresh: () async {
+        sl<GetNotificationBloc>().add(GetNotificationEvent.getNotification());
+      },
+      child: Skeletonizer(
+        enabled: isLoading,
+        child: _buildNotificationContent(context, null, isLoading: isLoading),
+      ),
+    );
+  }
+
+  Widget _buildNotificationContent(
+    BuildContext context,
+    NotificationModel? data, {
+    required bool isLoading,
+  }) {
+    return NotificationCard(
+      title: data?.title.toString() ?? '',
+      message: data?.message ?? '',
+      isRead: data?.isRead ?? false,
+      createdAt: data?.createdAt.toString() ?? '',
+      onTap: () {},
+    );
   }
 }
 
-// class NotificationsPage extends StatefulWidget {
-//   const NotificationsPage({super.key});
 
-//   @override
-//   State<NotificationsPage> createState() => _NotificationsPageState();
-// }
 
-// class _NotificationsPageState extends State<NotificationsPage> {
-//   void markAsRead(int id) {
-//     setState(() {
-//       final index = notifications.indexWhere((n) => n.id == id);
-//       if (index != -1) {
-//         notifications[index].isRead = true;
-//       }
-//     });
-//   }
-
-//   void markAllAsRead() {
-//     setState(() {
-//       for (var notification in notifications) {
-//         notification.isRead = true;
-//       }
-//     });
-//   }
-
-//   void deleteNotification(int id) {
-//     setState(() {
-//       notifications.removeWhere((n) => n.id == id);
-//     });
-//   }
-
-//   String getTimeAgo(DateTime dateTime) {
-//     final now = DateTime.now();
-//     final difference = now.difference(dateTime);
-
-//     if (difference.inDays > 0) {
-//       return '${difference.inDays}d ago';
-//     } else if (difference.inHours > 0) {
-//       return '${difference.inHours}h ago';
-//     } else if (difference.inMinutes > 0) {
-//       return '${difference.inMinutes}m ago';
-//     } else {
-//       return 'Just now';
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Notifications'),
-//         scrolledUnderElevation: 0,
-//         centerTitle: false,
-//       ),
-//       body: notifications.isEmpty
-//           ? Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Icon(Icons.notifications_off_outlined, size: 80),
-//                   const SizedBox(height: 16),
-//                   Text(
-//                     'No notifications',
-//                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-//                   ),
-//                 ],
-//               ),
-//             )
-//           : ListView.builder(
-//               itemCount: 2,
-//               itemBuilder: (context, index) {
-//                 final notification = notifications[index];
-//                 return Dismissible(
-//                   key: Key(notification.id.toString()),
-//                   background: Container(
-//                     color: ColorScheme.of(context).primary,
-//                     alignment: Alignment.centerRight,
-//                     padding: const EdgeInsets.only(right: 20),
-//                     child: const Icon(Icons.delete, color: Colors.white),
-//                   ),
-//                   direction: DismissDirection.endToStart,
-//                   onDismissed: (direction) {
-//                     deleteNotification(notification.id);
-//                     ScaffoldMessenger.of(context).showSnackBar(
-//                       const SnackBar(content: Text('Notification deleted')),
-//                     );
-//                   },
-//                   child: NotificationCard(
-//                     notification: notification,
-//                     timeAgo: getTimeAgo(notification.createdAt),
-//                     onTap: () => markAsRead(notification.id),
-//                   ),
-//                 );
-//               },
-//             ),
-//     );
-//   }
-// }
+// notifications.isEmpty
+//           ? 
+//           :
