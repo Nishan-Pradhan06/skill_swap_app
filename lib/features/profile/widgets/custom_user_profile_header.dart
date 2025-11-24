@@ -66,15 +66,24 @@ class CustomUserProfileHeader extends StatelessWidget {
               /// Profile Picture
               CircleAvatar(
                 radius: 55,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                child: CircleAvatar(
-                  radius: 50,
-                  child: CachedNetworkImage(
-                    errorWidget: (context, url, error) {
-                      return Image.asset('assets/images/default_profile.png');
-                    },
-                    fit: BoxFit.cover,
-                    imageUrl: profileImageUrl,
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerLowest,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: const BoxDecoration(shape: BoxShape.circle),
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: profileImageUrl,
+                      errorWidget: (context, url, error) {
+                        return Image.asset(
+                          'assets/images/default_profile.png',
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

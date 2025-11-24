@@ -74,13 +74,21 @@ class CustomProfileHeader extends StatelessWidget {
                   onTap: () {
                     context.pushNamed(AppRoutesName.profileScreenRoute);
                   },
-                  child: CircleAvatar(
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) {
-                        return Image.asset('assets/images/default_profile.png');
-                      },
-                      imageUrl: data?.profileImage ?? '',
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: data?.profileImage ?? '',
+                        errorWidget: (context, url, error) {
+                          return Image.asset(
+                            'assets/images/default_profile.png',
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
