@@ -160,6 +160,19 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: SizedBox(
+        height: 35,
+        width: 45,
+        child: FloatingActionButton.extended(
+          onPressed: () {},
+          label: Icon(Icons.message_rounded),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 10,
+          backgroundColor: ColorScheme.of(context).onInverseSurface,
+        ),
+      ),
     );
   }
 }

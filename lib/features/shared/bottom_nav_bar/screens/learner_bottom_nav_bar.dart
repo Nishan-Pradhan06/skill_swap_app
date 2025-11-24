@@ -4,7 +4,7 @@ import 'package:skill_swap/features/learner/menu/screen/learner_menu_screen.dart
 import 'package:skill_swap/features/learner/my_learning/screen/learner_my_learning_screen.dart';
 import 'package:skill_swap/features/learner/swap/screen/learner_swap_screen.dart';
 import '../../../../core/widgets/double_press_to_exit.dart';
-import '../../../learner/converstation/screen/learner_search_screen.dart';
+import '../../../notifications/screens/notification_screen.dart';
 
 class LearnerBottomNavBarScreen extends StatefulWidget {
   const LearnerBottomNavBarScreen({super.key});
@@ -20,7 +20,7 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
     LearnerHomeScreen(),
     LearnerMyLearningScreen(),
     LearnerSwapScreen(),
-    ConverstationScreen(),
+    NotificationsPage(),
     LearnerMenuScreen(),
   ];
 
@@ -53,8 +53,8 @@ class _LearnerBottomNavBarScreenState extends State<LearnerBottomNavBarScreen> {
                 label: 'Swap',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.comment_rounded),
-                label: 'Conversation',
+                icon: Icon(Icons.notifications_rounded),
+                label: 'Notifications',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.apps_rounded),
