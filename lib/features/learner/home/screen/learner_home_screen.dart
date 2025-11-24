@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../models/skill_list_card_model.dart';
@@ -49,6 +51,12 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   ];
 
   String selectedCategory = 'All';
+
+  @override
+  void initState() {
+    super.initState();
+    sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
+  }
 
   @override
   Widget build(BuildContext context) {

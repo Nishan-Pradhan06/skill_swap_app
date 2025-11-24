@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_scrollable_padding.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
+import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 import '../../../../core/widgets/custom_appearance_mode_selector.dart';
 import '../../../../core/widgets/custom_setting_widget.dart';
@@ -16,9 +22,26 @@ class LearnerMenuScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         centerTitle: false,
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.exit_to_app_rounded),
+          BlocConsumer<SignOutBloc, SignOutState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                failure: (failure) {
+                  CustomToast.showError(failure.message);
+                },
+                loaded: (data) {
+                  context.goNamed(AppRoutesName.authOptionScreenRoute);
+                  CustomToast.showSuccess("Sign Out Successufully");
+                },
+              );
+            },
+            builder: (context, state) {
+              return IconButton(
+                onPressed: () {
+                  sl<SignOutBloc>().add(SignOutEvent.signOut());
+                },
+                icon: const Icon(Icons.exit_to_app_rounded),
+              );
+            },
           ),
         ],
       ),

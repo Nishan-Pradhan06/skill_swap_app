@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:retry/retry.dart';
+import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
@@ -19,10 +20,12 @@ Future<void> setupServiceLocator() async {
   //###---------------GLOBAL BLOC--------------###
   sl.registerLazySingleton(() => OnceCacheService());
   sl.registerLazySingleton(() => OnBoardingCubit(onceService: sl()));
-
-  //###---------------BLOC---------------------###
   sl.registerLazySingleton(() => SignInBloc(repo: sl()));
   sl.registerLazySingleton(() => SignUpBloc(repo: sl()));
+  sl.registerLazySingleton(() => SignOutBloc(repo: sl()));
+
+  //###---------------BLOC---------------------###
+
   sl.registerLazySingleton(() => GetProfileBloc(repo: sl()));
   sl.registerLazySingleton(() => ProfileSetupBloc(repo: sl()));
 

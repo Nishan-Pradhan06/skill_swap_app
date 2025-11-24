@@ -51,10 +51,7 @@ class SkillSwap extends StatelessWidget {
         BlocProvider(create: (_) => sl<SignInBloc>()),
         BlocProvider(create: (_) => sl<SignUpBloc>()),
         BlocProvider(create: (_) => sl<ProfileSetupBloc>()),
-        BlocProvider(
-          create: (_) =>
-              sl<GetProfileBloc>()..add(GetProfileEvent.getProfile()),
-        ),
+        BlocProvider(create: (_) => sl<GetProfileBloc>()),
       ],
       child: BlocBuilder<ThemeAppearanceCubit, ThemeAppearanceState>(
         builder: (context, state) {
