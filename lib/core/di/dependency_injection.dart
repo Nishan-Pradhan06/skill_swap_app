@@ -6,7 +6,10 @@ import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 import 'package:skill_swap/features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
 import 'package:skill_swap/features/device_register_push_notification/repository/device_register_repository.dart';
+import 'package:skill_swap/features/notifications/bloc/delete_notifications/delete_notification_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
 import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/read_notifications/read_notifications_bloc.dart';
 import 'package:skill_swap/features/notifications/repository/notification_repository.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
@@ -28,6 +31,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => SignUpBloc(repo: sl()));
   sl.registerLazySingleton(() => SignOutBloc(repo: sl()));
   sl.registerLazySingleton(() => GetNotificationBloc(repo: sl()));
+  sl.registerLazySingleton(() => ReadNotificationsBloc(repo: sl()));
+  sl.registerLazySingleton(() => DeleteNotificationBloc(repo: sl()));
+  sl.registerLazySingleton(() => GetNotificationCountBloc(repo: sl()));
   sl.registerLazySingleton(() => DeviceRegisterBloc(repo: sl()));
 
   //###---------------BLOC---------------------###

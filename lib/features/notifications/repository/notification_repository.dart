@@ -7,7 +7,7 @@ abstract interface class NotificationRepository {
   FutureEither<List<NotificationModel>> getNotification();
   FutureEither<String> readNotification({required int notificationId});
   FutureEither<String> deleteNotification({required int notificationId});
-  FutureEither<String> getNotificationCount();
+  FutureEither<int> getNotificationCount();
 }
 
 class NotificationRepositoryImpl implements NotificationRepository {
@@ -36,25 +36,25 @@ class NotificationRepositoryImpl implements NotificationRepository {
       'notifications/$notificationId/read/',
     );
     return response.fold((failure) => Left(failure), (data) {
-      return Right(data);
+      return Right(data['message']);
     });
   }
 
   @override
-  FutureEither<String> getNotificationCount() async {
+  FutureEither<int> getNotificationCount() async {
     final response = await _apiService.get('notifications/unread-count/');
     return response.fold((failure) => Left(failure), (data) {
-      return Right(data);
+      return Right(data['unread_count']);
     });
   }
-  
+
   @override
-  FutureEither<String> deleteNotification({required int notificationId}) async{
-   final response = await _apiService.post(
+  FutureEither<String> deleteNotification({required int notificationId}) async {
+    final response = await _apiService.delete(
       'notifications/$notificationId/delete/',
     );
     return response.fold((failure) => Left(failure), (data) {
-      return Right(data);
+      return Right(data['message']);
     });
   }
 }

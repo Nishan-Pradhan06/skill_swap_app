@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skill_swap/features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
+import '../../features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
+import '../../features/notifications/bloc/delete_notifications/delete_notification_bloc.dart';
+import '../../features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
+import '../../features/notifications/bloc/read_notifications/read_notifications_bloc.dart';
 
 import '../../features/auth/bloc/bloc/sign_out_bloc.dart';
 import '../../features/auth/bloc/sign_in/sign_in_bloc.dart';
@@ -33,6 +36,9 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<SignOutBloc>()),
         BlocProvider(create: (_) => sl<GetNotificationBloc>()),
         BlocProvider(create: (_) => sl<DeviceRegisterBloc>()),
+        BlocProvider(create: (_) => sl<ReadNotificationsBloc>()),
+        BlocProvider(create: (_) => sl<DeleteNotificationBloc>()),
+        BlocProvider(create: (_) => sl<GetNotificationCountBloc>()),
       ],
       child: child,
     );

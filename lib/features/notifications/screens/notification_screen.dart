@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/utils/time_ago_utils.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
+import 'package:skill_swap/features/notifications/bloc/delete_notifications/delete_notification_bloc.dart';
 
 import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/read_notifications/read_notifications_bloc.dart';
 
 import '../../../core/di/dependency_injection.dart';
 import '../../../core/widgets/custom_scrollable_padding.dart';
+import '../bloc/get_notification_count/get_notification_count_bloc.dart';
 import '../models/notifications_model.dart';
 import '../widgets/notification_card_widget.dart';
 
@@ -41,6 +45,9 @@ class NotificationsPage extends StatelessWidget {
                     sl<GetNotificationBloc>().add(
                       GetNotificationEvent.getNotification(),
                     );
+                    sl<GetNotificationCountBloc>().add(
+                      GetNotificationCountEvent.getNotificationCount(),
+                    );
                   },
                   child: Center(
                     child: Column(
@@ -68,31 +75,65 @@ class NotificationsPage extends StatelessWidget {
                     GetNotificationEvent.getNotification(),
                   );
                 },
-                child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final notification = data[index];
-                    return Dismissible(
-                      key: Key(notification.id.toString()),
-                      background: Container(
-                        color: ColorScheme.of(context).primary,
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20),
-                        child: const Icon(Icons.delete, color: Colors.white),
-                      ),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        // deleteNotification(notification.id);
+                child:
+                    BlocConsumer<
+                      DeleteNotificationBloc,
+                      DeleteNotificationState
+                    >(
+                      listener: (context, state) {
+                        state.whenOrNull(
+                          failure: (failure) {
+                            CustomToast.showError(failure.message);
+                          },
+                          loaded: (data) {
+                            CustomToast.showSuccess(data);
+                          },
+                        );
                       },
-                      child: _buildNotificationContent(
-                        context,
-                        data[index],
-                        isLoading: false,
-                      ),
-                    );
-                  },
-                ),
+                      builder: (context, state) {
+                        return ListView.builder(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final notification = data[index];
+                            return Dismissible(
+                              key: Key(notification.id.toString()),
+                              background: Container(
+                                color: ColorScheme.of(context).primary,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                final id = notification.id;
+
+                                // remove item LOCALLY
+                                data.removeAt(index);
+
+                                // update UI
+                                (context as Element).markNeedsBuild();
+
+                                // call API
+                                sl<DeleteNotificationBloc>().add(
+                                  DeleteNotificationEvent.deleteNotification(
+                                    notificationId: id,
+                                  ),
+                                );
+                              },
+                              child: _buildNotificationContent(
+                                context,
+                                data[index],
+                                isLoading: false,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
               );
             },
           );
@@ -122,12 +163,34 @@ class NotificationsPage extends StatelessWidget {
     final timeAgo = data?.createdAt != null
         ? TimeAgo.format(data!.createdAt)
         : "N/A";
-    return NotificationCard(
-      title: data?.title.toString() ?? '',
-      message: data?.message ?? '',
-      isRead: data?.isRead ?? false,
-      createdAt: timeAgo.toString(),
-      onTap: () {},
+    return BlocConsumer<ReadNotificationsBloc, ReadNotificationsState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          failure: (failure) {
+            CustomToast.showError(failure.message);
+          },
+          loaded: (data) {
+            CustomToast.showSuccess(data);
+          },
+        );
+      },
+      builder: (context, state) {
+        final nId = data?.id ?? 0;
+        return NotificationCard(
+          title: data?.title.toString() ?? '',
+          message: data?.message ?? '',
+          isRead: data?.isRead ?? false,
+          createdAt: timeAgo.toString(),
+          onTap: () {
+            sl<ReadNotificationsBloc>().add(
+              ReadNotificationsEvent.readNotifications(notificationId: nId),
+            );
+            sl<GetNotificationCountBloc>().add(
+              GetNotificationCountEvent.getNotificationCount(),
+            );
+          },
+        );
+      },
     );
   }
 }
