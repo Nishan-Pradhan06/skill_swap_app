@@ -6,6 +6,7 @@ import 'package:skill_swap/features/notifications/models/notifications_model.dar
 abstract interface class NotificationRepository {
   FutureEither<List<NotificationModel>> getNotification();
   FutureEither<String> readNotification({required int notificationId});
+  FutureEither<String> deleteNotification({required int notificationId});
   FutureEither<String> getNotificationCount();
 }
 
@@ -42,6 +43,16 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   FutureEither<String> getNotificationCount() async {
     final response = await _apiService.get('notifications/unread-count/');
+    return response.fold((failure) => Left(failure), (data) {
+      return Right(data);
+    });
+  }
+  
+  @override
+  FutureEither<String> deleteNotification({required int notificationId}) async{
+   final response = await _apiService.post(
+      'notifications/$notificationId/delete/',
+    );
     return response.fold((failure) => Left(failure), (data) {
       return Right(data);
     });
