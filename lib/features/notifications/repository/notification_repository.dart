@@ -38,10 +38,12 @@ class NotificationRepositoryImpl implements NotificationRepository {
       return Right(data);
     });
   }
-  
+
   @override
-  FutureEither<String> getNotificationCount() {
-    // TODO: implement getNotificationCount
-    throw UnimplementedError();
+  FutureEither<String> getNotificationCount() async {
+    final response = await _apiService.get('notifications/unread-count/');
+    return response.fold((failure) => Left(failure), (data) {
+      return Right(data);
+    });
   }
 }
