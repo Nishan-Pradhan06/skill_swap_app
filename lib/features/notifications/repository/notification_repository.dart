@@ -6,6 +6,7 @@ import 'package:skill_swap/features/notifications/models/notifications_model.dar
 abstract interface class NotificationRepository {
   FutureEither<List<NotificationModel>> getNotification();
   FutureEither<String> readNotification({required int notificationId});
+  FutureEither<String> getNotificationCount();
 }
 
 class NotificationRepositoryImpl implements NotificationRepository {
@@ -36,5 +37,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
     return response.fold((failure) => Left(failure), (data) {
       return Right(data);
     });
+  }
+  
+  @override
+  FutureEither<String> getNotificationCount() {
+    // TODO: implement getNotificationCount
+    throw UnimplementedError();
   }
 }
