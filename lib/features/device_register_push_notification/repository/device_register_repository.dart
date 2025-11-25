@@ -35,7 +35,7 @@ class DeviceRegisterForPushNotificationRepositoryImpl
       'token': token,
     };
 
-    final response = await _apiService.post<Map>('device/register', data: body);
+    final response = await _apiService.post<Map>('device/register/', data: body);
 
     return response.fold((failure) => Left(failure), (data) {
       final deviceData = data['message'];

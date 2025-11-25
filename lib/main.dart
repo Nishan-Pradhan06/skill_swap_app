@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,6 +11,7 @@ import 'core/di/dependency_injection.dart';
 import 'core/services/cache_service.dart';
 import 'core/services/once_cache_service.dart';
 import 'core/widgets/bloc_wrapper_widget.dart';
+import 'features/device_register_push_notification/services/push_notification_services.dart';
 import 'router/app_router.dart';
 
 void main() async {
@@ -27,6 +29,11 @@ void main() async {
   await CacheServices.instance.init();
 
   await sl<OnceCacheService>().init();
+
+    //Firebase
+  await Firebase.initializeApp();
+
+  await PushNotificationService().init();
 
   runApp(const SkillSwap());
 }
