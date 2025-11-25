@@ -15,6 +15,7 @@ import 'package:skill_swap/features/auth/models/sign_in_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../core/helpers/validation_helpers.dart';
 import '../../../core/services/cache_service.dart';
+import '../../device_register_push_notification/bloc/device_register/device_register_bloc.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -172,6 +173,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       loaded: (data) async {
                         _handleNavigation();
                         CustomToast.showSuccess('Sign In Successful');
+                        sl<DeviceRegisterBloc>().add(
+                          DeviceRegisterEvent.deviceRegister(),
+                        );
                       },
                     );
                   },

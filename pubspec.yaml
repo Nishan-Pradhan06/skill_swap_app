@@ -41,6 +41,9 @@ dependencies:
   local_auth: ^3.0.0
   skeletonizer: ^2.1.0+1
   animated_read_more_text: ^0.0.6
+  firebase_messaging: ^16.0.4
+  firebase_core: ^4.2.1
+  flutter_local_notifications: ^19.5.0
 
 dev_dependencies:
   flutter_test:

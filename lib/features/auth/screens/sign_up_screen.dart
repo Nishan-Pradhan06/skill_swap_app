@@ -5,6 +5,7 @@ import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
 import 'package:skill_swap/features/auth/models/sign_up_model.dart';
+import 'package:skill_swap/features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
 
 import '../../../core/helpers/validation_helpers.dart';
 import '../../../core/theme/app_theme.dart';
@@ -113,6 +114,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       loaded: (data) {
                         context.goNamed(AppRoutesName.profileSetupScreenRoute);
                         CustomToast.showSuccess("Register Successful !!!");
+                        sl<DeviceRegisterBloc>().add(
+                          DeviceRegisterEvent.deviceRegister(),
+                        );
                       },
                     );
                   },
