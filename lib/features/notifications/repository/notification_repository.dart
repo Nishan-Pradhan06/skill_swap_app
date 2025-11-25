@@ -5,6 +5,7 @@ import 'package:skill_swap/features/notifications/models/notifications_model.dar
 
 abstract interface class NotificationRepository {
   FutureEither<List<NotificationModel>> getNotification();
+  FutureEither<String> readNotification({required int notificationId});
 }
 
 class NotificationRepositoryImpl implements NotificationRepository {
@@ -24,6 +25,16 @@ class NotificationRepositoryImpl implements NotificationRepository {
           .toList();
 
       return Right(notifications);
+    });
+  }
+
+  @override
+  FutureEither<String> readNotification({required int notificationId}) async {
+    final response = await _apiService.post(
+      'notifications/$notificationId/read/',
+    );
+    return response.fold((failure) => Left(failure), (data) {
+      return Right(data);
     });
   }
 }
