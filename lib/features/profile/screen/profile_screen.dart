@@ -78,8 +78,8 @@ class ProfileScreen extends StatelessWidget {
             CustomUserProfileHeader(
               profileImageUrl: data?.profileImage ?? '',
               coverImageUrl: data?.bannerImage ?? '',
-              userName: data?.fullName??'',
-              userTitle: data?.profileTitle??'',
+              userName: data?.fullName ?? '',
+              userTitle: data?.profileTitle ?? '',
             ),
             SizedBox(height: 100),
             // TabBar
@@ -104,7 +104,8 @@ class ProfileScreen extends StatelessWidget {
                   // About Tab
                   SingleChildScrollView(
                     child: AboutTabBarView(
-                      availableSkills: data?.skillYouOffer??[],
+                      availableSkills: data?.skillYouOffer ?? [],
+                      certifications: data?.certifications ?? [],
                       aboutBio: data?.bio ?? 'No Bio',
                     ),
                   ),

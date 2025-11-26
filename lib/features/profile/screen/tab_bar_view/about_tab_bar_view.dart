@@ -1,43 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:skill_swap/features/profile/model/certification_model.dart';
 
 import '../../../../core/widgets/custom_border.dart';
 import '../../../../core/widgets/custom_padding.dart';
 import '../../../../core/widgets/custom_readmore_text.dart';
 import '../../widgets/certificate_container_widget.dart';
+import '../../widgets/working_exp_widget.dart';
 
 class AboutTabBarView extends StatelessWidget {
   final List<String> availableSkills;
-  // final List<String> certifications;
+  final List<CertificationModel> certifications;
   // final List<String> workingExprienceList;
   final String aboutBio;
 
   const AboutTabBarView({
     super.key,
     required this.availableSkills,
-    // required this.certifications,
-    // required this.workingExprienceList,
     required this.aboutBio,
+    required this.certifications,
   });
 
   @override
   Widget build(BuildContext context) {
-    final certificates = [
-      {
-        'image':
-            'https://media.licdn.com/dms/image/v2/D4D2DAQHh2VVYTFFrpQ/profile-treasury-document-images_480/B4DZVUylBxHIAU-/1/1740884301203?e=1764806400&v=beta&t=TAUo7wqkn0UI4bAQ3yIsWe9XYkApDJB4IwnMgFab_70',
-        'title': 'Flutter Internship',
-      },
-      {
-        'image':
-            'https://media.licdn.com/dms/image/v2/D4D2DAQFq5DKnEDbshw/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1706104536130?e=1764255600&v=beta&t=OslUaxUB98I-G5a1vSusI1YFjEZAfBPOQJyB0xVayRM',
-        'title': 'Flutter Certificate',
-      },
-      {
-        'image':
-            'https://media.licdn.com/dms/image/v2/D4D2DAQFSQeBY0mWPQQ/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1706105868778?e=1764255600&v=beta&t=tRipxf2EhWhHacE7g8C5YzhseLMEBIEAE6mcEwH5wY8',
-        'title': 'INC webathon',
-      },
-    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
@@ -55,36 +39,44 @@ class AboutTabBarView extends StatelessWidget {
                   context,
                 ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: availableSkills.map((skill) {
-                  return FilterChip(
-                    padding: EdgeInsets.all(0),
-                    labelPadding: EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 0,
-                    ),
-                    label: Text(
-                      skill,
-                      style: TextTheme.of(context).bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.bold,
+              availableSkills.isEmpty
+                  ? Text(
+                      "No Skill added yet",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ),
+                    )
+                  : Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: availableSkills.map((skill) {
+                        return FilterChip(
+                          padding: EdgeInsets.all(0),
+                          labelPadding: EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 0,
+                          ),
+                          label: Text(
+                            skill,
+                            style: TextTheme.of(context).bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
 
-                    onSelected: (selected) {},
-                    side: BorderSide(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.6),
+                          onSelected: (selected) {},
+                          side: BorderSide(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.6),
+                          ),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.6),
+                        );
+                      }).toList(),
                     ),
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.6),
-                  );
-                }).toList(),
-              ),
             ],
           ),
         ),
@@ -101,18 +93,26 @@ class AboutTabBarView extends StatelessWidget {
                   context,
                 ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  spacing: 12,
-                  children: certificates.map((cert) {
-                    return ContainerWithImageWidget(
-                      certificateImageUrl: cert['image']!,
-                      certificateTitle: cert['title']!,
-                    );
-                  }).toList(),
-                ),
-              ),
+              certifications.isEmpty
+                  ? Text(
+                      "No certifications added yet",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        spacing: 12,
+                        children: certifications.map((cert) {
+                          return ContainerWithImageWidget(
+                            certificateImageUrl: cert.image,
+                            certificateTitle: cert.title,
+                          );
+                        }).toList(),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -129,6 +129,7 @@ class AboutTabBarView extends StatelessWidget {
                   context,
                 ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
+
               WorkingExprienceList(
                 imageUrl:
                     'https://media.licdn.com/dms/image/v2/D4D0BAQG_g0d95Eh5Sg/img-crop_100/img-crop_100/0/1721912200053?e=1765411200&v=beta&t=LNZNNg0u2PGrgcyqTSkHDwHJnZZ9ijqA25tKl3bbwTg',
@@ -150,58 +151,6 @@ class AboutTabBarView extends StatelessWidget {
           ),
         ),
         SizedBox(height: 50),
-      ],
-    );
-  }
-}
-
-class WorkingExprienceList extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String companyName;
-  final String location;
-  final String experience;
-
-  const WorkingExprienceList({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.companyName,
-    required this.location,
-    required this.experience,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 8,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.network(imageUrl, height: 60),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextTheme.of(
-                context,
-              ).bodyLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            Text(companyName),
-            Text(
-              location,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
-            ),
-            Text(
-              experience,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
-            ),
-          ],
-        ),
       ],
     );
   }
