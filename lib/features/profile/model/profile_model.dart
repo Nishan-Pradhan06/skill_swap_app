@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'certification_model.dart';
+
 /// Profile data model
 class ProfileDataModel {
   final String? profileImage;
@@ -8,13 +10,13 @@ class ProfileDataModel {
   final String? phoneNumber;
   final bool? phoneVerified;
   final String fullName;
-  final int? points; // fixed type
+  final int? points;
   final String? bio;
   final String? locationProvince;
   final List<String> skillYouOffer;
   final List<String> skillYouWantToLearn;
   final String? bannerImage;
-  final List<dynamic> certifications;
+  final List<CertificationModel> certifications;
   final List<dynamic> workExperience;
   final List<dynamic> portfolio;
   final DateTime? createdAt;
@@ -33,7 +35,7 @@ class ProfileDataModel {
     List<String>? skillYouOffer,
     List<String>? skillYouWantToLearn,
     this.bannerImage,
-    List<dynamic>? certifications,
+    List<CertificationModel>? certifications,
     List<dynamic>? workExperience,
     List<dynamic>? portfolio,
     this.createdAt,
@@ -45,7 +47,6 @@ class ProfileDataModel {
        portfolio = portfolio ?? [];
 
   factory ProfileDataModel.fromMap(Map<String, dynamic> map) {
-    // safe parsing for lists of strings
     List<String> parseStringList(dynamic value) {
       if (value == null) return <String>[];
       if (value is List) {
@@ -57,7 +58,16 @@ class ProfileDataModel {
       return <String>[];
     }
 
-    // general list parsing (keeps raw objects)
+    List<CertificationModel> parseCertificationList(dynamic value) {
+      if (value == null) return <CertificationModel>[];
+      if (value is List) {
+        return value
+            .map((e) => CertificationModel.fromMap(e as Map<String, dynamic>))
+            .toList();
+      }
+      return <CertificationModel>[];
+    }
+
     List<dynamic> parseDynamicList(dynamic value) {
       if (value == null) return <dynamic>[];
       if (value is List) return List<dynamic>.from(value);
@@ -78,21 +88,23 @@ class ProfileDataModel {
       profileTitle: map['profile_title']?.toString() ?? '',
       profileDescription: map['profile_description'] as String?,
       phoneNumber: map['phone_number'] as String?,
-      points: map['points'] is int
-          ? map['points'] as int
-          : int.tryParse(map['points']?.toString() ?? ''),
       phoneVerified: map['phone_verified'] as bool? ?? false,
+      points: map['points'] is int
+          ? map['points']
+          : int.tryParse(map['points']?.toString() ?? ''),
       fullName: map['full_name']?.toString() ?? '',
       bio: map['bio'] as String?,
       locationProvince: map['location_province'] as String?,
       skillYouOffer: parseStringList(map['skill_you_offer']),
       skillYouWantToLearn: parseStringList(map['skill_you_want_to_learn']),
       bannerImage: map['banner_image'] as String?,
-      certifications: parseDynamicList(map['certifications']),
+      certifications: parseCertificationList(
+        map['certifications'],
+      ), // <-- FIXED
       workExperience: parseDynamicList(map['work_experience']),
       portfolio: parseDynamicList(map['portfolio']),
-      createdAt: tryParseDate(map['created_at'] as String?),
-      updatedAt: tryParseDate(map['updated_at'] as String?),
+      createdAt: tryParseDate(map['created_at']),
+      updatedAt: tryParseDate(map['updated_at']),
     );
   }
 
@@ -110,7 +122,9 @@ class ProfileDataModel {
       'skill_you_offer': skillYouOffer,
       'skill_you_want_to_learn': skillYouWantToLearn,
       'banner_image': bannerImage,
-      'certifications': certifications,
+      'certifications': certifications
+          .map((e) => e.toMap())
+          .toList(), // <-- FIXED
       'work_experience': workExperience,
       'portfolio': portfolio,
       'created_at': createdAt?.toUtc().toIso8601String(),
@@ -133,7 +147,7 @@ class ProfileDataModel {
     List<String>? skillYouOffer,
     List<String>? skillYouWantToLearn,
     String? bannerImage,
-    List<dynamic>? certifications,
+    List<CertificationModel>? certifications,
     List<dynamic>? workExperience,
     List<dynamic>? portfolio,
     DateTime? createdAt,
@@ -153,7 +167,8 @@ class ProfileDataModel {
       skillYouWantToLearn:
           skillYouWantToLearn ?? List<String>.from(this.skillYouWantToLearn),
       bannerImage: bannerImage ?? this.bannerImage,
-      certifications: certifications ?? List<dynamic>.from(this.certifications),
+      certifications:
+          certifications ?? List<CertificationModel>.from(this.certifications),
       workExperience: workExperience ?? List<dynamic>.from(this.workExperience),
       portfolio: portfolio ?? List<dynamic>.from(this.portfolio),
       createdAt: createdAt ?? this.createdAt,
@@ -163,6 +178,6 @@ class ProfileDataModel {
 
   @override
   String toString() {
-    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, phone: $phoneNumber, points: $points)';
+    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, phone: $phoneNumber, points: $points, certifications: $certifications)';
   }
 }
