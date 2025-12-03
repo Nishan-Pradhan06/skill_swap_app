@@ -180,7 +180,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     );
                   },
                   builder: (context, state) {
+                    final bool isLoading = state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    );
                     return CustomButton(
+                      isDisabled: isLoading,
+                      isLoading: isLoading,
                       text: 'Sign In',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

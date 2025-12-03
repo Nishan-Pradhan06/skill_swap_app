@@ -30,7 +30,7 @@ void main() async {
 
   await sl<OnceCacheService>().init();
 
-    //Firebase
+  //Firebase
   await Firebase.initializeApp();
 
   await PushNotificationService().init();
