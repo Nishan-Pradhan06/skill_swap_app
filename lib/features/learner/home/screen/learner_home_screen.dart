@@ -171,7 +171,10 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
         width: 45,
         child: FloatingActionButton.extended(
           onPressed: () {},
-          label: Icon(Icons.message_rounded),
+          label: Icon(
+            Icons.message_rounded,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
