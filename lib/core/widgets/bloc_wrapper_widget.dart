@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/features/reward/blocs/bloc/daily_reward_bloc.dart';
 import '../../features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
 import '../../features/notifications/bloc/delete_notifications/delete_notification_bloc.dart';
 import '../../features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
@@ -39,6 +40,7 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<ReadNotificationsBloc>()),
         BlocProvider(create: (_) => sl<DeleteNotificationBloc>()),
         BlocProvider(create: (_) => sl<GetNotificationCountBloc>()),
+        BlocProvider(create: (_) => sl<DailyRewardBloc>()),
       ],
       child: child,
     );

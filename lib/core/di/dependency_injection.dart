@@ -14,6 +14,8 @@ import 'package:skill_swap/features/notifications/repository/notification_reposi
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';
+import 'package:skill_swap/features/reward/blocs/bloc/daily_reward_bloc.dart';
+import 'package:skill_swap/features/reward/repository/reward_repository.dart';
 
 import '../../features/auth/repository/auth_repository.dart';
 import '../../features/shared/on_boarding/cubit/on_boarding_cubit.dart';
@@ -35,6 +37,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => DeleteNotificationBloc(repo: sl()));
   sl.registerLazySingleton(() => GetNotificationCountBloc(repo: sl()));
   sl.registerLazySingleton(() => DeviceRegisterBloc(repo: sl()));
+  sl.registerLazySingleton(() => DailyRewardBloc(repo: sl()));
 
   //###---------------BLOC---------------------###
 
@@ -46,6 +49,9 @@ Future<void> setupServiceLocator() async {
   //###---------------REPOSITORY---------------###
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(apiService: sl()),
+  );
+  sl.registerLazySingleton<RewardRepository>(
+    () => RewardRepositoryImpl(apiService: sl()),
   );
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(apiService: sl()),
