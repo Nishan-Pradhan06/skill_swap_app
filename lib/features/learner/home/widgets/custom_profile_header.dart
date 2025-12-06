@@ -9,6 +9,7 @@ import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/name_splitter.dart';
 import '../../../../core/widgets/custom_scrollable_padding.dart';
 
 class CustomProfileHeader extends StatelessWidget {
@@ -96,7 +97,7 @@ class CustomProfileHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data?.fullName ?? '',
+                      NameSplitter.split(data?.fullName ?? ''),
                       style: TextTheme.of(context).bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w900,
