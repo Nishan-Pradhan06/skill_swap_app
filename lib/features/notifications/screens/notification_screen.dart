@@ -170,6 +170,12 @@ class NotificationsPage extends StatelessWidget {
             CustomToast.showError(failure.message);
           },
           loaded: (data) {
+            sl<GetNotificationBloc>().add(
+              GetNotificationEvent.getNotification(),
+            );
+            sl<GetNotificationCountBloc>().add(
+              GetNotificationCountEvent.getNotificationCount(),
+            );
             CustomToast.showSuccess(data);
           },
         );
@@ -181,14 +187,15 @@ class NotificationsPage extends StatelessWidget {
           message: data?.message ?? '',
           isRead: data?.isRead ?? false,
           createdAt: timeAgo.toString(),
-          onTap: () {
-            sl<ReadNotificationsBloc>().add(
-              ReadNotificationsEvent.readNotifications(notificationId: nId),
-            );
-            sl<GetNotificationCountBloc>().add(
-              GetNotificationCountEvent.getNotificationCount(),
-            );
-          },
+          onTap: data?.isRead == true
+              ? () {}
+              : () {
+                  sl<ReadNotificationsBloc>().add(
+                    ReadNotificationsEvent.readNotifications(
+                      notificationId: nId,
+                    ),
+                  );
+                },
         );
       },
     );
