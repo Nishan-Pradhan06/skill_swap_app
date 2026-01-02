@@ -28,9 +28,12 @@ class AuthRepositoryImpl implements AuthRepository {
     return response.fold((failure) => Left(failure), (data) async {
       final authData = data['data'];
       final token = authData['token']['access'];
+      final role = (authData['user']['roles'] as List).first;
       dLog.d(token);
+      dLog.d(role);
       await CacheServices.instance.setAuthToken(token);
-      return Right("Sign in successful");
+      await CacheServices.instance.setUserRole(role);
+      return Right(role);
     });
   }
 
@@ -52,7 +55,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   FutureEither<String> signOut() async {
     await CacheServices.instance.clearAuthToken();
-    
+
     return Right("Logout Successfully!!!");
   }
 }

@@ -171,7 +171,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         CustomToast.showError(failure.message);
                       },
                       loaded: (data) async {
-                        _handleNavigation();
+                        if (data == 'LEARNER' || data == 'MENTOR') {
+                          _handleNavigation();
+                        }
                         CustomToast.showSuccess('Sign In Successful');
                         sl<DeviceRegisterBloc>().add(
                           DeviceRegisterEvent.deviceRegister(),
