@@ -7,6 +7,7 @@ class AppRoutesName {
   static const String authSignUpScreenRoute = 'authSignUpScreenRoute';
   static const String authForgetPasswordScreenRoute = 'authForgetPasswordScreenRoute';
   static const String profileScreenRoute = 'profileScreenRoute';
+  static const String perosalDetailScreenRoute = 'perosalDetailScreenRoute';
 
   //#---------------LEARNER ROUTES NAME--------------##
   static const String profileSetupScreenRoute = 'profileSetupScreenRoute';

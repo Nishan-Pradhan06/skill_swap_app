@@ -7,11 +7,12 @@ import 'certification_model.dart';
 class ProfileDataModel {
   final String? profileImage;
   final String profileTitle;
-  final String? profileDescription;
-  final String? phoneNumber;
+  final String email;
+  final String phoneNumber;
   final bool? phoneVerified;
   final String fullName;
   final int? points;
+  final String? profileDescription;
   final String? bio;
   final String? locationProvince;
   final List<String> skillYouOffer;
@@ -27,11 +28,12 @@ class ProfileDataModel {
   ProfileDataModel({
     this.profileImage,
     required this.profileTitle,
-    this.profileDescription,
-    this.phoneNumber,
+    required this.email,
+    required this.phoneNumber, 
     this.phoneVerified,
     this.points,
     required this.fullName,
+    this.profileDescription,
     this.bio,
     this.locationProvince,
     List<String>? skillYouOffer,
@@ -96,13 +98,14 @@ class ProfileDataModel {
     return ProfileDataModel(
       profileImage: map['profile_image'] as String?,
       profileTitle: map['profile_title']?.toString() ?? '',
-      profileDescription: map['profile_description'] as String?,
-      phoneNumber: map['phone_number'] as String?,
+      email: map['email']?.toString() ?? '',
+      phoneNumber: map['phone_number']?.toString() ?? '',
       phoneVerified: map['phone_verified'] as bool? ?? false,
       points: map['points'] is int
           ? map['points']
           : int.tryParse(map['points']?.toString() ?? ''),
       fullName: map['full_name']?.toString() ?? '',
+      profileDescription: map['profile_description'] as String?,
       bio: map['bio'] as String?,
       locationProvince: map['location_province'] as String?,
       skillYouOffer: parseStringList(map['skill_you_offer']),
@@ -125,11 +128,12 @@ class ProfileDataModel {
     return {
       'profile_image': profileImage,
       'profile_title': profileTitle,
-      'profile_description': profileDescription,
-      'phone_number': phoneNumber,
+      'email': email,
+      'phone_number': phoneNumber, 
       'phone_verified': phoneVerified,
       'points': points,
       'full_name': fullName,
+      'profile_description': profileDescription,
       'bio': bio,
       'location_province': locationProvince,
       'skill_you_offer': skillYouOffer,
@@ -150,7 +154,8 @@ class ProfileDataModel {
     String? profileImage,
     String? profileTitle,
     String? profileDescription,
-    String? phoneNumber,
+    String? email,
+    String? phoneNumber, 
     int? points,
     bool? phoneVerified,
     String? fullName,
@@ -169,11 +174,12 @@ class ProfileDataModel {
     return ProfileDataModel(
       profileImage: profileImage ?? this.profileImage,
       profileTitle: profileTitle ?? this.profileTitle,
-      profileDescription: profileDescription ?? this.profileDescription,
+      email: email ?? this.email, 
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      points: points ?? this.points,
       phoneVerified: phoneVerified ?? this.phoneVerified,
+      points: points ?? this.points,
       fullName: fullName ?? this.fullName,
+      profileDescription: profileDescription ?? this.profileDescription,
       bio: bio ?? this.bio,
       locationProvince: locationProvince ?? this.locationProvince,
       skillYouOffer: skillYouOffer ?? List<String>.from(this.skillYouOffer),
@@ -194,6 +200,6 @@ class ProfileDataModel {
 
   @override
   String toString() {
-    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, points: $points)';
+    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, email: $email, phoneNumber: $phoneNumber, points: $points)';
   }
 }

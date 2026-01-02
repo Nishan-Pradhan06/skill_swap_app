@@ -53,7 +53,9 @@ class LearnerMenuScreen extends StatelessWidget {
               SettingTile(
                 icon: Icons.person_2_rounded,
                 title: 'Personal Details',
-                onTap: () {},
+                onTap: () {
+                  context.pushNamed(AppRoutesName.perosalDetailScreenRoute);
+                },
               ),
               SettingTile(
                 icon: Icons.security_rounded,
