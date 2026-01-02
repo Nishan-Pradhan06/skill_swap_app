@@ -103,7 +103,12 @@ class CustomProfileHeader extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    Text('Learner', style: TextTheme.of(context).bodySmall),
+                    Text(
+                      (data?.roles.isNotEmpty ?? false)
+                          ? data!.roles.first
+                          : 'LEARNER',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skill_swap/features/profile/model/certification_model.dart';
+import 'package:skill_swap/features/profile/model/working_exprience_model.dart';
 
 import '../../../../core/widgets/custom_border.dart';
 import '../../../../core/widgets/custom_padding.dart';
@@ -9,6 +10,7 @@ import '../../widgets/working_exp_widget.dart';
 
 class AboutTabBarView extends StatelessWidget {
   final List<String> availableSkills;
+  final List<WorkingExprienceModel> workExperiences;
   final List<CertificationModel> certifications;
   // final List<String> workingExprienceList;
   final String aboutBio;
@@ -18,6 +20,7 @@ class AboutTabBarView extends StatelessWidget {
     required this.availableSkills,
     required this.aboutBio,
     required this.certifications,
+    required this.workExperiences,
   });
 
   @override
@@ -129,24 +132,30 @@ class AboutTabBarView extends StatelessWidget {
                   context,
                 ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-
-              WorkingExprienceList(
-                imageUrl:
-                    'https://media.licdn.com/dms/image/v2/D4D0BAQG_g0d95Eh5Sg/img-crop_100/img-crop_100/0/1721912200053?e=1765411200&v=beta&t=LNZNNg0u2PGrgcyqTSkHDwHJnZZ9ijqA25tKl3bbwTg',
-                title: 'Junior Flutter Mobile App Developer',
-                companyName: 'Lunar I.T. Solution Pvt. Ltd',
-                location: 'Itahari, Nepal',
-                experience: '6 month of Experience',
-              ),
-              Divider(),
-              WorkingExprienceList(
-                imageUrl:
-                    'https://media.licdn.com/dms/image/v2/D4D0BAQGDa4MdEnwpiw/company-logo_200_200/company-logo_200_200/0/1732850527682/sainotech010_logo?e=1765411200&v=beta&t=Pj9fl5KsBV9noKP9TqZJbOmJ2eorlkC09_IEmFNfSGc',
-                title: 'Flutter Mobile App Developer',
-                companyName: 'Saino Tech Pvt. Ltd',
-                location: 'Itahari, Nepal',
-                experience: '2 Years of Experience',
-              ),
+              workExperiences.isEmpty
+                  ? Text(
+                      "No working experience added yet",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : Column(
+                      children: workExperiences.map((work) {
+                        return Column(
+                          children: [
+                            WorkingExprienceList(
+                              imageUrl: work.image,
+                              title: work.title,
+                              companyName: work.companyName,
+                              location: work.location,
+                              experience: work.experience,
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      }).toList(),
+                    ),
             ],
           ),
         ),

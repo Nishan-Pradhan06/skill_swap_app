@@ -107,6 +107,9 @@ class ProfileScreen extends StatelessWidget {
                       availableSkills: data?.skillYouOffer ?? [],
                       certifications: data?.certifications ?? [],
                       aboutBio: data?.bio ?? 'No Bio',
+                      workExperiences:data?.workingExpriences?? [
+
+                      ],
                     ),
                   ),
                   // Portfolio Tab

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:skill_swap/features/profile/model/working_exprience_model.dart';
 import 'certification_model.dart';
 
 /// Profile data model
@@ -17,10 +18,11 @@ class ProfileDataModel {
   final List<String> skillYouWantToLearn;
   final String? bannerImage;
   final List<CertificationModel> certifications;
-  final List<dynamic> workExperience;
+  final List<WorkingExprienceModel> workingExpriences;
   final List<dynamic> portfolio;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final List<String> roles;
 
   ProfileDataModel({
     this.profileImage,
@@ -34,16 +36,18 @@ class ProfileDataModel {
     this.locationProvince,
     List<String>? skillYouOffer,
     List<String>? skillYouWantToLearn,
+    List<String>? roles,
     this.bannerImage,
     List<CertificationModel>? certifications,
-    List<dynamic>? workExperience,
+    List<WorkingExprienceModel>? workingExpriences,
     List<dynamic>? portfolio,
     this.createdAt,
     this.updatedAt,
   }) : skillYouOffer = skillYouOffer ?? [],
        skillYouWantToLearn = skillYouWantToLearn ?? [],
        certifications = certifications ?? [],
-       workExperience = workExperience ?? [],
+       workingExpriences = workingExpriences ?? [],
+       roles = roles ?? [],
        portfolio = portfolio ?? [];
 
   factory ProfileDataModel.fromMap(Map<String, dynamic> map) {
@@ -68,10 +72,16 @@ class ProfileDataModel {
       return <CertificationModel>[];
     }
 
-    List<dynamic> parseDynamicList(dynamic value) {
-      if (value == null) return <dynamic>[];
-      if (value is List) return List<dynamic>.from(value);
-      return <dynamic>[];
+    List<WorkingExprienceModel> parseWorkingExperience(dynamic value) {
+      if (value == null) return <WorkingExprienceModel>[];
+      if (value is List) {
+        return value
+            .map(
+              (e) => WorkingExprienceModel.fromMap(e as Map<String, dynamic>),
+            )
+            .toList();
+      }
+      return <WorkingExprienceModel>[];
     }
 
     DateTime? tryParseDate(String? s) {
@@ -98,13 +108,16 @@ class ProfileDataModel {
       skillYouOffer: parseStringList(map['skill_you_offer']),
       skillYouWantToLearn: parseStringList(map['skill_you_want_to_learn']),
       bannerImage: map['banner_image'] as String?,
-      certifications: parseCertificationList(
-        map['certifications'],
-      ), // <-- FIXED
-      workExperience: parseDynamicList(map['work_experience']),
-      portfolio: parseDynamicList(map['portfolio']),
+      certifications: parseCertificationList(map['certifications']),
+      workingExpriences: parseWorkingExperience(map['work_experience']),
+      portfolio: map['portfolio'] is List
+          ? List<dynamic>.from(map['portfolio'])
+          : [],
       createdAt: tryParseDate(map['created_at']),
       updatedAt: tryParseDate(map['updated_at']),
+      roles: parseStringList(map['roles']).isNotEmpty
+          ? parseStringList(map['roles'])
+          : ['LEARNER'],
     );
   }
 
@@ -122,13 +135,12 @@ class ProfileDataModel {
       'skill_you_offer': skillYouOffer,
       'skill_you_want_to_learn': skillYouWantToLearn,
       'banner_image': bannerImage,
-      'certifications': certifications
-          .map((e) => e.toMap())
-          .toList(), // <-- FIXED
-      'work_experience': workExperience,
+      'certifications': certifications.map((e) => e.toMap()).toList(),
+      'work_experience': workingExpriences.map((e) => e.toMap()).toList(),
       'portfolio': portfolio,
       'created_at': createdAt?.toUtc().toIso8601String(),
       'updated_at': updatedAt?.toUtc().toIso8601String(),
+      'roles': roles,
     };
   }
 
@@ -148,10 +160,11 @@ class ProfileDataModel {
     List<String>? skillYouWantToLearn,
     String? bannerImage,
     List<CertificationModel>? certifications,
-    List<dynamic>? workExperience,
+    List<WorkingExprienceModel>? workingExpriences,
     List<dynamic>? portfolio,
     DateTime? createdAt,
     DateTime? updatedAt,
+    List<String>? roles,
   }) {
     return ProfileDataModel(
       profileImage: profileImage ?? this.profileImage,
@@ -169,15 +182,18 @@ class ProfileDataModel {
       bannerImage: bannerImage ?? this.bannerImage,
       certifications:
           certifications ?? List<CertificationModel>.from(this.certifications),
-      workExperience: workExperience ?? List<dynamic>.from(this.workExperience),
+      workingExpriences:
+          workingExpriences ??
+          List<WorkingExprienceModel>.from(this.workingExpriences),
       portfolio: portfolio ?? List<dynamic>.from(this.portfolio),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      roles: roles ?? List<String>.from(this.roles),
     );
   }
 
   @override
   String toString() {
-    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, phone: $phoneNumber, points: $points, certifications: $certifications)';
+    return 'ProfileData(fullName: $fullName, profileTitle: $profileTitle, points: $points)';
   }
 }
