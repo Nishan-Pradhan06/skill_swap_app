@@ -34,13 +34,13 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<SignInBloc>()),
         BlocProvider(create: (_) => sl<SignUpBloc>()),
         BlocProvider(create: (_) => sl<ProfileSetupBloc>()),
-        BlocProvider(create: (_) => sl<GetProfileBloc>()),
+        BlocProvider(create: (_) => sl<GetProfileBloc>()..add(GetProfileEvent.getProfile())),
         BlocProvider(create: (_) => sl<SignOutBloc>()),
-        BlocProvider(create: (_) => sl<GetNotificationBloc>()),
+        BlocProvider(create: (_) => sl<GetNotificationBloc>()..add(GetNotificationEvent.getNotification())),
         BlocProvider(create: (_) => sl<DeviceRegisterBloc>()),
         BlocProvider(create: (_) => sl<ReadNotificationsBloc>()),
         BlocProvider(create: (_) => sl<DeleteNotificationBloc>()),
-        BlocProvider(create: (_) => sl<GetNotificationCountBloc>()),
+        BlocProvider(create: (_) => sl<GetNotificationCountBloc>()..add(GetNotificationCountEvent.getNotificationCount())),
         BlocProvider(create: (_) => sl<SwitchRoleBloc>()),
         BlocProvider(
           create: (_) =>

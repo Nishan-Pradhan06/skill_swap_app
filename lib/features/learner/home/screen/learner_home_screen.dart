@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
-import 'package:skill_swap/features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
-import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
-import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
-import 'package:skill_swap/features/reward/blocs/bloc/daily_reward_bloc.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../models/skill_list_card_model.dart';
@@ -58,12 +53,12 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
-    sl<GetNotificationBloc>().add(GetNotificationEvent.getNotification());
-    sl<GetNotificationCountBloc>().add(
-      GetNotificationCountEvent.getNotificationCount(),
-    );
-    sl<DailyRewardBloc>().add(DailyRewardEvent.dailyReward());
+    // sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
+    // sl<GetNotificationBloc>().add(GetNotificationEvent.getNotification());
+    // sl<GetNotificationCountBloc>().add(
+    //   GetNotificationCountEvent.getNotificationCount(),
+    // );
+    // sl<DailyRewardBloc>().add(DailyRewardEvent.dailyReward());
   }
 
   @override
