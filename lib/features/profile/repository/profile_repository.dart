@@ -5,9 +5,11 @@ import 'package:skill_swap/features/profile/model/profile_model.dart';
 import '../../../common/typedef/either_type.dart';
 import '../../../core/network/api_services.dart';
 import '../model/profile_setup_model.dart';
+import '../model/roles_model.dart';
 
 abstract interface class ProfileRepository {
   FutureEither<ProfileDataModel> getProfile();
+  FutureEither<String> switchRole({required RolesModel roles});
   FutureEither<String> setUpProfile({
     required UserProfileSetUpModel profileSetUpModel,
   });
@@ -48,6 +50,18 @@ class ProfileRepositoryImpl implements ProfileRepository {
     );
 
     return response.fold((failure) => Left(failure), (data) async {
+      return Right(data['message']);
+    });
+  }
+
+  @override
+  FutureEither<String> switchRole({required RolesModel roles}) async {
+    final response = await _apiService.post<Map>(
+      'profile/switch-role/',
+      data: roles,
+    );
+
+    return response.fold((failure) => Left(failure), (data) {
       return Right(data['message']);
     });
   }
