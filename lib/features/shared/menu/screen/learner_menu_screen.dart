@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/di/dependency_injection.dart';
+import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
-import 'package:skill_swap/core/widgets/custom_scrollable_padding.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
@@ -45,8 +45,7 @@ class LearnerMenuScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ScrollableRefreshablePadding(
-        onRefresh: () async {},
+      body: SingleChildScrollView(
         child: CustomPadding(
           child: Column(
             children: [
@@ -84,7 +83,10 @@ class LearnerMenuScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               AppearanceModeSelector(),
-              const SizedBox(height: 80),
+              const SizedBox(height: 30),
+              CustomButton(text: "Switch To Mentor", onPressed: () {}),
+              const SizedBox(height: 10),
+
               Text(
                 'SkillSwap v1.0.0',
                 style: Theme.of(context).textTheme.bodySmall,
