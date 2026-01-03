@@ -40,7 +40,10 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<ReadNotificationsBloc>()),
         BlocProvider(create: (_) => sl<DeleteNotificationBloc>()),
         BlocProvider(create: (_) => sl<GetNotificationCountBloc>()),
-        BlocProvider(create: (_) => sl<DailyRewardBloc>()),
+        BlocProvider(
+          create: (_) =>
+              sl<DailyRewardBloc>()..add(DailyRewardEvent.dailyReward()),
+        ),
       ],
       child: child,
     );
