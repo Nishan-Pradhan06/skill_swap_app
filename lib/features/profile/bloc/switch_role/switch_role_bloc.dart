@@ -21,6 +21,7 @@ class SwitchRoleBloc extends Bloc<SwitchRoleEvent, SwitchRoleState> {
     Emitter<SwitchRoleState> emit,
   ) async {
     emit(SwitchRoleState.loading());
+    Future.delayed(Duration(seconds: 5));
 
     final result = await _profileRepository.switchRole(roles: event.roles);
 

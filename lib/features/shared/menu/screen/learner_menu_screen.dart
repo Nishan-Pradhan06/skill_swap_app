@@ -11,6 +11,7 @@ import 'package:skill_swap/features/profile/bloc/switch_role/switch_role_bloc.da
 import 'package:skill_swap/features/profile/model/roles_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 
+import '../../../../core/services/cache_service.dart';
 import '../../../../core/widgets/custom_appearance_mode_selector.dart';
 import '../../../../core/widgets/custom_setting_widget.dart';
 
@@ -92,54 +93,71 @@ class LearnerMenuScreen extends StatelessWidget {
                   return state.when(
                     failure: (failure) => SizedBox(),
                     initial: () => SizedBox(),
-                    loading: () => CircularProgressIndicator(),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                     loaded: (roles) {
+                      final currentRole = roles.roles.first;
+
                       return BlocConsumer<SwitchRoleBloc, SwitchRoleState>(
-                        listener: (context, state) {
-                          state.whenOrNull(
-                            loaded: (data) {
-                              CustomToast.showSuccess(data);
+                        listener: (context, switchState) {
+                          switchState.whenOrNull(
+                            loaded: (message) async {
+                              // Update cached role for SplashScreen or global use
+                              await CacheServices.instance.setUserRole(
+                                currentRole == 'LEARNER' ? 'MENTOR' : 'LEARNER',
+                              );
+
+                              // Refresh profile after role switch
                               sl<GetProfileBloc>().add(
                                 GetProfileEvent.getProfile(),
                               );
-                            },
 
+                              // Show success toast
+                              CustomToast.showSuccess(
+                                "Role switched successfully",
+                              );
+
+                              // Navigate based on the new role
+                              final newRole = currentRole == 'LEARNER'
+                                  ? 'MENTOR'
+                                  : 'LEARNER';
+                              if (newRole == 'LEARNER') {
+                                context.goNamed(
+                                  AppRoutesName.learnerBottomNavBar,
+                                );
+                              } else if (newRole == 'MENTOR') {
+                                context.goNamed(
+                                  AppRoutesName.mentorBottomNavBar,
+                                );
+                              }
+                            },
                             failure: (failure) {
                               CustomToast.showError(failure.message);
                             },
                           );
                         },
-                        builder: (context, state) {
-                          final bool isLearner = roles.roles.first == 'LEARNER';
+                        builder: (context, switchState) {
+                          final isLoading = switchState.maybeWhen(
+                            loading: () => true,
+                            orElse: () => false,
+                          );
+
+                          final isLearner = currentRole == 'LEARNER';
 
                           return CustomButton(
+                            isDisabled: isLoading,
+                            isLoading: isLoading,
                             text: isLearner
                                 ? "Switch To Mentor"
                                 : "Switch To Learner",
                             onPressed: () {
-                              if (isLearner) {
-                                sl<SwitchRoleBloc>().add(
-                                  SwitchRoleEvent.switchRole(
-                                    RolesModel(
-                                      role: 'MENTOR',
-                                    ), // send single string
-                                  ),
-                                );
-                                context.goNamed(
-                                  AppRoutesName.mentorBottomNavBar,
-                                );
-                              } else {
-                                sl<SwitchRoleBloc>().add(
-                                  SwitchRoleEvent.switchRole(
-                                    RolesModel(
-                                      role: 'LEARNER',
-                                    ), // send single string
-                                  ),
-                                );
-                                context.goNamed(
-                                  AppRoutesName.learnerBottomNavBar,
-                                );
-                              }
+                              final newRole = isLearner ? 'MENTOR' : 'LEARNER';
+
+                              sl<SwitchRoleBloc>().add(
+                                SwitchRoleEvent.switchRole(
+                                  RolesModel(role: newRole),
+                                ),
+                              );
                             },
                           );
                         },
