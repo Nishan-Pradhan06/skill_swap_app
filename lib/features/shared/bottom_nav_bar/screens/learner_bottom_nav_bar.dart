@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/features/learner/home/screen/learner_home_screen.dart';
-import 'package:skill_swap/features/learner/menu/screen/learner_menu_screen.dart';
+import 'package:skill_swap/features/shared/menu/screen/learner_menu_screen.dart';
 import 'package:skill_swap/features/learner/my_learning/screen/learner_my_learning_screen.dart';
 import 'package:skill_swap/features/learner/swap/screen/learner_swap_screen.dart';
 import 'package:skill_swap/features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
