@@ -5,6 +5,7 @@ import 'package:skill_swap/features/profile/screen/profile_setup/profile_setup_s
 import 'package:skill_swap/router/app_routes_names.dart';
 
 import '../features/shared/bottom_nav_bar/screens/learner_bottom_nav_bar.dart';
+import '../features/shared/bottom_nav_bar/screens/mentor_bottom_nav_bar.dart';
 
 List<GoRoute> userAppRoutes = [
   GoRoute(
@@ -16,6 +17,11 @@ List<GoRoute> userAppRoutes = [
     path: AppRoutesName.learnerBottomNavBar.path,
     name: AppRoutesName.learnerBottomNavBar,
     builder: (context, state) => LearnerBottomNavBarScreen(),
+  ),
+  GoRoute(
+    path: AppRoutesName.mentorBottomNavBar.path,
+    name: AppRoutesName.mentorBottomNavBar,
+    builder: (context, state) => MentorBottomNavBarScreen(),
   ),
   GoRoute(
     path: AppRoutesName.skillCardDetails.path,

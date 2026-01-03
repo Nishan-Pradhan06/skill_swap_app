@@ -6,6 +6,9 @@ import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/features/profile/bloc/switch_role/switch_role_bloc.dart';
+import 'package:skill_swap/features/profile/model/roles_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 
 import '../../../../core/widgets/custom_appearance_mode_selector.dart';
@@ -84,7 +87,67 @@ class LearnerMenuScreen extends StatelessWidget {
               const SizedBox(height: 8),
               AppearanceModeSelector(),
               const SizedBox(height: 30),
-              CustomButton(text: "Switch To Mentor", onPressed: () {}),
+              BlocBuilder<GetProfileBloc, GetProfileState>(
+                builder: (context, state) {
+                  return state.when(
+                    failure: (failure) => SizedBox(),
+                    initial: () => SizedBox(),
+                    loading: () => CircularProgressIndicator(),
+                    loaded: (roles) {
+                      return BlocConsumer<SwitchRoleBloc, SwitchRoleState>(
+                        listener: (context, state) {
+                          state.whenOrNull(
+                            loaded: (data) {
+                              CustomToast.showSuccess(data);
+                              sl<GetProfileBloc>().add(
+                                GetProfileEvent.getProfile(),
+                              );
+                            },
+
+                            failure: (failure) {
+                              CustomToast.showError(failure.message);
+                            },
+                          );
+                        },
+                        builder: (context, state) {
+                          final bool isLearner = roles.roles.first == 'LEARNER';
+
+                          return CustomButton(
+                            text: isLearner
+                                ? "Switch To Mentor"
+                                : "Switch To Learner",
+                            onPressed: () {
+                              if (isLearner) {
+                                sl<SwitchRoleBloc>().add(
+                                  SwitchRoleEvent.switchRole(
+                                    RolesModel(
+                                      role: 'MENTOR',
+                                    ), // send single string
+                                  ),
+                                );
+                                context.goNamed(
+                                  AppRoutesName.mentorBottomNavBar,
+                                );
+                              } else {
+                                sl<SwitchRoleBloc>().add(
+                                  SwitchRoleEvent.switchRole(
+                                    RolesModel(
+                                      role: 'LEARNER',
+                                    ), // send single string
+                                  ),
+                                );
+                                context.goNamed(
+                                  AppRoutesName.learnerBottomNavBar,
+                                );
+                              }
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
               const SizedBox(height: 10),
 
               Text(

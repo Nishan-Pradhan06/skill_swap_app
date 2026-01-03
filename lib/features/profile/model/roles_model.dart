@@ -1,13 +1,15 @@
 class RolesModel {
-  final List<String> roles;
+  final String role; // single role
 
-  RolesModel({required this.roles});
+  RolesModel({required this.role});
 
   factory RolesModel.fromJson(Map<String, dynamic> json) {
-    return RolesModel(roles: List<String>.from(json['roles'] ?? []));
+    return RolesModel(role: json['role'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {'roles': roles};
+    return {
+      'role': role,
+    };
   }
 }

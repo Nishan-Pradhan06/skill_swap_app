@@ -13,6 +13,7 @@ import 'package:skill_swap/features/notifications/bloc/read_notifications/read_n
 import 'package:skill_swap/features/notifications/repository/notification_repository.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
+import 'package:skill_swap/features/profile/bloc/switch_role/switch_role_bloc.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';
 import 'package:skill_swap/features/reward/blocs/bloc/daily_reward_bloc.dart';
 import 'package:skill_swap/features/reward/repository/reward_repository.dart';
@@ -38,6 +39,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetNotificationCountBloc(repo: sl()));
   sl.registerLazySingleton(() => DeviceRegisterBloc(repo: sl()));
   sl.registerLazySingleton(() => DailyRewardBloc(repo: sl()));
+  sl.registerLazySingleton(() => SwitchRoleBloc(repo: sl()));
 
   //###---------------BLOC---------------------###
 

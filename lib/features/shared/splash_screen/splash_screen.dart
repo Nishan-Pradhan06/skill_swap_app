@@ -56,6 +56,8 @@ class _SplashScreenState extends State<SplashScreen>
     final token = await CacheServices.instance.getAuthToken();
     final isProfileCompleted =
         await CacheServices.instance.getProfileSetupCompleted() ?? false;
+    final role = await CacheServices.instance
+        .getUserRole(); // String: 'LEARNER', 'MENTOR', 'ADMIN'
 
     // Not signed in → show onboarding/login
     if (token == null || token.isEmpty) {
@@ -70,9 +72,28 @@ class _SplashScreenState extends State<SplashScreen>
       if (mounted) {
         context.goNamed(AppRoutesName.profileSetupScreenRoute);
       }
-    } else {
+      return;
+    }
+
+    // Navigate based on role
+    if (role == 'LEARNER') {
       if (mounted) {
         context.goNamed(AppRoutesName.learnerBottomNavBar);
+      }
+    } else if (role == 'MENTOR') {
+      if (mounted) {
+        context.goNamed(AppRoutesName.mentorBottomNavBar);
+      }
+    } else if (role == 'ADMIN') {
+      // if (mounted) {
+      //   context.goNamed(
+      //     AppRoutesName.adminDashboardScreen,
+      //   ); // create this route
+      // }
+    } else {
+      // fallback
+      if (mounted) {
+        context.goNamed(AppRoutesName.onBoardingScreen);
       }
     }
   }
