@@ -18,11 +18,11 @@ class _MentorBottomNavBarScreenState extends State<MentorBottomNavBarScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    MentorHomeScreen(),
-    MyStudentsScreen(),
-    RequestScreen(),
-    NotificationsPage(),
-    LearnerMenuScreen(),
+    const MentorHomeScreen(),
+    const MyStudentsScreen(),
+    const MentorRequestsScreen(),
+    const NotificationsPage(),
+    const LearnerMenuScreen(),
   ];
 
   @override
