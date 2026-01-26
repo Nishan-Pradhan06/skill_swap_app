@@ -24,12 +24,13 @@ class ProfileDataModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<String> roles;
+  final int? id;
 
   ProfileDataModel({
     this.profileImage,
     required this.profileTitle,
     required this.email,
-    required this.phoneNumber, 
+    required this.phoneNumber,
     this.phoneVerified,
     this.points,
     required this.fullName,
@@ -45,6 +46,7 @@ class ProfileDataModel {
     List<dynamic>? portfolio,
     this.createdAt,
     this.updatedAt,
+    this.id,
   }) : skillYouOffer = skillYouOffer ?? [],
        skillYouWantToLearn = skillYouWantToLearn ?? [],
        certifications = certifications ?? [],
@@ -121,6 +123,7 @@ class ProfileDataModel {
       roles: parseStringList(map['roles']).isNotEmpty
           ? parseStringList(map['roles'])
           : ['LEARNER'],
+      id: map['id'] as int?,
     );
   }
 
@@ -129,7 +132,7 @@ class ProfileDataModel {
       'profile_image': profileImage,
       'profile_title': profileTitle,
       'email': email,
-      'phone_number': phoneNumber, 
+      'phone_number': phoneNumber,
       'phone_verified': phoneVerified,
       'points': points,
       'full_name': fullName,
@@ -155,7 +158,7 @@ class ProfileDataModel {
     String? profileTitle,
     String? profileDescription,
     String? email,
-    String? phoneNumber, 
+    String? phoneNumber,
     int? points,
     bool? phoneVerified,
     String? fullName,
@@ -174,7 +177,7 @@ class ProfileDataModel {
     return ProfileDataModel(
       profileImage: profileImage ?? this.profileImage,
       profileTitle: profileTitle ?? this.profileTitle,
-      email: email ?? this.email, 
+      email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       phoneVerified: phoneVerified ?? this.phoneVerified,
       points: points ?? this.points,

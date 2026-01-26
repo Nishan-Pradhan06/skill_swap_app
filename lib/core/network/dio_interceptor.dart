@@ -38,7 +38,7 @@ class AppDioInterceptor extends Interceptor {
     final int? statusCode = err.response?.statusCode;
     final String path = err.requestOptions.uri.path;
 
-    dLog.d("[Error] $statusCode on $path");
+    dLog.d("[Error] ${statusCode ?? 'Unknown Status'} on $path");
 
     if (statusCode == 401) {
       // Token expired → logout user

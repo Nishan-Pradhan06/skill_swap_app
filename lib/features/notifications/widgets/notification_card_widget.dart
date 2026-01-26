@@ -26,7 +26,7 @@ class NotificationCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: isRead
-              ? ColorScheme.of(context).background
+              ? ColorScheme.of(context).surface
               : Colors.red.withValues(alpha: 0.1),
           border: Border(
             bottom: BorderSide(color: AppTheme.dividerDark, width: 0.5),

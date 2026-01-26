@@ -5,7 +5,8 @@ class AppRoutesName {
   static const String authOptionScreenRoute = 'authOptionScreenRoute';
   static const String authSignInScreenRoute = 'authSignInScreenRoute';
   static const String authSignUpScreenRoute = 'authSignUpScreenRoute';
-  static const String authForgetPasswordScreenRoute = 'authForgetPasswordScreenRoute';
+  static const String authForgetPasswordScreenRoute =
+      'authForgetPasswordScreenRoute';
   static const String profileScreenRoute = 'profileScreenRoute';
   static const String perosalDetailScreenRoute = 'perosalDetailScreenRoute';
 
@@ -16,7 +17,11 @@ class AppRoutesName {
 
   //#---------------MENTOR ROUTES NAME--------------##
   static const String mentorBottomNavBar = 'mentorBottomNavBar';
+  static const String mentorPostsRoute = 'mentorPostsRoute';
+  static const String skillPostFormRoute = 'skillPostFormRoute';
 
+  //#---------------SKILL SWAP ROUTES NAME--------------##
+  static const String learnerBookingRoute = 'learnerBookingRoute';
 
   //#--------------ADMIN ROUTES NAME-------------##
   static const String adminBottomNavBarRoute = 'adminBottomNavBarRoute';

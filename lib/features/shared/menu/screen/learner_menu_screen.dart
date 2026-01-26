@@ -96,67 +96,79 @@ class LearnerMenuScreen extends StatelessWidget {
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
                     loaded: (roles) {
-                      final currentRole = roles.roles.first;
+                      return FutureBuilder<String?>(
+                        future: CacheServices.instance.getUserRole(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const SizedBox.shrink();
+                          }
+                          final currentRole = snapshot.data ?? 'LEARNER';
 
-                      return BlocConsumer<SwitchRoleBloc, SwitchRoleState>(
-                        listener: (context, switchState) {
-                          switchState.whenOrNull(
-                            loaded: (message) async {
-                              // Update cached role for SplashScreen or global use
-                              await CacheServices.instance.setUserRole(
-                                currentRole == 'LEARNER' ? 'MENTOR' : 'LEARNER',
+                          return BlocConsumer<SwitchRoleBloc, SwitchRoleState>(
+                            listener: (context, switchState) {
+                              switchState.whenOrNull(
+                                loaded: (message) async {
+                                  // Update cached role for SplashScreen or global use
+                                  await CacheServices.instance.setUserRole(
+                                    currentRole == 'LEARNER'
+                                        ? 'MENTOR'
+                                        : 'LEARNER',
+                                  );
+
+                                  // Refresh profile after role switch
+                                  sl<GetProfileBloc>().add(
+                                    GetProfileEvent.getProfile(),
+                                  );
+
+                                  // Show success toast
+                                  CustomToast.showSuccess(
+                                    "Role switched successfully",
+                                  );
+
+                                  // Navigate based on the new role
+                                  final newRole = currentRole == 'LEARNER'
+                                      ? 'MENTOR'
+                                      : 'LEARNER';
+                                  if (newRole == 'LEARNER') {
+                                    context.goNamed(
+                                      AppRoutesName.learnerBottomNavBar,
+                                    );
+                                  } else if (newRole == 'MENTOR') {
+                                    context.goNamed(
+                                      AppRoutesName.mentorBottomNavBar,
+                                    );
+                                  }
+                                },
+                                failure: (failure) {
+                                  CustomToast.showError(failure.message);
+                                },
                               );
-
-                              // Refresh profile after role switch
-                              sl<GetProfileBloc>().add(
-                                GetProfileEvent.getProfile(),
-                              );
-
-                              // Show success toast
-                              CustomToast.showSuccess(
-                                "Role switched successfully",
-                              );
-
-                              // Navigate based on the new role
-                              final newRole = currentRole == 'LEARNER'
-                                  ? 'MENTOR'
-                                  : 'LEARNER';
-                              if (newRole == 'LEARNER') {
-                                context.goNamed(
-                                  AppRoutesName.learnerBottomNavBar,
-                                );
-                              } else if (newRole == 'MENTOR') {
-                                context.goNamed(
-                                  AppRoutesName.mentorBottomNavBar,
-                                );
-                              }
                             },
-                            failure: (failure) {
-                              CustomToast.showError(failure.message);
-                            },
-                          );
-                        },
-                        builder: (context, switchState) {
-                          final isLoading = switchState.maybeWhen(
-                            loading: () => true,
-                            orElse: () => false,
-                          );
+                            builder: (context, switchState) {
+                              final isLoading = switchState.maybeWhen(
+                                loading: () => true,
+                                orElse: () => false,
+                              );
 
-                          final isLearner = currentRole == 'LEARNER';
+                              final isLearner = currentRole == 'LEARNER';
 
-                          return CustomButton(
-                            isDisabled: isLoading,
-                            isLoading: isLoading,
-                            text: isLearner
-                                ? "Switch To Mentor"
-                                : "Switch To Learner",
-                            onPressed: () {
-                              final newRole = isLearner ? 'MENTOR' : 'LEARNER';
+                              return CustomButton(
+                                isDisabled: isLoading,
+                                isLoading: isLoading,
+                                text: isLearner
+                                    ? "Switch To Mentor"
+                                    : "Switch To Learner",
+                                onPressed: () {
+                                  final newRole = isLearner
+                                      ? 'MENTOR'
+                                      : 'LEARNER';
 
-                              sl<SwitchRoleBloc>().add(
-                                SwitchRoleEvent.switchRole(
-                                  RolesModel(role: newRole),
-                                ),
+                                  sl<SwitchRoleBloc>().add(
+                                    SwitchRoleEvent.switchRole(
+                                      RolesModel(role: newRole),
+                                    ),
+                                  );
+                                },
                               );
                             },
                           );

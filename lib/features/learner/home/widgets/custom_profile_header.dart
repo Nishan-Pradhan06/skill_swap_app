@@ -7,15 +7,18 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
-import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/name_splitter.dart';
-import '../../../../core/widgets/custom_scrollable_padding.dart';
 
 class CustomProfileHeader extends StatelessWidget {
   final bool isLoading;
+  final String? currentRole;
 
-  const CustomProfileHeader({super.key, this.isLoading = false});
+  const CustomProfileHeader({
+    super.key,
+    this.isLoading = false,
+    this.currentRole,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +49,7 @@ class CustomProfileHeader extends StatelessWidget {
     BuildContext context, {
     required bool isLoading,
   }) {
-    return ScrollableRefreshablePadding(
-      onRefresh: () async {
-        sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
-      },
-      child: _buildProfileMethodConent(context, null, isLoading: isLoading),
-    );
+    return _buildProfileMethodConent(context, null, isLoading: isLoading);
   }
 
   Widget _buildProfileMethodConent(
@@ -80,16 +78,21 @@ class CustomProfileHeader extends StatelessWidget {
                     width: 40,
                     decoration: const BoxDecoration(shape: BoxShape.circle),
                     child: ClipOval(
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: data?.profileImage ?? '',
-                        errorWidget: (context, url, error) {
-                          return Image.asset(
-                            'assets/images/default_profile.png',
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
+                      child: (data?.profileImage?.isNotEmpty ?? false)
+                          ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: data!.profileImage!,
+                              errorWidget: (context, url, error) {
+                                return Image.asset(
+                                  'assets/images/default_profile.png',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              'assets/images/default_profile.png',
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                 ),
@@ -104,9 +107,10 @@ class CustomProfileHeader extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      (data?.roles.isNotEmpty ?? false)
-                          ? data!.roles.first
-                          : 'LEARNER',
+                      currentRole ??
+                          ((data?.roles.isNotEmpty ?? false)
+                              ? data!.roles.first
+                              : 'LEARNER'),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],

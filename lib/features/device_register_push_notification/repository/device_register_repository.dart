@@ -21,12 +21,12 @@ class DeviceRegisterForPushNotificationRepositoryImpl
 
   @override
   FutureEither<String> deviceRegister() async {
-    final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+    final FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token;
     if (Platform.isIOS) {
       // token = await _messaging.getAPNSToken() ?? '';
     } else if (Platform.isAndroid) {
-      token = await _messaging.getToken() ?? '';
+      token = await messaging.getToken() ?? '';
       log('Android device token: $token');
     }
 

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/widgets/custom_container.dart';
 import '../../../../core/widgets/custom_padding.dart';
@@ -47,8 +48,21 @@ class CustomSkillCard extends StatelessWidget {
                     SizedBox(
                       height: 35,
                       width: 35,
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(userProfileUrl),
+                      child: ClipOval(
+                        child: userProfileUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: userProfileUrl,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(
+                                      'assets/images/default_profile.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                              )
+                            : Image.asset(
+                                'assets/images/default_profile.png',
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Column(
