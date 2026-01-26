@@ -190,7 +190,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               ),
                               backgroundColor: Theme.of(
                                 context,
-                              ).colorScheme.background,
+                              ).colorScheme.surface,
                               selectedColor: Theme.of(
                                 context,
                               ).colorScheme.primary.withValues(alpha: 0.6),
@@ -226,7 +226,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               ),
                               backgroundColor: Theme.of(
                                 context,
-                              ).colorScheme.background,
+                              ).colorScheme.surface,
                               selectedColor: Theme.of(
                                 context,
                               ).colorScheme.primary.withValues(alpha: 0.6),

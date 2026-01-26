@@ -4,12 +4,17 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../models/skill_list_card_model.dart';
+import 'package:skill_swap/features/notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
+import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/get_skill_swap_posts_bloc.dart';
 import '../widgets/custom_cateogry_chip.dart';
 import '../widgets/custom_filter_chip.dart';
 import '../widgets/custom_profile_header.dart';
 import '../widgets/custom_skill_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/get_categories_bloc.dart';
+import '../../../../core/theme/app_theme.dart';
 
 class LearnerHomeScreen extends StatefulWidget {
   const LearnerHomeScreen({super.key});
@@ -22,58 +27,33 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
   bool isLoading = false;
 
   Future<void> _handleRefresh() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    // Simulate API call or actual data fetching
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      isLoading = false;
-    });
+    context.read<GetProfileBloc>().add(GetProfileEvent.getProfile());
+    context.read<GetNotificationBloc>().add(
+      GetNotificationEvent.getNotification(),
+    );
+    context.read<GetNotificationCountBloc>().add(
+      GetNotificationCountEvent.getNotificationCount(),
+    );
+    context.read<GetSkillSwapPostsBloc>().add(
+      const GetSkillSwapPostsEvent.getPosts(),
+    );
   }
-
-  final List<String> filterCategory = [
-    'All',
-    'Programming',
-    'Design',
-    'Writing',
-    'Marketing',
-    'Photography',
-    'Video Editing',
-    'Music',
-    'Teaching',
-    'Cooking',
-    'Gardening',
-  ];
-
-  String selectedCategory = 'All';
 
   @override
   void initState() {
     super.initState();
-    // sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
-    // sl<GetNotificationBloc>().add(GetNotificationEvent.getNotification());
-    // sl<GetNotificationCountBloc>().add(
-    //   GetNotificationCountEvent.getNotificationCount(),
-    // );
-    // sl<DailyRewardBloc>().add(DailyRewardEvent.dailyReward());
+    _handleRefresh();
+    context.read<GetCategoriesBloc>().add(
+      const GetCategoriesEvent.getCategories(),
+    );
   }
+
+  String selectedCategory = 'All';
+  int? selectedCategoryId;
 
   @override
   Widget build(BuildContext context) {
     final darkTextTheme = Theme.of(context).brightness == Brightness.dark;
-
-    final filteredSkills = selectedCategory == 'All'
-        ? skillCards
-        : skillCards
-              .where(
-                (card) => card.categoryTitle.toLowerCase().contains(
-                  selectedCategory.toLowerCase(),
-                ),
-              )
-              .toList();
 
     return Scaffold(
       body: SafeArea(
@@ -102,28 +82,66 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           children: [
                             CustomPadding(
                               horizontal: 0,
-                              child: CustomProfileHeader(isLoading: isLoading),
-                            ),
-                            CustomPadding(
-                              vertical: 0,
-                              child: CustomTextField(
-                                hint: 'Search',
-                                borderColor: Colors.transparent,
-                                borderRadius: 18,
-                                type: CustomTextFieldType.search,
-                                fillColor: darkTextTheme
-                                    ? const Color(0XFF272c29)
-                                    : AppTheme.surfaceLight,
+                              child: CustomProfileHeader(
+                                isLoading: isLoading,
+                                currentRole: 'LEARNER',
                               ),
                             ),
+                            BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                              builder: (context, state) {
+                                final hintText = state.maybeWhen(
+                                  loaded: (cats) =>
+                                      "Looking for ${cats.take(3).map((e) => e.name).join(', ')}...",
+                                  orElse: () => "Search for skills...",
+                                );
+                                return CustomPadding(
+                                  vertical: 0,
+                                  child: CustomTextField(
+                                    hint: hintText,
+                                    borderColor: Colors.transparent,
+                                    borderRadius: 18,
+                                    type: CustomTextFieldType.search,
+                                    fillColor: darkTextTheme
+                                        ? const Color(0XFF272c29)
+                                        : AppTheme.surfaceLight,
+                                  ),
+                                );
+                              },
+                            ),
                             SizedBox(height: 10),
-                            CategoryFilterChips(
-                              categories: filterCategory,
-                              selectedCategory: selectedCategory,
-                              onCategorySelected: (category) {
-                                setState(() {
-                                  selectedCategory = category;
-                                });
+                            BlocBuilder<GetCategoriesBloc, GetCategoriesState>(
+                              builder: (context, state) {
+                                return state.maybeWhen(
+                                  loaded: (categories) {
+                                    final List<String> catNames = [
+                                      'All',
+                                      ...categories.map((e) => e.name),
+                                    ];
+                                    return CategoryFilterChips(
+                                      categories: catNames,
+                                      selectedCategory: selectedCategory,
+                                      onCategorySelected: (category) {
+                                        setState(() {
+                                          selectedCategory = category;
+                                          if (category == 'All') {
+                                            selectedCategoryId = null;
+                                          } else {
+                                            selectedCategoryId = categories
+                                                .firstWhere(
+                                                  (e) => e.name == category,
+                                                )
+                                                .id;
+                                          }
+                                        });
+                                      },
+                                    );
+                                  },
+                                  loading: () => const Center(
+                                    child: LinearProgressIndicator(),
+                                  ),
+                                  orElse: () =>
+                                      const Text("Failed to load categories"),
+                                );
                               },
                             ),
                           ],
@@ -134,30 +152,80 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                 ),
               ),
 
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  final skill = filteredSkills[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Skeletonizer(
-                      enabled: isLoading,
-                      child: CustomSkillCard(
-                        userName: skill.userName,
-                        userProfileUrl: skill.userProfileUrl,
-                        categoryTitle: skill.categoryTitle,
-                        skillTitle: skill.skillTitle,
-                        skillDescription: skill.skillDescription,
-                        skillList: skill.skillList
-                            .map((text) => CustomCategoryChip(chipText: text))
-                            .toList(),
-                        point: skill.point,
-                        onTap: () {
-                          context.pushNamed(AppRoutesName.skillCardDetails);
-                        },
+              BlocBuilder<GetSkillSwapPostsBloc, GetSkillSwapPostsState>(
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    loading: () => SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => Skeletonizer(
+                          enabled: true,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: CustomSkillCard(
+                              userName: "Skeleton User",
+                              userProfileUrl: "",
+                              categoryTitle: "Category",
+                              skillTitle: "Skill Title",
+                              skillDescription:
+                                  "This is a long description for skeleton loading",
+                              skillList: const [],
+                              point: "0",
+                              onTap: () {},
+                            ),
+                          ),
+                        ),
+                        childCount: 5,
                       ),
                     ),
+                    loaded: (posts) {
+                      final filteredSkills = selectedCategoryId == null
+                          ? posts
+                          : posts
+                                .where(
+                                  (post) =>
+                                      post.category?.id == selectedCategoryId,
+                                )
+                                .toList();
+
+                      if (filteredSkills.isEmpty) {
+                        return const SliverToBoxAdapter(
+                          child: Center(child: Text("No posts found")),
+                        );
+                      }
+
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final skill = filteredSkills[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: CustomSkillCard(
+                              userName: skill.user.fullName,
+                              userProfileUrl: skill.user.profileImage ?? '',
+                              categoryTitle: skill.category?.name ?? 'General',
+                              skillTitle: skill.skillOffered,
+                              skillDescription: skill.description,
+                              skillList: [
+                                CustomCategoryChip(chipText: skill.skillWanted),
+                              ],
+                              point: skill.pointsReward.toString(),
+                              onTap: () {
+                                context.pushNamed(
+                                  AppRoutesName.skillCardDetails,
+                                  extra: skill,
+                                );
+                              },
+                            ),
+                          );
+                        }, childCount: filteredSkills.length),
+                      );
+                    },
+                    failure: (message) => SliverToBoxAdapter(
+                      child: Center(child: Text("Error: $message")),
+                    ),
+                    orElse: () =>
+                        const SliverToBoxAdapter(child: SizedBox.shrink()),
                   );
-                }, childCount: filteredSkills.length),
+                },
               ),
             ],
           ),

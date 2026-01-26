@@ -63,6 +63,8 @@ abstract interface class SkillSwapRepository {
     required int sessionId,
     required String action,
   });
+
+  FutureEither<String> addCategory({required String name});
 }
 
 class SkillSwapRepositoryImpl implements SkillSwapRepository {
@@ -282,6 +284,19 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     return response.fold(
       (failure) => Left(failure),
       (data) => Right(data['message'] ?? "Action successful"),
+    );
+  }
+
+  @override
+  FutureEither<String> addCategory({required String name}) async {
+    final response = await _apiService.post<Map>(
+      'skillswap/categories/',
+      data: {"name": name},
+    );
+
+    return response.fold(
+      (failure) => Left(failure),
+      (data) => Right(data['name'] ?? "Category added successfully"),
     );
   }
 }
