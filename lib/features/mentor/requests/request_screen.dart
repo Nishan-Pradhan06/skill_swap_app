@@ -29,7 +29,11 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Incoming Requests"),
+      appBar: AppBar(
+        title: Text("Incoming Requests"),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+      ),
       body: BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
         listener: (context, state) {
           state.maybeWhen(
