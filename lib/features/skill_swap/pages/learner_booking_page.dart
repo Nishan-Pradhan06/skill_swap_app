@@ -53,7 +53,11 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
     return BlocProvider(
       create: (_) => sl<BookingBloc>(),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Book Session')),
+        appBar: AppBar(
+          title: const Text('Book Session'),
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+        ),
         body: BlocListener<BookingBloc, BookingState>(
           listener: (context, state) {
             state.whenOrNull(

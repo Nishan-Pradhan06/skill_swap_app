@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/features/learner/home/widgets/custom_cateogry_chip.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
@@ -19,11 +18,9 @@ class SkillCardDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          post.title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: const CustomBackButton(),
+        title: Text(post.title),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -34,7 +31,9 @@ class SkillCardDetailsScreen extends StatelessWidget {
               height: 200,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
               ),
               child: Center(
                 child: Icon(
@@ -141,7 +140,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                     children: [CustomCategoryChip(chipText: post.skillOffered)],
                   ),
                   const SizedBox(height: 24),
-                  const SizedBox(height: 24),
+
                   if (post.teachDate != null ||
                       (post.availableSlotsCount ?? 0) > 0) ...[
                     Text(
@@ -212,7 +211,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                     spacing: 8,
                     children: [CustomCategoryChip(chipText: post.skillWanted)],
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
                   BlocBuilder<GetProfileBloc, GetProfileState>(
                     builder: (context, state) {
                       final currentUserId = state.maybeWhen(
