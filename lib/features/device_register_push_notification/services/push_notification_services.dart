@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -15,8 +14,6 @@ class PushNotificationService {
 
   Future<void> init() async {
     await Firebase.initializeApp();
-
-    if (Platform.isIOS) return;
 
     await _requestPermission();
     await _setForegroundPresentationOptions();

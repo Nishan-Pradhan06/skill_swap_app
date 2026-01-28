@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 

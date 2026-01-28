@@ -7,12 +7,15 @@ import '../../../core/network/api_services.dart';
 import '../model/profile_setup_model.dart';
 import '../model/roles_model.dart';
 
+import 'package:skill_swap/features/profile/model/profile_completion_model.dart';
+
 abstract interface class ProfileRepository {
   FutureEither<ProfileDataModel> getProfile();
   FutureEither<String> switchRole({required RolesModel roles});
   FutureEither<String> setUpProfile({
     required UserProfileSetUpModel profileSetUpModel,
   });
+  FutureEither<ProfileCompletionModel> checkProfileCompletion();
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -63,6 +66,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
     return response.fold((failure) => Left(failure), (data) {
       return Right(data['message']);
+    });
+  }
+
+  @override
+  FutureEither<ProfileCompletionModel> checkProfileCompletion() async {
+    final response = await _apiService.get('profile/completion-check/');
+
+    return response.fold((failure) => Left(failure), (data) {
+      final completionData = data['data'];
+      final completionModel = ProfileCompletionModel.fromJson(completionData);
+      return Right(completionModel);
     });
   }
 }
