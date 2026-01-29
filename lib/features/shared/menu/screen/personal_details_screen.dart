@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/core/helpers/validation_helpers.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
@@ -42,12 +43,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Personal details updated successfully'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        CustomToast.showSuccess('Personal details updated successfully');
       }
     }
   }

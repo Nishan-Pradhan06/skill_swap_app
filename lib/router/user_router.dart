@@ -6,9 +6,13 @@ import 'package:skill_swap/features/learner/home/screen/skill_card_details_scree
 import 'package:skill_swap/features/profile/screen/profile_setup/profile_setup_screen.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/core/di/dependency_injection.dart';
+import 'package:skill_swap/features/reward/blocs/reward_bloc.dart';
 
 import '../features/shared/bottom_nav_bar/screens/learner_bottom_nav_bar.dart';
 import '../features/shared/bottom_nav_bar/screens/mentor_bottom_nav_bar.dart';
+import 'package:skill_swap/features/reward/screens/daily_reward_screen.dart';
 
 List<GoRoute> userAppRoutes = [
   GoRoute(
@@ -42,5 +46,13 @@ List<GoRoute> userAppRoutes = [
     name: AppRoutesName.skillPostFormRoute,
     builder: (context, state) =>
         SkillPostFormScreen(post: state.extra as SkillSwapPostModel?),
+  ),
+  GoRoute(
+    path: AppRoutesName.dailyRewardScreenRoute.path,
+    name: AppRoutesName.dailyRewardScreenRoute,
+    builder: (context, state) => BlocProvider(
+      create: (context) => sl<RewardBloc>(),
+      child: const DailyRewardScreen(),
+    ),
   ),
 ];
