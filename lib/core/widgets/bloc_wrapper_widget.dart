@@ -69,10 +69,7 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<GetCategoriesBloc>()),
         BlocProvider(create: (_) => sl<GetSessionsBloc>()),
         BlocProvider(create: (_) => sl<HandleSessionActionBloc>()),
-        BlocProvider(
-          create: (_) =>
-              sl<DailyRewardBloc>()..add(DailyRewardEvent.dailyReward()),
-        ),
+        BlocProvider(create: (_) => sl<DailyRewardBloc>()),
       ],
       child: child,
     );

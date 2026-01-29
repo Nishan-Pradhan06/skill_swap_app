@@ -117,28 +117,33 @@ class CustomProfileHeader extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              height: 40,
-              width: 65,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: Row(
-                  spacing: 4,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      (data?.points ?? 0).toString(),
-                      style: TextTheme.of(context).bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: AppTheme.backgroundLight,
+            GestureDetector(
+              onTap: () {
+                context.pushNamed(AppRoutesName.dailyRewardScreenRoute);
+              },
+              child: Container(
+                height: 40,
+                width: 65,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Row(
+                    spacing: 4,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        (data?.points ?? 0).toString(),
+                        style: TextTheme.of(context).bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppTheme.backgroundLight,
+                        ),
                       ),
-                    ),
-                    Image.asset('assets/images/coin.png', height: 20),
-                  ],
+                      Image.asset('assets/images/coin.png', height: 20),
+                    ],
+                  ),
                 ),
               ),
             ),
