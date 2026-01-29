@@ -26,6 +26,7 @@ import 'package:skill_swap/features/skill_swap/blocs/get_mentor_posts_bloc.dart'
 import 'package:skill_swap/features/skill_swap/blocs/get_categories_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/skill_search_bloc.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 
 import '../../features/auth/repository/auth_repository.dart';
@@ -88,6 +89,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory(() => GetSessionsBloc(repository: sl()));
   sl.registerFactory(() => HandleSessionActionBloc(repository: sl()));
   sl.registerFactory(() => RewardBloc(repository: sl()));
+  sl.registerFactory(() => SkillSearchBloc(repository: sl()));
 
   //###---------------EXTERNAL REPOSITORY SERVICES---------------###
 

@@ -1,45 +1,61 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skill_swap/core/di/dependency_injection.dart';
+import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_appbar.dart';
+import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
+import 'package:skill_swap/features/learner/home/widgets/custom_cateogry_chip.dart';
+import 'package:skill_swap/features/learner/home/widgets/custom_skill_card.dart';
+import 'package:skill_swap/features/skill_swap/blocs/skill_search_bloc.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/custom_padding.dart';
-import '../../../../core/widgets/custom_text_form_field.dart';
-
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => sl<SkillSearchBloc>(),
+      child: const _SearchScreenView(),
+    );
+  }
 }
 
-class _SearchPageState extends State<SearchScreen> {
+class _SearchScreenView extends StatefulWidget {
+  const _SearchScreenView();
+
+  @override
+  State<_SearchScreenView> createState() => _SearchScreenViewState();
+}
+
+class _SearchScreenViewState extends State<_SearchScreenView> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _allItems = [
-    'Apple',
-    'Banana',
-    'Cherry',
-    'Mango',
-    'Orange',
-    'Pineapple',
-  ];
-  List<String> _filteredItems = [];
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    _filteredItems = _allItems;
-    _searchController.addListener(_filterList);
+    _searchController.addListener(_onSearchChanged);
   }
 
-  void _filterList() {
-    setState(() {
-      _filteredItems = _allItems
-          .where(
-            (item) => item.toLowerCase().contains(
-              _searchController.text.toLowerCase(),
-            ),
-          )
-          .toList();
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<SkillSearchBloc>().add(
+        SkillSearchEvent.searchQueryChanged(_searchController.text),
+      );
     });
   }
 
@@ -54,12 +70,12 @@ class _SearchPageState extends State<SearchScreen> {
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomBackButton(),
+              const CustomBackButton(),
               CustomTextField(
-                hint: 'Search',
+                hint: 'Search skills...',
                 borderColor: Colors.transparent,
                 borderRadius: 18,
-                leading: Icon(Icons.search),
+                leading: const Icon(Icons.search),
                 controller: _searchController,
                 type: CustomTextFieldType.text,
                 fillColor: darkTextTheme
@@ -67,13 +83,65 @@ class _SearchPageState extends State<SearchScreen> {
                     : AppTheme.surfaceLight,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: _filteredItems.length,
-                  itemBuilder: (_, index) {
-                    final item = _filteredItems[index];
-                    return ListTile(
-                      title: Text(item),
-                      onTap: () => Navigator.pop(context, item),
+                child: BlocBuilder<SkillSearchBloc, SkillSearchState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loading: () => ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => const Skeletonizer(
+                          enabled: true,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 12.0),
+                            child: CustomSkillCard(
+                              userName: "Skeleton User",
+                              userProfileUrl: "",
+                              categoryTitle: "Category",
+                              skillTitle: "Skill Title",
+                              skillDescription: "Description loading...",
+                              skillList: [],
+                              point: "0",
+                            ),
+                          ),
+                        ),
+                      ),
+                      loaded: (posts) {
+                        if (posts.isEmpty) {
+                          return const Center(child: Text('No skills found'));
+                        }
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          itemBuilder: (context, index) {
+                            final skill = posts[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: CustomSkillCard(
+                                userName: skill.user.fullName,
+                                userProfileUrl: skill.user.profileImage ?? '',
+                                categoryTitle:
+                                    skill.category?.name ?? 'General',
+                                skillTitle: skill.skillOffered,
+                                skillDescription: skill.description,
+                                skillList: [
+                                  CustomCategoryChip(
+                                    chipText: skill.skillWanted,
+                                  ),
+                                ],
+                                point: skill.pointsReward.toString(),
+                                onTap: () {
+                                  context.pushNamed(
+                                    AppRoutesName.skillCardDetails,
+                                    extra: skill,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      failure: (message) => Center(child: Text(message)),
+                      orElse: () => const Center(
+                        child: Text('Type to search for skills'),
+                      ),
                     );
                   },
                 ),

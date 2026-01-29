@@ -23,6 +23,8 @@ abstract interface class SkillSwapRepository {
 
   FutureEither<List<SkillSwapPostModel>> getMentorPosts();
 
+  FutureEither<List<SkillSwapPostModel>> searchSkillSwapPosts(String query);
+
   FutureEither<String> createPost({
     required String title,
     required String description,
@@ -145,6 +147,23 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
   @override
   FutureEither<List<SkillSwapPostModel>> getMentorPosts() async {
     final response = await _apiService.get<List>('skillswap/posts/mentor/');
+
+    return response.fold((failure) => Left(failure), (data) {
+      final List<SkillSwapPostModel> posts = data
+          .map((e) => SkillSwapPostModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      return Right(posts);
+    });
+  }
+
+  @override
+  FutureEither<List<SkillSwapPostModel>> searchSkillSwapPosts(
+    String query,
+  ) async {
+    final response = await _apiService.get<List>(
+      'skillswap/posts/',
+      queryParameters: {'search': query},
+    );
 
     return response.fold((failure) => Left(failure), (data) {
       final List<SkillSwapPostModel> posts = data
