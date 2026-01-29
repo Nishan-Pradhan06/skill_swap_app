@@ -15,6 +15,7 @@ import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.da
 import 'package:skill_swap/features/profile/bloc/profile_completion_check/profile_completion_check_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/switch_role/switch_role_bloc.dart';
+import 'package:skill_swap/features/profile/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';
 import 'package:skill_swap/features/reward/blocs/reward_bloc.dart';
 import 'package:skill_swap/features/reward/repository/reward_repository.dart';
@@ -56,6 +57,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetProfileBloc(repo: sl()));
   sl.registerLazySingleton(() => ProfileSetupBloc(repo: sl()));
   sl.registerLazySingleton(() => ProfileCompletionCheckBloc(repo: sl()));
+  sl.registerFactory(() => EditProfileBloc(repository: sl()));
 
   //###---------------CUBIT--------------------###
 

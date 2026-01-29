@@ -8,6 +8,7 @@ import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/features/profile/widgets/custom_user_profile_header.dart';
 import 'tab_bar_view/about_tab_bar_view.dart';
 import 'tab_bar_view/portfolio_tab_bar_view.dart';
+import 'package:skill_swap/features/profile/screen/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,7 +25,21 @@ class ProfileScreen extends StatelessWidget {
           elevation: 0,
           centerTitle: false,
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+            IconButton(
+              onPressed: () {
+                final state = context.read<GetProfileBloc>().state;
+                state.whenOrNull(
+                  loaded: (data) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => EditProfileScreen(profileData: data),
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.settings),
+            ),
           ],
         ),
         body: BlocBuilder<GetProfileBloc, GetProfileState>(
@@ -107,9 +122,7 @@ class ProfileScreen extends StatelessWidget {
                       availableSkills: data?.skillYouOffer ?? [],
                       certifications: data?.certifications ?? [],
                       aboutBio: data?.bio ?? 'No Bio',
-                      workExperiences:data?.workingExpriences?? [
-
-                      ],
+                      workExperiences: data?.workingExpriences ?? [],
                     ),
                   ),
                   // Portfolio Tab

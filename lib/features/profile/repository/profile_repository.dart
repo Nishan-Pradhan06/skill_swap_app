@@ -16,6 +16,11 @@ abstract interface class ProfileRepository {
     required UserProfileSetUpModel profileSetUpModel,
   });
   FutureEither<ProfileCompletionModel> checkProfileCompletion();
+  FutureEither<String> updateProfile({
+    required Map<String, dynamic> data,
+    String? profileImagePath,
+    String? bannerImagePath,
+  });
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -77,6 +82,37 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final completionData = data['data'];
       final completionModel = ProfileCompletionModel.fromJson(completionData);
       return Right(completionModel);
+    });
+  }
+
+  @override
+  FutureEither<String> updateProfile({
+    required Map<String, dynamic> data,
+    String? profileImagePath,
+    String? bannerImagePath,
+  }) async {
+    Map<String, dynamic> mapData = Map.from(data);
+
+    if (profileImagePath != null) {
+      mapData['profile_image'] = await MultipartFile.fromFile(
+        profileImagePath,
+        filename: profileImagePath.split('/').last,
+      );
+    }
+
+    if (bannerImagePath != null) {
+      mapData['banner_image'] = await MultipartFile.fromFile(
+        bannerImagePath,
+        filename: bannerImagePath.split('/').last,
+      );
+    }
+
+    FormData formData = FormData.fromMap(mapData);
+
+    final response = await _apiService.patch('profile/update/', data: formData);
+
+    return response.fold((failure) => Left(failure), (data) {
+      return Right(data['message']);
     });
   }
 }
