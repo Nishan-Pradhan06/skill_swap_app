@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
@@ -29,7 +28,11 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Incoming Requests"),
+      appBar: AppBar(
+        title: Text("Incoming Requests"),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+      ),
       body: BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
         listener: (context, state) {
           state.maybeWhen(

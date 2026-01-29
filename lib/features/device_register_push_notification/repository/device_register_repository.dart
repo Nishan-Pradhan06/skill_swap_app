@@ -24,7 +24,8 @@ class DeviceRegisterForPushNotificationRepositoryImpl
     final FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token;
     if (Platform.isIOS) {
-      // token = await _messaging.getAPNSToken() ?? '';
+      token = await messaging.getToken() ?? '';
+      log('iOS device token: $token');
     } else if (Platform.isAndroid) {
       token = await messaging.getToken() ?? '';
       log('Android device token: $token');

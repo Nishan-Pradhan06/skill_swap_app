@@ -137,7 +137,7 @@ class _TeacherAvailabilityScreenState extends State<TeacherAvailabilityScreen> {
                         // Assuming GetSkillSwapPostsBloc already has them or we filter here
                         // For simplicity, showing all posts for now, but usually it should be sl<GetProfileBloc>().state.user.id
                         return DropdownButtonFormField<SkillSwapPostModel>(
-                          value: _selectedPost,
+                          initialValue: _selectedPost,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: "Select Skill Post",

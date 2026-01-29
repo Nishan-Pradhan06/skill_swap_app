@@ -7,6 +7,8 @@ import 'package:skill_swap/features/skill_swap/blocs/booking_bloc.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 import 'package:skill_swap/features/skill_swap/models/availability_slot_model.dart';
 
+import '../../../core/utils/date_string_split_utils.dart';
+
 class LearnerBookingPage extends StatefulWidget {
   final int mentorId;
   final int? postId;
@@ -53,7 +55,11 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
     return BlocProvider(
       create: (_) => sl<BookingBloc>(),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Book Session')),
+        appBar: AppBar(
+          title: const Text('Book Session'),
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+        ),
         body: BlocListener<BookingBloc, BookingState>(
           listener: (context, state) {
             state.whenOrNull(
@@ -74,7 +80,7 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.secondaryContainer.withOpacity(0.5),
+                        ).colorScheme.secondaryContainer.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -123,7 +129,7 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+
                     Expanded(
                       child: CustomPadding(
                         child: ListView.builder(
@@ -131,8 +137,16 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
                           itemBuilder: (context, index) {
                             final slot = _slots[index];
                             return Card(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 0,
+                              ),
                               child: ListTile(
-                                title: Text("${slot.startTime.toLocal()}"),
+                                title: Text(
+                                  DateTimeUtils.formatDateTimeNoDay(
+                                    slot.startTime,
+                                  ),
+                                ),
                                 subtitle: Text(
                                   slot.isBooked ? "Booked" : "Available",
                                 ),

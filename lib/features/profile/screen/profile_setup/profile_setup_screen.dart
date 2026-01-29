@@ -12,7 +12,6 @@ import 'package:skill_swap/features/profile/screen/profile_setup/skill_wanted_sc
 import 'package:skill_swap/features/profile/screen/profile_setup/skilled_offered_screen.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 
-import '../../../../core/services/cache_service.dart';
 import '../../../../core/widgets/custom_toast.dart';
 
 class ProfileSetupFlow extends StatefulWidget {
@@ -253,8 +252,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                                 ),
                               ),
                             );
-                            await CacheServices.instance
-                                .setProfileSetupCompleted(true);
+                            // Removed local cache call - backend now trac                                 ks completion
                           },
                         ),
                       ],

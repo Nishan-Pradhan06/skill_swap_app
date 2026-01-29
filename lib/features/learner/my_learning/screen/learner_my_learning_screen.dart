@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import '../widgets/booking_status_card.dart';
@@ -29,7 +28,11 @@ class _LearnerMyLearningScreenState extends State<LearnerMyLearningScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "My Skill Bookings"),
+      appBar: AppBar(
+        title: Text("My Learning"),
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           _fetchBookings();

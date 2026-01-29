@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:skill_swap/features/profile/bloc/profile_completion_check/profile_completion_check_bloc.dart';
+import '../../../core/di/dependency_injection.dart';
 import '../../../core/services/cache_service.dart';
 import '../../../router/app_routes_names.dart';
 
@@ -39,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward();
-    _navigate(); // Uncomment when navigation is ready
+    _navigate();
   }
 
   @override
@@ -48,16 +50,11 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // ...existing code...
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
 
     final token = await CacheServices.instance.getAuthToken();
-    final isProfileCompleted =
-        await CacheServices.instance.getProfileSetupCompleted() ?? false;
-    final role = await CacheServices.instance
-        .getUserRole(); // String: 'LEARNER', 'MENTOR', 'ADMIN'
 
     // Not signed in → show onboarding/login
     if (token == null || token.isEmpty) {
@@ -67,34 +64,58 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
-    // Signed in → check profile completion
-    if (!isProfileCompleted) {
-      if (mounted) {
-        context.goNamed(AppRoutesName.profileSetupScreenRoute);
-      }
-      return;
-    }
+    // Signed in → check profile completion from backend
+    final bloc = sl<ProfileCompletionCheckBloc>();
+    bloc.add(const ProfileCompletionCheckEvent.checkProfileCompletion());
 
-    // Navigate based on role
+    await for (final state in bloc.stream) {
+      if (!mounted) return;
+
+      // Only process loaded or failure states
+      final shouldNavigate = state.whenOrNull(
+        loaded: (data) {
+          if (!data.isComplete) {
+            // Profile incomplete → redirect to setup
+            if (mounted) {
+              context.goNamed(AppRoutesName.profileSetupScreenRoute);
+            }
+          } else {
+            // Profile complete → navigate based on role
+            _navigateToHomeByRole();
+          }
+          return true;
+        },
+        failure: (failure) {
+          // On error, fallback to onboarding
+          if (mounted) {
+            context.goNamed(AppRoutesName.onBoardingScreen);
+          }
+          return true;
+        },
+      );
+
+      // Break only after we've navigated
+      if (shouldNavigate == true) {
+        break;
+      }
+    }
+  }
+
+  Future<void> _navigateToHomeByRole() async {
+    final role = await CacheServices.instance.getUserRole();
+
+    if (!mounted) return;
+
     if (role == 'LEARNER') {
-      if (mounted) {
-        context.goNamed(AppRoutesName.learnerBottomNavBar);
-      }
+      context.goNamed(AppRoutesName.learnerBottomNavBar);
     } else if (role == 'MENTOR') {
-      if (mounted) {
-        context.goNamed(AppRoutesName.mentorBottomNavBar);
-      }
+      context.goNamed(AppRoutesName.mentorBottomNavBar);
     } else if (role == 'ADMIN') {
-      // if (mounted) {
-      //   context.goNamed(
-      //     AppRoutesName.adminDashboardScreen,
-      //   ); // create this route
-      // }
+      // context.goNamed(AppRoutesName.adminDashboardScreen);
+      context.goNamed(AppRoutesName.onBoardingScreen);
     } else {
       // fallback
-      if (mounted) {
-        context.goNamed(AppRoutesName.onBoardingScreen);
-      }
+      context.goNamed(AppRoutesName.onBoardingScreen);
     }
   }
 
