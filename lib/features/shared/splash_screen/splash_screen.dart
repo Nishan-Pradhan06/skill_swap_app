@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward();
-    _navigate(); // Uncomment when navigation is ready
+    _navigate();
   }
 
   @override
@@ -50,7 +50,6 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  // ...existing code...
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
@@ -72,7 +71,8 @@ class _SplashScreenState extends State<SplashScreen>
     await for (final state in bloc.stream) {
       if (!mounted) return;
 
-      state.whenOrNull(
+      // Only process loaded or failure states
+      final shouldNavigate = state.whenOrNull(
         loaded: (data) {
           if (!data.isComplete) {
             // Profile incomplete → redirect to setup
@@ -83,17 +83,21 @@ class _SplashScreenState extends State<SplashScreen>
             // Profile complete → navigate based on role
             _navigateToHomeByRole();
           }
+          return true;
         },
         failure: (failure) {
           // On error, fallback to onboarding
           if (mounted) {
             context.goNamed(AppRoutesName.onBoardingScreen);
           }
+          return true;
         },
       );
 
-      // Break after first non-initial state
-      break;
+      // Break only after we've navigated
+      if (shouldNavigate == true) {
+        break;
+      }
     }
   }
 

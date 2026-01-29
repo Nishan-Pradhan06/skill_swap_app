@@ -12,6 +12,7 @@ import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/models/sign_in_model.dart';
+import 'package:skill_swap/features/profile/bloc/profile_completion_check/profile_completion_check_bloc.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../core/helpers/validation_helpers.dart';
 import '../../../core/services/cache_service.dart';
@@ -75,11 +76,45 @@ class _SignInScreenState extends State<SignInScreen> {
   // }
 
   /// Handle login button press
+  /// Handle login button press
   Future<void> _handleNavigation() async {
-    final isProfileCompleted =
-        await CacheServices.instance.getProfileSetupCompleted() ?? false;
-    if (!isProfileCompleted) {
-      context.goNamed(AppRoutesName.profileSetupScreenRoute);
+    // Check backend for profile completion status
+    final bloc = sl<ProfileCompletionCheckBloc>();
+    bloc.add(const ProfileCompletionCheckEvent.checkProfileCompletion());
+
+    // Wait for the result
+    await for (final state in bloc.stream) {
+      if (!mounted) return;
+
+      final shouldNavigate = state.whenOrNull(
+        loaded: (data) {
+          if (!data.isComplete) {
+            context.goNamed(AppRoutesName.profileSetupScreenRoute);
+          } else {
+            // Profile complete → navigate based on role (which we can get from cache or just default to learner/mentor based on login response,
+            // but CacheServices might be updated by SignInBloc? Let's assume CacheServices has the role now)
+            _navigateToHome();
+          }
+          return true;
+        },
+        failure: (failure) {
+          // If check fails, maybe go to home as fallback or show error?
+          // Fallback to simpler check or just go to home
+          context.goNamed(AppRoutesName.learnerBottomNavBar);
+          return true;
+        },
+      );
+
+      if (shouldNavigate == true) {
+        break;
+      }
+    }
+  }
+
+  Future<void> _navigateToHome() async {
+    final role = await CacheServices.instance.getUserRole();
+    if (role == 'MENTOR') {
+      context.goNamed(AppRoutesName.mentorBottomNavBar);
     } else {
       context.goNamed(AppRoutesName.learnerBottomNavBar);
     }

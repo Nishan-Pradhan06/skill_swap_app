@@ -252,7 +252,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                                 ),
                               ),
                             );
-                            // Removed local cache call - backend now tracks completion
+                            // Removed local cache call - backend now trac                                 ks completion
                           },
                         ),
                       ],
