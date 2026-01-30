@@ -8,6 +8,7 @@ import 'package:skill_swap/features/notifications/bloc/get_notification_count/ge
 import 'package:skill_swap/features/notifications/bloc/get_notifications/get_notification_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_skill_swap_posts_bloc.dart';
+import '../../../../core/widgets/custom_toast.dart';
 import '../widgets/custom_cateogry_chip.dart';
 import '../widgets/custom_filter_chip.dart';
 import '../widgets/custom_profile_header.dart';
@@ -37,6 +38,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
     context.read<GetSkillSwapPostsBloc>().add(
       const GetSkillSwapPostsEvent.getPosts(),
     );
+    CustomToast.showSuccess("Refreshed");
   }
 
   @override

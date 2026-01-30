@@ -6,6 +6,7 @@ import 'package:skill_swap/core/widgets/custom_scrollable_padding.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/features/profile/widgets/custom_user_profile_header.dart';
+import '../../../core/widgets/custom_toast.dart';
 import 'tab_bar_view/about_tab_bar_view.dart';
 import 'tab_bar_view/portfolio_tab_bar_view.dart';
 import 'package:skill_swap/features/profile/screen/edit_profile_screen.dart';
@@ -57,6 +58,7 @@ class ProfileScreen extends StatelessWidget {
                 return ScrollableRefreshablePadding(
                   onRefresh: () async {
                     sl<GetProfileBloc>().add(GetProfileEvent.getProfile());
+                    CustomToast.showSuccess("Profile refreshed");
                   },
                   child: _buildProfileContent(context, data, isLoading: false),
                 );

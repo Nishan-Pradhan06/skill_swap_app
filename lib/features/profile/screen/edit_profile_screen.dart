@@ -7,9 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skill_swap/core/di/dependency_injection.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/features/profile/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
+import 'package:skill_swap/core/theme/app_theme.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final ProfileDataModel profileData;
@@ -143,17 +147,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         listener: (context, state) {
           state.whenOrNull(
             success: (message) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(message)));
-              // Refresh profile data
+              CustomToast.showSuccess(message);
+
               sl<GetProfileBloc>().add(const GetProfileEvent.getProfile());
               context.pop();
             },
             failure: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.red),
-              );
+              CustomToast.showError(message);
             },
           );
         },
@@ -166,6 +166,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Edit Profile'),
+              scrolledUnderElevation: 0,
+              centerTitle: false,
               actions: [
                 if (isLoading)
                   const Center(child: CircularProgressIndicator())
@@ -202,78 +204,116 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Stack(
                     alignment: Alignment.bottomLeft,
                     children: [
-                      GestureDetector(
-                        onTap: () => _pickImage(false),
-                        child: Container(
-                          height: 150,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            image: _bannerImage != null
-                                ? DecorationImage(
-                                    image: FileImage(_bannerImage!),
-                                    fit: BoxFit.cover,
-                                  )
-                                : widget.profileData.bannerImage != null &&
-                                      widget.profileData.bannerImage!.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(
-                                      widget.profileData.bannerImage!,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                : const DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/banner.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                          child:
-                              _bannerImage == null &&
-                                  (widget.profileData.bannerImage == null ||
-                                      widget.profileData.bannerImage!.isEmpty)
-                              ? const Center(
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                  ),
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          image: _bannerImage != null
+                              ? DecorationImage(
+                                  image: FileImage(_bannerImage!),
+                                  fit: BoxFit.cover,
                                 )
-                              : null,
+                              : widget.profileData.bannerImage != null &&
+                                    widget.profileData.bannerImage!.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                    widget.profileData.bannerImage!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                )
+                              : const DecorationImage(
+                                  image: AssetImage('assets/images/banner.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        child:
+                            _bannerImage == null &&
+                                (widget.profileData.bannerImage == null ||
+                                    widget.profileData.bannerImage!.isEmpty)
+                            ? const Center(
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : null,
+                      ),
+                      CustomPadding(
+                        horizontal: 12,
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            padding: EdgeInsets.zero,
+                            margin: EdgeInsets.zero,
+                            constraints: BoxConstraints(),
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () => _pickImage(false),
+                              icon: Icon(Icons.mode_edit_rounded, size: 14),
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () => _pickImage(true),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.white,
-                            backgroundImage: _profileImage != null
-                                ? FileImage(_profileImage!)
-                                : widget.profileData.profileImage != null &&
-                                      widget
-                                          .profileData
-                                          .profileImage!
-                                          .isNotEmpty
-                                ? NetworkImage(widget.profileData.profileImage!)
-                                : const AssetImage(
-                                        'assets/images/default_profile.png',
-                                      )
-                                      as ImageProvider,
-                            child:
-                                _profileImage == null &&
-                                    (widget.profileData.profileImage == null ||
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.white,
+                              backgroundImage: _profileImage != null
+                                  ? FileImage(_profileImage!)
+                                  : widget.profileData.profileImage != null &&
                                         widget
                                             .profileData
                                             .profileImage!
-                                            .isEmpty)
-                                ? null // Don't show icon content if we have a default image, or maybe show a small edit icon?
-                                // The original code showed an icon if null.
-                                // If we show a default image, we might not want the big person icon covering it.
-                                // Let's remove the child Icon(Icons.person) since the default image is self-explanatory.
-                                : null,
-                          ),
+                                            .isNotEmpty
+                                  ? NetworkImage(
+                                      widget.profileData.profileImage!,
+                                    )
+                                  : const AssetImage(
+                                          'assets/images/default_profile.png',
+                                        )
+                                        as ImageProvider,
+                              child:
+                                  _profileImage == null &&
+                                      (widget.profileData.profileImage ==
+                                              null ||
+                                          widget
+                                              .profileData
+                                              .profileImage!
+                                              .isEmpty)
+                                  ? null
+                                  : null,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                height: 26,
+                                width: 26,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () => _pickImage(true),
+                                  icon: Icon(Icons.mode_edit_rounded, size: 14),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -281,37 +321,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 20),
 
                   // Form Fields
-                  TextFormField(
+                  // Form Fields
+                  CustomTextField(
+                    label: 'Full Name',
                     controller: _fullNameController,
-                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
+                  CustomTextField(
+                    label: 'Profile Title',
                     controller: _titleController,
-                    decoration: const InputDecoration(
-                      labelText: 'Profile Title',
-                    ),
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
+                  CustomTextField(
+                    label: 'Bio',
                     controller: _bioController,
-                    decoration: const InputDecoration(labelText: 'Bio'),
                     maxLines: 3,
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
+                  CustomTextField(
+                    label: 'Phone Number',
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                    ),
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 10),
-                  TextFormField(
+                  CustomTextField(
+                    label: 'Location (Province)',
                     controller: _locationController,
-                    decoration: const InputDecoration(
-                      labelText: 'Location (Province)',
-                    ),
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 20),
 
@@ -323,11 +378,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
+                        child: CustomTextField(
                           controller: _skillOfferController,
-                          decoration: const InputDecoration(
-                            hintText: 'Add a skill',
-                          ),
+                          hint: 'Add a skill',
+                          borderColor: Colors.transparent,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0XFF272c29)
+                              : AppTheme.surfaceLight,
                         ),
                       ),
                       IconButton(
@@ -339,10 +397,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   Wrap(
                     spacing: 8,
+                    runSpacing: 8,
                     children: _skillsOffered
                         .map(
-                          (skill) => Chip(
-                            label: Text(skill),
+                          (skill) => FilterChip(
+                            padding: EdgeInsets.all(0),
+                            labelPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 0,
+                            ),
+                            label: Text(
+                              skill,
+                              style: TextTheme.of(context).bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onSelected: (selected) {},
+                            side: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.6),
+                            ),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.6),
+                            deleteIcon: Icon(
+                              Icons.cancel,
+                              size: 18,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                             onDeleted: () {
                               setState(() {
                                 _skillsOffered.remove(skill);
@@ -362,11 +446,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
+                        child: CustomTextField(
                           controller: _skillWantController,
-                          decoration: const InputDecoration(
-                            hintText: 'Add a skill',
-                          ),
+                          hint: 'Add a skill',
+                          borderColor: Colors.transparent,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0XFF272c29)
+                              : AppTheme.surfaceLight,
                         ),
                       ),
                       IconButton(
@@ -378,10 +465,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   Wrap(
                     spacing: 8,
+                    runSpacing: 8,
                     children: _skillsWanted
                         .map(
-                          (skill) => Chip(
-                            label: Text(skill),
+                          (skill) => FilterChip(
+                            padding: EdgeInsets.all(0),
+                            labelPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 0,
+                            ),
+                            label: Text(
+                              skill,
+                              style: TextTheme.of(context).bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onSelected: (selected) {},
+                            side: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.6),
+                            ),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.6),
+                            deleteIcon: Icon(
+                              Icons.cancel,
+                              size: 18,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
                             onDeleted: () {
                               setState(() {
                                 _skillsWanted.remove(skill);

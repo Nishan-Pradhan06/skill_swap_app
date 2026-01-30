@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/custom_container.dart';
-import '../../../core/widgets/custom_padding.dart';
 
 class CustomUserProfileHeader extends StatelessWidget {
   final String profileImageUrl;
@@ -36,27 +35,7 @@ class CustomUserProfileHeader extends StatelessWidget {
             imageUrl: coverImageUrl,
           ),
         ),
-        CustomPadding(
-          horizontal: 12,
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              padding: EdgeInsets.zero,
-              margin: EdgeInsets.zero,
-              constraints: BoxConstraints(),
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.mode_edit_rounded, size: 14),
-              ),
-            ),
-          ),
-        ),
+
         Positioned(
           bottom: -100,
           left: 20,
