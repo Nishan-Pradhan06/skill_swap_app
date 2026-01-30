@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/features/profile/bloc/edit_profile/edit_profile_bloc.dart';
@@ -70,14 +71,59 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {
-      setState(() {
-        if (isProfile) {
-          _profileImage = File(pickedFile.path);
-        } else {
-          _bannerImage = File(pickedFile.path);
-        }
-      });
+      final croppedFile = await _cropImage(
+        path: pickedFile.path,
+        isProfile: isProfile,
+      );
+
+      if (croppedFile != null) {
+        setState(() {
+          if (isProfile) {
+            _profileImage = File(croppedFile.path);
+          } else {
+            _bannerImage = File(croppedFile.path);
+          }
+        });
+      }
     }
+  }
+
+  Future<CroppedFile?> _cropImage({
+    required String path,
+    required bool isProfile,
+  }) async {
+    return await ImageCropper().cropImage(
+      sourcePath: path,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: isProfile ? 'Crop Profile Image' : 'Crop Banner Image',
+          toolbarColor: Theme.of(context).primaryColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: isProfile
+              ? CropAspectRatioPreset.square
+              : CropAspectRatioPreset.ratio16x9,
+          lockAspectRatio: true,
+          aspectRatioPresets: isProfile
+              ? [CropAspectRatioPreset.square]
+              : [
+                  CropAspectRatioPreset.ratio16x9,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                ],
+        ),
+        IOSUiSettings(
+          title: isProfile ? 'Crop Profile Image' : 'Crop Banner Image',
+          cropStyle: isProfile ? CropStyle.circle : CropStyle.rectangle,
+          aspectRatioPresets: isProfile
+              ? [CropAspectRatioPreset.square]
+              : [
+                  CropAspectRatioPreset.ratio16x9,
+                  CropAspectRatioPreset.ratio3x2,
+                  CropAspectRatioPreset.original,
+                ],
+        ),
+      ],
+    );
   }
 
   void _addSkill(List<String> list, TextEditingController controller) {
@@ -168,19 +214,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     image: FileImage(_bannerImage!),
                                     fit: BoxFit.cover,
                                   )
-                                : widget.profileData.bannerImage != null
+                                : widget.profileData.bannerImage != null &&
+                                      widget.profileData.bannerImage!.isNotEmpty
                                 ? DecorationImage(
                                     image: NetworkImage(
                                       widget.profileData.bannerImage!,
                                     ),
                                     fit: BoxFit.cover,
                                   )
-                                : null,
+                                : const DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/banner.png',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
                           child:
                               _bannerImage == null &&
-                                  widget.profileData.bannerImage == null
-                              ? const Center(child: Icon(Icons.camera_alt))
+                                  (widget.profileData.bannerImage == null ||
+                                      widget.profileData.bannerImage!.isEmpty)
+                              ? const Center(
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                )
                               : null,
                         ),
                       ),
@@ -193,13 +251,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             backgroundColor: Colors.white,
                             backgroundImage: _profileImage != null
                                 ? FileImage(_profileImage!)
-                                : widget.profileData.profileImage != null
+                                : widget.profileData.profileImage != null &&
+                                      widget
+                                          .profileData
+                                          .profileImage!
+                                          .isNotEmpty
                                 ? NetworkImage(widget.profileData.profileImage!)
-                                : null as ImageProvider?,
+                                : const AssetImage(
+                                        'assets/images/default_profile.png',
+                                      )
+                                      as ImageProvider,
                             child:
                                 _profileImage == null &&
-                                    widget.profileData.profileImage == null
-                                ? const Icon(Icons.person)
+                                    (widget.profileData.profileImage == null ||
+                                        widget
+                                            .profileData
+                                            .profileImage!
+                                            .isEmpty)
+                                ? null // Don't show icon content if we have a default image, or maybe show a small edit icon?
+                                // The original code showed an icon if null.
+                                // If we show a default image, we might not want the big person icon covering it.
+                                // Let's remove the child Icon(Icons.person) since the default image is self-explanatory.
                                 : null,
                           ),
                         ),
