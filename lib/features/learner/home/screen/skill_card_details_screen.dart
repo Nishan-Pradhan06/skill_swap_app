@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import '../../../../core/utils/image_url_utils.dart';
 import 'package:skill_swap/features/learner/home/widgets/custom_cateogry_chip.dart';
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/skill_swap_post_model.dart';
@@ -82,7 +83,9 @@ class SkillCardDetailsScreen extends StatelessWidget {
                       ClipOval(
                         child: (post.user.profileImage?.isNotEmpty ?? false)
                             ? CachedNetworkImage(
-                                imageUrl: post.user.profileImage!,
+                                imageUrl: ImageUrlUtils.getImageUrl(
+                                  post.user.profileImage!,
+                                ),
                                 height: 40,
                                 width: 40,
                                 fit: BoxFit.cover,

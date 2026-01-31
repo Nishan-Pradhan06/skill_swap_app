@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/image_url_utils.dart';
 
 class WorkingExprienceList extends StatelessWidget {
   final String imageUrl;
@@ -22,7 +23,7 @@ class WorkingExprienceList extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.network(imageUrl, height: 60),
+        Image.network(ImageUrlUtils.getImageUrl(imageUrl), height: 60),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -9,6 +9,7 @@ import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/name_splitter.dart';
+import '../../../../core/utils/image_url_utils.dart';
 
 class CustomProfileHeader extends StatelessWidget {
   final bool isLoading;
@@ -81,7 +82,9 @@ class CustomProfileHeader extends StatelessWidget {
                       child: (data?.profileImage?.isNotEmpty ?? false)
                           ? CachedNetworkImage(
                               fit: BoxFit.cover,
-                              imageUrl: data!.profileImage!,
+                              imageUrl: ImageUrlUtils.getImageUrl(
+                                data!.profileImage!,
+                              ),
                               errorWidget: (context, url, error) {
                                 return Image.asset(
                                   'assets/images/default_profile.png',

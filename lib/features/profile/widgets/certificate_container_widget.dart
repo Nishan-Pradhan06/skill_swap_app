@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/image_url_utils.dart';
 
 import '../../../core/widgets/custom_container.dart';
 
@@ -24,7 +25,10 @@ class ContainerWithImageWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Stack(
         children: [
-          Image.network(certificateImageUrl, height: 200),
+          Image.network(
+            ImageUrlUtils.getImageUrl(certificateImageUrl),
+            height: 200,
+          ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
