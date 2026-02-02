@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/utils/image_url_utils.dart';
 
@@ -23,15 +24,28 @@ class WorkingExprienceList extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.network(ImageUrlUtils.getImageUrl(imageUrl), height: 60),
+        imageUrl.startsWith('http')
+            ? Image.network(
+                ImageUrlUtils.getImageUrl(imageUrl),
+                height: 60,
+                width: 60,
+                fit: BoxFit.cover,
+              )
+            : Image.file(
+                File(imageUrl),
+                height: 60,
+                width: 60,
+                fit: BoxFit.cover,
+              ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: TextTheme.of(
-                context,
-              ).bodyLarge?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
             Text(companyName),
             Text(

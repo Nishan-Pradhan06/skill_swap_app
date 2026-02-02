@@ -300,16 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           'assets/images/default_profile.png',
                                         )
                                         as ImageProvider,
-                              child:
-                                  _profileImage == null &&
-                                      (widget.profileData.profileImage ==
-                                              null ||
-                                          widget
-                                              .profileData
-                                              .profileImage!
-                                              .isEmpty)
-                                  ? null
-                                  : null,
+                              child: null,
                             ),
                             Positioned(
                               bottom: 0,
@@ -339,7 +330,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Form Fields
                   // Form Fields
                   CustomTextField(
                     label: 'Full Name',
@@ -427,10 +417,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             label: Text(
                               skill,
-                              style: TextTheme.of(context).bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             onSelected: (selected) {},
                             side: BorderSide(
@@ -495,10 +488,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             label: Text(
                               skill,
-                              style: TextTheme.of(context).bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             onSelected: (selected) {},
                             side: BorderSide(

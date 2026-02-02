@@ -3,7 +3,16 @@ import '../config/env_config.dart';
 class ImageUrlUtils {
   static String getImageUrl(String? url) {
     if (url == null || url.isEmpty) return '';
-    if (url.startsWith('http')) return url;
+
+    // Sanitize the URL: remove log junk, newlines, and extra whitespace
+    String cleanUrl = url.replaceAll(RegExp(r'[\r\n]'), '').trim();
+    if (cleanUrl.contains('║')) {
+      cleanUrl = cleanUrl.split('║').last.trim();
+    }
+    // Remove common log prefixes if they somehow got in
+    cleanUrl = cleanUrl.replaceAll(RegExp(r'I/flutter \(\d+\):'), '').trim();
+
+    if (cleanUrl.startsWith('http')) return cleanUrl;
 
     String baseUrl = EnvConfig.instance.apiBaseUrl;
 

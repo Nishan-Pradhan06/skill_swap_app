@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/utils/image_url_utils.dart';
 
@@ -25,10 +26,17 @@ class ContainerWithImageWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Stack(
         children: [
-          Image.network(
-            ImageUrlUtils.getImageUrl(certificateImageUrl),
-            height: 200,
-          ),
+          certificateImageUrl.startsWith('http')
+              ? Image.network(
+                  ImageUrlUtils.getImageUrl(certificateImageUrl),
+                  height: 200,
+                  fit: BoxFit.cover,
+                )
+              : Image.file(
+                  File(certificateImageUrl),
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -37,7 +45,7 @@ class ContainerWithImageWidget extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               child: Text(
                 certificateTitle,
-                style: TextTheme.of(context).bodySmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
