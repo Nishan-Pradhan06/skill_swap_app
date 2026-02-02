@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import '../../../core/utils/image_url_utils.dart';
 
 import '../../../core/widgets/custom_container.dart';
 
@@ -32,7 +33,7 @@ class CustomUserProfileHeader extends StatelessWidget {
             errorWidget: (context, url, error) {
               return Image.asset('assets/images/banner.png');
             },
-            imageUrl: coverImageUrl,
+            imageUrl: ImageUrlUtils.getImageUrl(coverImageUrl),
           ),
         ),
 
@@ -55,7 +56,7 @@ class CustomUserProfileHeader extends StatelessWidget {
                   child: ClipOval(
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: profileImageUrl,
+                      imageUrl: ImageUrlUtils.getImageUrl(profileImageUrl),
                       errorWidget: (context, url, error) {
                         return Image.asset(
                           'assets/images/default_profile.png',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/custom_container.dart';
 import '../../../../core/widgets/custom_padding.dart';
 import 'custom_cateogry_chip.dart';
+import '../../../../core/utils/image_url_utils.dart';
 
 class CustomSkillCard extends StatelessWidget {
   final String userName;
@@ -51,7 +52,9 @@ class CustomSkillCard extends StatelessWidget {
                       child: ClipOval(
                         child: userProfileUrl.isNotEmpty
                             ? CachedNetworkImage(
-                                imageUrl: userProfileUrl,
+                                imageUrl: ImageUrlUtils.getImageUrl(
+                                  userProfileUrl,
+                                ),
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) =>
                                     Image.asset(

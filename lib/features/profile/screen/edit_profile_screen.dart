@@ -14,6 +14,11 @@ import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/core/theme/app_theme.dart';
+import 'package:skill_swap/features/profile/model/certification_model.dart';
+import 'package:skill_swap/features/profile/model/working_exprience_model.dart';
+import 'package:skill_swap/features/profile/widgets/certificate_container_widget.dart';
+import 'package:skill_swap/features/profile/widgets/working_exp_widget.dart';
+import '../../../core/utils/image_url_utils.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final ProfileDataModel profileData;
@@ -35,6 +40,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<String> _skillsOffered = [];
   List<String> _skillsWanted = [];
+  List<CertificationModel> _certifications = [];
+  List<WorkingExprienceModel> _experiences = [];
   final TextEditingController _skillOfferController = TextEditingController();
   final TextEditingController _skillWantController = TextEditingController();
 
@@ -56,6 +63,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
     _skillsOffered = List.from(widget.profileData.skillYouOffer);
     _skillsWanted = List.from(widget.profileData.skillYouWantToLearn);
+    _certifications = List.from(widget.profileData.certifications);
+    _experiences = List.from(widget.profileData.workingExpriences);
   }
 
   @override
@@ -182,6 +191,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         'location_province': _locationController.text,
                         'skill_you_offer': jsonEncode(_skillsOffered),
                         'skill_you_want_to_learn': jsonEncode(_skillsWanted),
+                        'certifications': jsonEncode(
+                          _certifications.map((e) => e.toMap()).toList(),
+                        ),
+                        'work_experience': jsonEncode(
+                          _experiences.map((e) => e.toMap()).toList(),
+                        ),
                       };
                       context.read<EditProfileBloc>().add(
                         EditProfileEvent.submit(
@@ -218,7 +233,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     widget.profileData.bannerImage!.isNotEmpty
                               ? DecorationImage(
                                   image: NetworkImage(
-                                    widget.profileData.bannerImage!,
+                                    ImageUrlUtils.getImageUrl(
+                                      widget.profileData.bannerImage,
+                                    ),
                                   ),
                                   fit: BoxFit.cover,
                                 )
@@ -275,22 +292,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             .profileImage!
                                             .isNotEmpty
                                   ? NetworkImage(
-                                      widget.profileData.profileImage!,
+                                      ImageUrlUtils.getImageUrl(
+                                        widget.profileData.profileImage,
+                                      ),
                                     )
                                   : const AssetImage(
                                           'assets/images/default_profile.png',
                                         )
                                         as ImageProvider,
-                              child:
-                                  _profileImage == null &&
-                                      (widget.profileData.profileImage ==
-                                              null ||
-                                          widget
-                                              .profileData
-                                              .profileImage!
-                                              .isEmpty)
-                                  ? null
-                                  : null,
+                              child: null,
                             ),
                             Positioned(
                               bottom: 0,
@@ -320,7 +330,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Form Fields
                   // Form Fields
                   CustomTextField(
                     label: 'Full Name',
@@ -408,10 +417,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             label: Text(
                               skill,
-                              style: TextTheme.of(context).bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             onSelected: (selected) {},
                             side: BorderSide(
@@ -476,10 +488,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             label: Text(
                               skill,
-                              style: TextTheme.of(context).bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             onSelected: (selected) {},
                             side: BorderSide(
@@ -504,12 +519,336 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         )
                         .toList(),
                   ),
+                  const SizedBox(height: 20),
+
+                  // Certifications
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Certifications',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      IconButton(
+                        onPressed: _showAddCertificationDialog,
+                        icon: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                  if (_certifications.isNotEmpty)
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _certifications.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 10),
+                        itemBuilder: (context, index) {
+                          final cert = _certifications[index];
+                          return Stack(
+                            children: [
+                              ContainerWithImageWidget(
+                                certificateImageUrl: cert.image,
+                                certificateTitle: cert.title,
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _certifications.removeAt(index);
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withValues(alpha: 0.8),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
+                  else
+                    const Text('No certifications added.'),
+
+                  const SizedBox(height: 20),
+
+                  // Working Experience
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Working Experience',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      IconButton(
+                        onPressed: _showAddExperienceDialog,
+                        icon: const Icon(Icons.add),
+                      ),
+                    ],
+                  ),
+                  if (_experiences.isNotEmpty)
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _experiences.length,
+                      itemBuilder: (context, index) {
+                        final exp = _experiences[index];
+                        return Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: WorkingExprienceList(
+                                imageUrl: exp.image,
+                                title: exp.title,
+                                companyName: exp.companyName,
+                                location: exp.location,
+                                experience: exp.experience,
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _experiences.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    )
+                  else
+                    const Text('No working experience added.'),
+
                   const SizedBox(height: 40),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Future<String?> _pickNestedImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image == null) return null;
+
+    final croppedFile = await _cropImage(path: image.path, isProfile: false);
+    return croppedFile?.path;
+  }
+
+  void _showAddCertificationDialog() {
+    final titleController = TextEditingController();
+    String? pickedImagePath;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Add Certification'),
+          content: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTextField(
+                  label: 'Title',
+                  controller: titleController,
+                  borderColor: Colors.transparent,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0XFF272c29)
+                      : AppTheme.surfaceLight,
+                ),
+                const SizedBox(height: 10),
+                if (pickedImagePath != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(pickedImagePath!),
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                else
+                  const Text('No image selected'),
+                TextButton.icon(
+                  onPressed: () async {
+                    final path = await _pickNestedImage();
+                    if (path != null) {
+                      setDialogState(() {
+                        pickedImagePath = path;
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.image),
+                  label: const Text('Pick Image'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (titleController.text.isNotEmpty &&
+                    pickedImagePath != null) {
+                  setState(() {
+                    _certifications.add(
+                      CertificationModel(
+                        title: titleController.text,
+                        image: pickedImagePath!,
+                      ),
+                    );
+                  });
+                  Navigator.pop(context);
+                } else if (pickedImagePath == null) {
+                  CustomToast.showError('Please pick an image');
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddExperienceDialog() {
+    final titleController = TextEditingController();
+    final companyController = TextEditingController();
+    final locationController = TextEditingController();
+    final experienceController = TextEditingController();
+    String? pickedImagePath;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Add Experience'),
+          content: SizedBox(
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomTextField(
+                    label: 'Job Title',
+                    controller: titleController,
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    label: 'Company Name',
+                    controller: companyController,
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    label: 'Location',
+                    controller: locationController,
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                    label: 'Experience (e.g., 2 years)',
+                    controller: experienceController,
+                    borderColor: Colors.transparent,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
+                  ),
+                  const SizedBox(height: 10),
+                  if (pickedImagePath != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(pickedImagePath!),
+                        height: 60,
+                        width: 60,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    const Text('No Logo selected'),
+                  TextButton.icon(
+                    onPressed: () async {
+                      final path = await _pickNestedImage();
+                      if (path != null) {
+                        setDialogState(() {
+                          pickedImagePath = path;
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.image),
+                    label: const Text('Pick Company Logo'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (titleController.text.isNotEmpty &&
+                    companyController.text.isNotEmpty &&
+                    pickedImagePath != null) {
+                  setState(() {
+                    _experiences.add(
+                      WorkingExprienceModel(
+                        title: titleController.text,
+                        companyName: companyController.text,
+                        location: locationController.text,
+                        experience: experienceController.text,
+                        image: pickedImagePath!,
+                      ),
+                    );
+                  });
+                  Navigator.pop(context);
+                } else if (pickedImagePath == null) {
+                  CustomToast.showError('Please pick a company logo');
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        ),
       ),
     );
   }
