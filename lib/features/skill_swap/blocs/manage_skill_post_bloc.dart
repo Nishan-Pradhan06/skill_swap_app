@@ -10,9 +10,7 @@ class ManageSkillPostEvent with _$ManageSkillPostEvent {
     required String title,
     required String description,
     required int categoryId,
-    required String skillOffered,
-    required String skillWanted,
-    required int pointsReward,
+    required String skillToLearn,
     required int pointsCost,
     Map<String, dynamic>? availability,
   }) = _Create;
@@ -22,9 +20,7 @@ class ManageSkillPostEvent with _$ManageSkillPostEvent {
     String? title,
     String? description,
     int? categoryId,
-    String? skillOffered,
-    String? skillWanted,
-    int? pointsReward,
+    String? skillToLearn,
     int? pointsCost,
     Map<String, dynamic>? availability,
   }) = _Update;
@@ -61,9 +57,7 @@ class ManageSkillPostBloc
       title: event.title,
       description: event.description,
       categoryId: event.categoryId,
-      skillOffered: event.skillOffered,
-      skillWanted: event.skillWanted,
-      pointsReward: event.pointsReward,
+      skillToLearn: event.skillToLearn,
       pointsCost: event.pointsCost,
       availability: event.availability,
     );
@@ -83,9 +77,7 @@ class ManageSkillPostBloc
       title: event.title,
       description: event.description,
       categoryId: event.categoryId,
-      skillOffered: event.skillOffered,
-      skillWanted: event.skillWanted,
-      pointsReward: event.pointsReward,
+      skillToLearn: event.skillToLearn,
       pointsCost: event.pointsCost,
       availability: event.availability,
     );

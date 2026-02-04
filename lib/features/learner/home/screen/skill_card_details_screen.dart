@@ -57,7 +57,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            post.pointsReward.toString(),
+                            post.pointsCost.toString(),
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.primary,
@@ -132,7 +132,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    "Skills Offered",
+                    "Skill to Learn",
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -140,7 +140,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
-                    children: [CustomCategoryChip(chipText: post.skillOffered)],
+                    children: [CustomCategoryChip(chipText: post.skillToLearn)],
                   ),
                   const SizedBox(height: 24),
 
@@ -203,18 +203,6 @@ class SkillCardDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                   ],
-                  Text(
-                    "Looking for",
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: [CustomCategoryChip(chipText: post.skillWanted)],
-                  ),
-                  const SizedBox(height: 20),
                   BlocBuilder<GetProfileBloc, GetProfileState>(
                     builder: (context, state) {
                       final currentUserId = state.maybeWhen(
@@ -237,7 +225,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                                       builder: (context) => LearnerBookingPage(
                                         mentorId: post.user.id,
                                         postId: post.id,
-                                        skillTitle: post.skillOffered,
+                                        skillTitle: post.skillToLearn,
                                         pointsCost: post.pointsCost,
                                       ),
                                     ),

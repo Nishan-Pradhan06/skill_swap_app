@@ -22,9 +22,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
-  late TextEditingController _skillOfferedController;
-  late TextEditingController _skillWantedController;
-  late TextEditingController _pointsRewardController;
+  late TextEditingController _skillToLearnController;
   late TextEditingController _pointsCostController;
   late TextEditingController _durationController;
 
@@ -41,12 +39,8 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
     final p = widget.post;
     _titleController = TextEditingController(text: p?.title ?? '');
     _descriptionController = TextEditingController(text: p?.description ?? '');
-    _skillOfferedController = TextEditingController(
-      text: p?.skillOffered ?? '',
-    );
-    _skillWantedController = TextEditingController(text: p?.skillWanted ?? '');
-    _pointsRewardController = TextEditingController(
-      text: (p?.pointsReward ?? 50).toString(),
+    _skillToLearnController = TextEditingController(
+      text: p?.skillToLearn ?? '',
     );
     _pointsCostController = TextEditingController(
       text: (p?.pointsCost ?? 0).toString(),
@@ -63,9 +57,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _skillOfferedController.dispose();
-    _skillWantedController.dispose();
-    _pointsRewardController.dispose();
+    _skillToLearnController.dispose();
     _pointsCostController.dispose();
     _durationController.dispose();
     super.dispose();
@@ -155,9 +147,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillOffered: _skillOfferedController.text,
-          skillWanted: _skillWantedController.text,
-          pointsReward: int.tryParse(_pointsRewardController.text) ?? 0,
+          skillToLearn: _skillToLearnController.text,
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -169,9 +159,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillOffered: _skillOfferedController.text,
-          skillWanted: _skillWantedController.text,
-          pointsReward: int.tryParse(_pointsRewardController.text) ?? 0,
+          skillToLearn: _skillToLearnController.text,
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -256,6 +244,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: Text(
             widget.post == null ? "Create Skill Post" : "Edit Skill Post",
           ),
+          scrolledUnderElevation: 0,
         ),
         body: SingleChildScrollView(
           child: CustomPadding(
@@ -270,6 +259,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     controller: _titleController,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Title required" : null,
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
@@ -279,6 +269,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     maxLines: 3,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Description required" : null,
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -388,41 +379,20 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    label: "Skill you offer",
+                    label: "Skill you will learn",
                     hint: "e.g. Python Programming",
-                    controller: _skillOfferedController,
+                    controller: _skillToLearnController,
                     validator: (v) => v?.isEmpty ?? true ? "Required" : null,
+                    fillColor: Colors.transparent,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    label: "Skill you want to learn",
-                    hint: "e.g. Web Design",
-                    controller: _skillWantedController,
-                    validator: (v) => v?.isEmpty ?? true ? "Required" : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          label: "Points Reward",
-                          hint: "50",
-                          controller: _pointsRewardController,
-                          type: CustomTextFieldType.number,
-                          leading: const Icon(Icons.stars),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: CustomTextField(
-                          label: "Points Cost",
-                          hint: "0",
-                          controller: _pointsCostController,
-                          type: CustomTextFieldType.number,
-                          leading: const Icon(Icons.money_off),
-                        ),
-                      ),
-                    ],
+                    label: "Points Cost",
+                    hint: "0",
+                    controller: _pointsCostController,
+                    type: CustomTextFieldType.number,
+                    fillColor: Colors.transparent,
+                    leading: const Icon(Icons.money_off),
                   ),
                   const SizedBox(height: 32),
                   const Divider(),

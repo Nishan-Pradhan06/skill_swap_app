@@ -63,7 +63,7 @@ class _MentorPostsScreenState extends State<MentorPostsScreen> {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          "${post.skillOffered} • ${post.pointsReward} pts",
+                          "${post.skillToLearn} • ${post.pointsCost} pts",
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

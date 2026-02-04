@@ -4,13 +4,11 @@ class SkillSwapPostModel {
   final String title;
   final String description;
   final PostCategoryModel? category;
-  final String skillOffered;
-  final String skillWanted;
+  final String skillToLearn;
   final String? teachDate;
   final String? teachTime;
   final String? learnDate;
   final String? learnTime;
-  final int pointsReward;
   final int pointsCost;
   final bool isActive;
   final DateTime createdAt;
@@ -23,13 +21,11 @@ class SkillSwapPostModel {
     required this.title,
     required this.description,
     this.category,
-    required this.skillOffered,
-    required this.skillWanted,
+    required this.skillToLearn,
     this.teachDate,
     this.teachTime,
     this.learnDate,
     this.learnTime,
-    required this.pointsReward,
     required this.pointsCost,
     required this.isActive,
     required this.createdAt,
@@ -46,13 +42,11 @@ class SkillSwapPostModel {
       category: json['category'] != null
           ? PostCategoryModel.fromJson(json['category'])
           : null,
-      skillOffered: json['skill_offered'],
-      skillWanted: json['skill_wanted'],
+      skillToLearn: json['skill_to_learn'],
       teachDate: json['teach_date'],
       teachTime: json['teach_time'],
       learnDate: json['learn_date'],
       learnTime: json['learn_time'],
-      pointsReward: json['points_reward'],
       pointsCost: json['points_cost'],
       isActive: json['is_active'],
       createdAt: DateTime.parse(json['created_at']),

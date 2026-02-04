@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_mentor_posts_bloc.dart';
 import '../../learner/home/widgets/custom_skill_card.dart';
-import '../../learner/home/widgets/custom_cateogry_chip.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
 import '../../../core/widgets/custom_padding.dart';
 import '../../learner/home/widgets/custom_profile_header.dart';
@@ -120,10 +119,8 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                               categoryTitle: post.category?.name ?? 'General',
                               skillTitle: post.title,
                               skillDescription: post.description,
-                              skillList: [
-                                CustomCategoryChip(chipText: post.skillOffered),
-                              ],
-                              point: post.pointsReward.toString(),
+                              skillList: [],
+                              point: post.pointsCost.toString(),
                               onTap: () async {
                                 final result = await context.pushNamed(
                                   AppRoutesName.skillPostFormRoute,
