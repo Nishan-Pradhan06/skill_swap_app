@@ -26,10 +26,12 @@ class CustomSkillCard extends StatelessWidget {
     this.slotInfo,
     this.skills,
     this.onTap,
+    this.trailing,
   });
 
   final String? availabilityText;
   final String? slotInfo;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +104,14 @@ class CustomSkillCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomCategoryChip(chipText: categoryTitle),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 4,
+                  children: [
+                    CustomCategoryChip(chipText: categoryTitle),
+                    if (trailing != null) trailing!,
+                  ],
+                ),
               ],
             ),
             Text(
