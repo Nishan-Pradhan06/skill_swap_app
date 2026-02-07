@@ -10,6 +10,8 @@ import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 import 'package:skill_swap/features/skill_swap/models/skill_swap_post_model.dart';
 
+import '../../../../core/theme/app_theme.dart';
+
 class SkillPostFormScreen extends StatefulWidget {
   final SkillSwapPostModel? post;
   const SkillPostFormScreen({super.key, this.post});
@@ -287,7 +289,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     controller: _titleController,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Title required" : null,
-                    fillColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
@@ -297,7 +303,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     maxLines: 3,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Description required" : null,
-                    fillColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -324,13 +334,13 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                             icon: const Icon(Icons.add_circle_outline),
                             tooltip: "Add new category",
                           ),
-                          IconButton(
-                            onPressed: () => context
-                                .read<GetCategoriesBloc>()
-                                .add(const GetCategoriesEvent.getCategories()),
-                            icon: const Icon(Icons.refresh, size: 20),
-                            tooltip: "Refresh categories",
-                          ),
+                          // IconButton(
+                          //   onPressed: () => context
+                          //       .read<GetCategoriesBloc>()
+                          //       .add(const GetCategoriesEvent.getCategories()),
+                          //   icon: const Icon(Icons.refresh, size: 20),
+                          //   tooltip: "Refresh categories",
+                          // ),
                         ],
                       ),
                     ],
@@ -411,7 +421,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     hint: "e.g. Python Programming",
                     controller: _skillToLearnController,
                     validator: (v) => v?.isEmpty ?? true ? "Required" : null,
-                    fillColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
@@ -419,7 +433,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     hint: "0",
                     controller: _pointsCostController,
                     type: CustomTextFieldType.number,
-                    fillColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                     leading: const Icon(Icons.money_off),
                   ),
                   const SizedBox(height: 32),
@@ -500,6 +518,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                       hint: "60",
                       controller: _durationController,
                       type: CustomTextFieldType.number,
+                      borderColor: Colors.transparent,
+
+                      fillColor: Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0XFF272c29)
+                          : AppTheme.surfaceLight,
                     ),
                   ],
                   const SizedBox(height: 48),

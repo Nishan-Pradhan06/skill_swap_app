@@ -25,6 +25,8 @@ class ProfileDataModel {
   final DateTime? updatedAt;
   final List<String> roles;
   final DateTime? lastLoginRewardPoints;
+  final int? totalStudents;
+  final int? dailyPointsEarned;
   final int? id;
 
   ProfileDataModel({
@@ -48,6 +50,8 @@ class ProfileDataModel {
     this.createdAt,
     this.updatedAt,
     this.lastLoginRewardPoints,
+    this.totalStudents,
+    this.dailyPointsEarned,
     this.id,
   }) : skillYouOffer = skillYouOffer ?? [],
        skillYouWantToLearn = skillYouWantToLearn ?? [],
@@ -123,6 +127,8 @@ class ProfileDataModel {
       createdAt: tryParseDate(map['created_at']),
       updatedAt: tryParseDate(map['updated_at']),
       lastLoginRewardPoints: tryParseDate(map['last_login_reward_points']),
+      totalStudents: map['total_students'] as int?,
+      dailyPointsEarned: map['daily_points_earned'] as int?,
       roles: parseStringList(map['roles']).isNotEmpty
           ? parseStringList(map['roles'])
           : ['LEARNER'],
@@ -152,6 +158,8 @@ class ProfileDataModel {
       'updated_at': updatedAt?.toUtc().toIso8601String(),
       'roles': roles,
       'last_login_reward_points': lastLoginRewardPoints?.toIso8601String(),
+      'total_students': totalStudents,
+      'daily_points_earned': dailyPointsEarned,
     };
   }
 
@@ -178,6 +186,8 @@ class ProfileDataModel {
     DateTime? updatedAt,
     List<String>? roles,
     DateTime? lastLoginRewardPoints,
+    int? totalStudents,
+    int? dailyPointsEarned,
   }) {
     return ProfileDataModel(
       profileImage: profileImage ?? this.profileImage,
@@ -205,6 +215,8 @@ class ProfileDataModel {
       roles: roles ?? List<String>.from(this.roles),
       lastLoginRewardPoints:
           lastLoginRewardPoints ?? this.lastLoginRewardPoints,
+      totalStudents: totalStudents ?? this.totalStudents,
+      dailyPointsEarned: dailyPointsEarned ?? this.dailyPointsEarned,
     );
   }
 

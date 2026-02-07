@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skill_swap/features/shared/menu/screen/learner_menu_screen.dart';
 import '../../../../core/widgets/double_press_to_exit.dart';
-import '../../../mentor/home/mentor_home_screen.dart';
+import '../../../mentor/home/screens/mentor_home_screen.dart';
 import '../../../mentor/my_students/my_students_screen.dart';
 import '../../../mentor/requests/request_screen.dart';
 import '../../../notifications/screens/notification_screen.dart';
