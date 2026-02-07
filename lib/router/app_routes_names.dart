@@ -20,6 +20,7 @@ class AppRoutesName {
   static const String mentorBottomNavBar = 'mentorBottomNavBar';
   static const String mentorPostsRoute = 'mentorPostsRoute';
   static const String skillPostFormRoute = 'skillPostFormRoute';
+  static const String mentorAllSkillsRoute = 'mentorAllSkillsRoute';
 
   //#---------------SKILL SWAP ROUTES NAME--------------##
   static const String learnerBookingRoute = 'learnerBookingRoute';

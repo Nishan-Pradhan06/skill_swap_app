@@ -7,7 +7,6 @@ import 'package:skill_swap/core/theme/app_theme.dart';
 import 'package:skill_swap/core/widgets/custom_appbar.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
-import 'package:skill_swap/features/learner/home/widgets/custom_cateogry_chip.dart';
 import 'package:skill_swap/features/learner/home/widgets/custom_skill_card.dart';
 import 'package:skill_swap/features/skill_swap/blocs/skill_search_bloc.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
@@ -92,13 +91,12 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                           enabled: true,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 12.0),
-                            child: CustomSkillCard(
+                            child: const CustomSkillCard(
                               userName: "Skeleton User",
                               userProfileUrl: "",
                               categoryTitle: "Category",
                               skillTitle: "Skill Title",
                               skillDescription: "Description loading...",
-                              skillList: [],
                               point: "0",
                             ),
                           ),
@@ -119,14 +117,21 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                                 userProfileUrl: skill.user.profileImage ?? '',
                                 categoryTitle:
                                     skill.category?.name ?? 'General',
-                                skillTitle: skill.skillOffered,
+                                skillTitle: skill.title,
                                 skillDescription: skill.description,
-                                skillList: [
-                                  CustomCategoryChip(
-                                    chipText: skill.skillWanted,
-                                  ),
-                                ],
-                                point: skill.pointsReward.toString(),
+                                point: skill.pointsCost.toString(),
+                                skills: skill.skillToLearn
+                                    .split(',')
+                                    .map((s) => s.trim())
+                                    .where((s) => s.isNotEmpty)
+                                    .toList(),
+                                availabilityText:
+                                    skill.availabilityRange != "Not specified"
+                                    ? skill.availabilityRange
+                                    : null,
+                                slotInfo: skill.totalSlotsCount != null
+                                    ? "${skill.availableSlotsCount ?? 0}/${skill.totalSlotsCount} slots"
+                                    : null,
                                 onTap: () {
                                   context.pushNamed(
                                     AppRoutesName.skillCardDetails,

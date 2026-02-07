@@ -9,7 +9,6 @@ import 'package:skill_swap/features/notifications/bloc/get_notifications/get_not
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_skill_swap_posts_bloc.dart';
 import '../../../../core/widgets/custom_toast.dart';
-import '../widgets/custom_cateogry_chip.dart';
 import '../widgets/custom_filter_chip.dart';
 import '../widgets/custom_profile_header.dart';
 import '../widgets/custom_skill_card.dart';
@@ -163,16 +162,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           enabled: true,
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: CustomSkillCard(
+                            child: const CustomSkillCard(
                               userName: "Skeleton User",
                               userProfileUrl: "",
                               categoryTitle: "Category",
                               skillTitle: "Skill Title",
                               skillDescription:
                                   "This is a long description for skeleton loading",
-                              skillList: const [],
                               point: "0",
-                              onTap: () {},
                             ),
                           ),
                         ),
@@ -204,12 +201,18 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                               userName: skill.user.fullName,
                               userProfileUrl: skill.user.profileImage ?? '',
                               categoryTitle: skill.category?.name ?? 'General',
-                              skillTitle: skill.skillOffered,
+                              skillTitle: skill.title,
                               skillDescription: skill.description,
-                              skillList: [
-                                CustomCategoryChip(chipText: skill.skillWanted),
-                              ],
-                              point: skill.pointsReward.toString(),
+                              point: skill.pointsCost.toString(),
+                              skills: skill.skillToLearn
+                                  .split(',')
+                                  .map((s) => s.trim())
+                                  .where((s) => s.isNotEmpty)
+                                  .toList(),
+
+                              slotInfo: skill.totalSlotsCount != null
+                                  ? "${skill.availableSlotsCount ?? 0}/${skill.totalSlotsCount} slots"
+                                  : null,
                               onTap: () {
                                 context.pushNamed(
                                   AppRoutesName.skillCardDetails,

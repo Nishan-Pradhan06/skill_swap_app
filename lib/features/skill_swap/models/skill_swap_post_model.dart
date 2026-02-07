@@ -1,17 +1,20 @@
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
+
 class SkillSwapPostModel {
   final int id;
   final PostUserModel user;
   final String title;
   final String description;
   final PostCategoryModel? category;
-  final String skillOffered;
-  final String skillWanted;
+  final String skillToLearn;
   final String? teachDate;
   final String? teachTime;
+  final String? teachEndDate;
+  final String? teachEndTime;
   final String? learnDate;
   final String? learnTime;
-  final int pointsReward;
   final int pointsCost;
+  final int durationMinutes;
   final bool isActive;
   final DateTime createdAt;
   final int? availableSlotsCount;
@@ -23,14 +26,15 @@ class SkillSwapPostModel {
     required this.title,
     required this.description,
     this.category,
-    required this.skillOffered,
-    required this.skillWanted,
+    required this.skillToLearn,
     this.teachDate,
     this.teachTime,
+    this.teachEndDate,
+    this.teachEndTime,
     this.learnDate,
     this.learnTime,
-    required this.pointsReward,
     required this.pointsCost,
+    this.durationMinutes = 60,
     required this.isActive,
     required this.createdAt,
     this.availableSlotsCount,
@@ -46,19 +50,65 @@ class SkillSwapPostModel {
       category: json['category'] != null
           ? PostCategoryModel.fromJson(json['category'])
           : null,
-      skillOffered: json['skill_offered'],
-      skillWanted: json['skill_wanted'],
+      skillToLearn: json['skill_to_learn'],
       teachDate: json['teach_date'],
       teachTime: json['teach_time'],
+      teachEndDate: json['teach_end_date'],
+      teachEndTime: json['teach_end_time'],
       learnDate: json['learn_date'],
       learnTime: json['learn_time'],
-      pointsReward: json['points_reward'],
       pointsCost: json['points_cost'],
+      durationMinutes: json['duration_minutes'] ?? 60,
       isActive: json['is_active'],
       createdAt: DateTime.parse(json['created_at']),
       availableSlotsCount: json['available_slots_count'],
       totalSlotsCount: json['total_slots_count'],
     );
+  }
+
+  String get availabilityRange {
+    if (teachDate == null) return "Not specified";
+    try {
+      final startDate = DateTime.parse(teachDate!);
+      String startStr = DateTimeUtils.getDay(startDate);
+      if (teachTime != null) {
+        final timeParts = teachTime!.split(':');
+        final startWithTime = DateTime(
+          startDate.year,
+          startDate.month,
+          startDate.day,
+          int.parse(timeParts[0]),
+          int.parse(timeParts[1]),
+        );
+        startStr = DateTimeUtils.formatDateTimeNoDay(startWithTime);
+      }
+
+      if (teachEndDate != null) {
+        final endDate = DateTime.parse(teachEndDate!);
+        String endStr = DateTimeUtils.formatDate(endDate);
+        if (teachEndTime != null) {
+          final timeParts = teachEndTime!.split(':');
+          final endWithTime = DateTime(
+            endDate.year,
+            endDate.month,
+            endDate.day,
+            int.parse(timeParts[0]),
+            int.parse(timeParts[1]),
+          );
+          endStr = DateTimeUtils.formatDateTimeNoDay(endWithTime);
+        }
+        return "$startStr - $endStr";
+      }
+      return startStr;
+    } catch (e) {
+      // Fallback to simple string concat if parsing fails
+      String start = "$teachDate ${teachTime ?? ""}";
+      if (teachEndDate != null) {
+        String end = "$teachEndDate ${teachEndTime ?? ""}";
+        return "$start - $end";
+      }
+      return start;
+    }
   }
 }
 

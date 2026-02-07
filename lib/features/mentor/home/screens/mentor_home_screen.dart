@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_mentor_posts_bloc.dart';
-import '../../learner/home/widgets/custom_skill_card.dart';
-import '../../learner/home/widgets/custom_cateogry_chip.dart';
+import '../../../learner/home/widgets/custom_skill_card.dart';
 import 'package:skill_swap/router/app_routes_names.dart';
-import '../../../core/widgets/custom_padding.dart';
-import '../../learner/home/widgets/custom_profile_header.dart';
+import '../../../../core/widgets/custom_padding.dart';
+import '../../../learner/home/widgets/custom_profile_header.dart';
+import '../widgets/mentor_stats_card.dart';
+import '../../../profile/bloc/get_profile/get_profile_bloc.dart';
 
 class MentorHomeScreen extends StatefulWidget {
   const MentorHomeScreen({super.key});
@@ -29,6 +30,7 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
     context.read<GetMentorPostsBloc>().add(
       const GetMentorPostsEvent.getPosts(),
     );
+    context.read<GetProfileBloc>().add(const GetProfileEvent.getProfile());
   }
 
   @override
@@ -51,11 +53,43 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                   ),
                 ),
               ),
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: CustomPadding(
-                  child: Text(
-                    "My Active Skills",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  child: BlocBuilder<GetProfileBloc, GetProfileState>(
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        loaded: (profile) => MentorStatsCard(
+                          totalStudents: profile.totalStudents ?? 0,
+                          dailyPoints: profile.dailyPointsEarned ?? 0,
+                        ),
+                        orElse: () => const MentorStatsCard(
+                          totalStudents: 0,
+                          dailyPoints: 0,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: CustomPadding(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "My Active Skills",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.pushNamed(AppRoutesName.mentorAllSkillsRoute);
+                        },
+                        child: const Text("View All"),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -84,7 +118,7 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                                   color: Theme.of(context)
                                       .colorScheme
                                       .primaryContainer
-                                      .withOpacity(0.3),
+                                      .withValues(alpha: 0.3),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: Theme.of(
@@ -111,31 +145,42 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                           ),
                         );
                       }
+                      final displayPosts = posts.length > 4
+                          ? posts.take(4).toList()
+                          : posts;
+
                       return SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
-                          final post = posts[index];
+                          final post = displayPosts[index];
                           return CustomPadding(
-                            vertical: 8,
+                            horizontal: 0,
+                            vertical: 4,
                             child: CustomSkillCard(
                               userName: post.user.fullName,
                               userProfileUrl: post.user.profileImage ?? '',
                               categoryTitle: post.category?.name ?? 'General',
                               skillTitle: post.title,
                               skillDescription: post.description,
-                              skillList: [
-                                CustomCategoryChip(chipText: post.skillOffered),
-                              ],
-                              point: post.pointsReward.toString(),
+                              point: post.pointsCost.toString(),
+                              skills: post.skillToLearn
+                                  .split(',')
+                                  .map((s) => s.trim())
+                                  .where((s) => s.isNotEmpty)
+                                  .toList(),
+                              slotInfo: post.totalSlotsCount != null
+                                  ? "${post.availableSlotsCount ?? 0}/${post.totalSlotsCount} slots"
+                                  : null,
                               onTap: () async {
                                 final result = await context.pushNamed(
                                   AppRoutesName.skillPostFormRoute,
                                   extra: post,
                                 );
+                                if (!context.mounted) return;
                                 if (result == true) _handleRefresh();
                               },
                             ),
                           );
-                        }, childCount: posts.length),
+                        }, childCount: displayPosts.length),
                       );
                     },
                     failure: (msg) =>

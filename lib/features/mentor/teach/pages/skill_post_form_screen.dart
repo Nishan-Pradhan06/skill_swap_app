@@ -10,6 +10,8 @@ import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 import 'package:skill_swap/features/skill_swap/models/skill_swap_post_model.dart';
 
+import '../../../../core/theme/app_theme.dart';
+
 class SkillPostFormScreen extends StatefulWidget {
   final SkillSwapPostModel? post;
   const SkillPostFormScreen({super.key, this.post});
@@ -22,9 +24,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
-  late TextEditingController _skillOfferedController;
-  late TextEditingController _skillWantedController;
-  late TextEditingController _pointsRewardController;
+  late TextEditingController _skillToLearnController;
   late TextEditingController _pointsCostController;
   late TextEditingController _durationController;
 
@@ -41,18 +41,42 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
     final p = widget.post;
     _titleController = TextEditingController(text: p?.title ?? '');
     _descriptionController = TextEditingController(text: p?.description ?? '');
-    _skillOfferedController = TextEditingController(
-      text: p?.skillOffered ?? '',
-    );
-    _skillWantedController = TextEditingController(text: p?.skillWanted ?? '');
-    _pointsRewardController = TextEditingController(
-      text: (p?.pointsReward ?? 50).toString(),
+    _skillToLearnController = TextEditingController(
+      text: p?.skillToLearn ?? '',
     );
     _pointsCostController = TextEditingController(
       text: (p?.pointsCost ?? 0).toString(),
     );
     _durationController = TextEditingController(text: '60');
     _selectedCategory = p?.category;
+
+    if (p != null && p.teachDate != null) {
+      _setAvailability = true;
+      _startDate = DateTime.tryParse(p.teachDate!);
+      if (p.teachTime != null) {
+        final timeParts = p.teachTime!.split(':');
+        if (timeParts.length >= 2) {
+          _startTime = TimeOfDay(
+            hour: int.parse(timeParts[0]),
+            minute: int.parse(timeParts[1]),
+          );
+        }
+      }
+
+      if (p.teachEndDate != null) {
+        _endDate = DateTime.tryParse(p.teachEndDate!);
+      }
+      if (p.teachEndTime != null) {
+        final timeParts = p.teachEndTime!.split(':');
+        if (timeParts.length >= 2) {
+          _endTime = TimeOfDay(
+            hour: int.parse(timeParts[0]),
+            minute: int.parse(timeParts[1]),
+          );
+        }
+      }
+      _durationController.text = p.durationMinutes.toString();
+    }
 
     context.read<GetCategoriesBloc>().add(
       const GetCategoriesEvent.getCategories(),
@@ -63,9 +87,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _skillOfferedController.dispose();
-    _skillWantedController.dispose();
-    _pointsRewardController.dispose();
+    _skillToLearnController.dispose();
     _pointsCostController.dispose();
     _durationController.dispose();
     super.dispose();
@@ -155,9 +177,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillOffered: _skillOfferedController.text,
-          skillWanted: _skillWantedController.text,
-          pointsReward: int.tryParse(_pointsRewardController.text) ?? 0,
+          skillToLearn: _skillToLearnController.text,
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -169,9 +189,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillOffered: _skillOfferedController.text,
-          skillWanted: _skillWantedController.text,
-          pointsReward: int.tryParse(_pointsRewardController.text) ?? 0,
+          skillToLearn: _skillToLearnController.text,
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -256,6 +274,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: Text(
             widget.post == null ? "Create Skill Post" : "Edit Skill Post",
           ),
+          scrolledUnderElevation: 0,
         ),
         body: SingleChildScrollView(
           child: CustomPadding(
@@ -270,6 +289,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     controller: _titleController,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Title required" : null,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
@@ -279,6 +303,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     maxLines: 3,
                     validator: (v) =>
                         v?.isEmpty ?? true ? "Description required" : null,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -305,13 +334,13 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                             icon: const Icon(Icons.add_circle_outline),
                             tooltip: "Add new category",
                           ),
-                          IconButton(
-                            onPressed: () => context
-                                .read<GetCategoriesBloc>()
-                                .add(const GetCategoriesEvent.getCategories()),
-                            icon: const Icon(Icons.refresh, size: 20),
-                            tooltip: "Refresh categories",
-                          ),
+                          // IconButton(
+                          //   onPressed: () => context
+                          //       .read<GetCategoriesBloc>()
+                          //       .add(const GetCategoriesEvent.getCategories()),
+                          //   icon: const Icon(Icons.refresh, size: 20),
+                          //   tooltip: "Refresh categories",
+                          // ),
                         ],
                       ),
                     ],
@@ -388,41 +417,28 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    label: "Skill you offer",
+                    label: "Skill you will learn",
                     hint: "e.g. Python Programming",
-                    controller: _skillOfferedController,
+                    controller: _skillToLearnController,
                     validator: (v) => v?.isEmpty ?? true ? "Required" : null,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
-                    label: "Skill you want to learn",
-                    hint: "e.g. Web Design",
-                    controller: _skillWantedController,
-                    validator: (v) => v?.isEmpty ?? true ? "Required" : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          label: "Points Reward",
-                          hint: "50",
-                          controller: _pointsRewardController,
-                          type: CustomTextFieldType.number,
-                          leading: const Icon(Icons.stars),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: CustomTextField(
-                          label: "Points Cost",
-                          hint: "0",
-                          controller: _pointsCostController,
-                          type: CustomTextFieldType.number,
-                          leading: const Icon(Icons.money_off),
-                        ),
-                      ),
-                    ],
+                    label: "Points Cost",
+                    hint: "0",
+                    controller: _pointsCostController,
+                    type: CustomTextFieldType.number,
+                    borderColor: Colors.transparent,
+
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0XFF272c29)
+                        : AppTheme.surfaceLight,
+                    leading: const Icon(Icons.money_off),
                   ),
                   const SizedBox(height: 32),
                   const Divider(),
@@ -502,6 +518,11 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                       hint: "60",
                       controller: _durationController,
                       type: CustomTextFieldType.number,
+                      borderColor: Colors.transparent,
+
+                      fillColor: Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0XFF272c29)
+                          : AppTheme.surfaceLight,
                     ),
                   ],
                   const SizedBox(height: 48),

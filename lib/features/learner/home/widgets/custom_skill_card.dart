@@ -11,9 +11,9 @@ class CustomSkillCard extends StatelessWidget {
   final String categoryTitle;
   final String skillTitle;
   final String skillDescription;
-  final List<Widget> skillList;
   final void Function()? onTap;
   final String point;
+  final List<String>? skills;
   const CustomSkillCard({
     super.key,
     required this.userName,
@@ -21,13 +21,21 @@ class CustomSkillCard extends StatelessWidget {
     required this.categoryTitle,
     required this.skillTitle,
     required this.skillDescription,
-    required this.skillList,
     required this.point,
+    this.availabilityText,
+    this.slotInfo,
+    this.skills,
     this.onTap,
+    this.trailing,
   });
+
+  final String? availabilityText;
+  final String? slotInfo;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return CustomPadding(
       vertical: 0,
       child: CustomContainer(
@@ -96,7 +104,14 @@ class CustomSkillCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomCategoryChip(chipText: categoryTitle),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 4,
+                  children: [
+                    CustomCategoryChip(chipText: categoryTitle),
+                    if (trailing != null) trailing!,
+                  ],
+                ),
               ],
             ),
             Text(
@@ -114,13 +129,67 @@ class CustomSkillCard extends StatelessWidget {
               textAlign: TextAlign.justify,
               style: TextTheme.of(context).bodySmall,
             ),
+            if (availabilityText != null || slotInfo != null) ...[
+              const SizedBox(height: 4),
+              Column(
+                children: [
+                  if (availabilityText != null) ...[
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: Colors.blue,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          availabilityText!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (availabilityText != null && slotInfo != null)
+                    const SizedBox(width: 12),
+                  if (slotInfo != null) ...[
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.event_seat,
+                          size: 14,
+                          color: Colors.green,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          slotInfo!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ],
             Text(
-              'Looking for:',
+              'Skill you will learn:',
               style: TextTheme.of(
                 context,
               ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            Wrap(spacing: 6, runSpacing: 6, children: skillList),
+            if (skills != null && skills!.isNotEmpty)
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: skills!
+                    .map((s) => CustomCategoryChip(chipText: s))
+                    .toList(),
+              ),
           ],
         ),
       ),
