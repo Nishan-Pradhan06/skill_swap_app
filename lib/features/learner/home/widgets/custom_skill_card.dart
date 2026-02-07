@@ -122,30 +122,46 @@ class CustomSkillCard extends StatelessWidget {
             ),
             if (availabilityText != null || slotInfo != null) ...[
               const SizedBox(height: 4),
-              Row(
+              Column(
                 children: [
                   if (availabilityText != null) ...[
-                    const Icon(Icons.access_time, size: 14, color: Colors.blue),
-                    const SizedBox(width: 4),
-                    Text(
-                      availabilityText!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: Colors.blue,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          availabilityText!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                   if (availabilityText != null && slotInfo != null)
                     const SizedBox(width: 12),
                   if (slotInfo != null) ...[
-                    const Icon(Icons.event_seat, size: 14, color: Colors.green),
-                    const SizedBox(width: 4),
-                    Text(
-                      slotInfo!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.event_seat,
+                          size: 14,
+                          color: Colors.green,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          slotInfo!,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ],

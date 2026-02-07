@@ -112,7 +112,8 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                         delegate: SliverChildBuilderDelegate((context, index) {
                           final post = posts[index];
                           return CustomPadding(
-                            vertical: 8,
+                            horizontal: 0,
+                            vertical: 4,
                             child: CustomSkillCard(
                               userName: post.user.fullName,
                               userProfileUrl: post.user.profileImage ?? '',
@@ -125,10 +126,7 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                                   .map((s) => s.trim())
                                   .where((s) => s.isNotEmpty)
                                   .toList(),
-                              availabilityText:
-                                  post.availabilityRange != "Not specified"
-                                  ? post.availabilityRange
-                                  : null,
+
                               slotInfo: post.totalSlotsCount != null
                                   ? "${post.availableSlotsCount ?? 0}/${post.totalSlotsCount} slots"
                                   : null,

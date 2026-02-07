@@ -209,10 +209,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                                   .map((s) => s.trim())
                                   .where((s) => s.isNotEmpty)
                                   .toList(),
-                              availabilityText:
-                                  skill.availabilityRange != "Not specified"
-                                  ? skill.availabilityRange
-                                  : null,
+
                               slotInfo: skill.totalSlotsCount != null
                                   ? "${skill.availableSlotsCount ?? 0}/${skill.totalSlotsCount} slots"
                                   : null,

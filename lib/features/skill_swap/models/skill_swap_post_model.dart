@@ -70,7 +70,7 @@ class SkillSwapPostModel {
     if (teachDate == null) return "Not specified";
     try {
       final startDate = DateTime.parse(teachDate!);
-      String startStr = DateTimeUtils.formatDate(startDate);
+      String startStr = DateTimeUtils.getDay(startDate);
       if (teachTime != null) {
         final timeParts = teachTime!.split(':');
         final startWithTime = DateTime(
