@@ -91,13 +91,12 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                           enabled: true,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 12.0),
-                            child: CustomSkillCard(
+                            child: const CustomSkillCard(
                               userName: "Skeleton User",
                               userProfileUrl: "",
                               categoryTitle: "Category",
                               skillTitle: "Skill Title",
                               skillDescription: "Description loading...",
-                              skillList: [],
                               point: "0",
                             ),
                           ),
@@ -118,10 +117,14 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                                 userProfileUrl: skill.user.profileImage ?? '',
                                 categoryTitle:
                                     skill.category?.name ?? 'General',
-                                skillTitle: skill.skillToLearn,
+                                skillTitle: skill.title,
                                 skillDescription: skill.description,
-                                skillList: [],
                                 point: skill.pointsCost.toString(),
+                                skills: skill.skillToLearn
+                                    .split(',')
+                                    .map((s) => s.trim())
+                                    .where((s) => s.isNotEmpty)
+                                    .toList(),
                                 availabilityText:
                                     skill.availabilityRange != "Not specified"
                                     ? skill.availabilityRange

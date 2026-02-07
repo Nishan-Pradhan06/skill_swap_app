@@ -162,16 +162,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                           enabled: true,
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: CustomSkillCard(
+                            child: const CustomSkillCard(
                               userName: "Skeleton User",
                               userProfileUrl: "",
                               categoryTitle: "Category",
                               skillTitle: "Skill Title",
                               skillDescription:
                                   "This is a long description for skeleton loading",
-                              skillList: const [],
                               point: "0",
-                              onTap: () {},
                             ),
                           ),
                         ),
@@ -203,10 +201,14 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
                               userName: skill.user.fullName,
                               userProfileUrl: skill.user.profileImage ?? '',
                               categoryTitle: skill.category?.name ?? 'General',
-                              skillTitle: skill.skillToLearn,
+                              skillTitle: skill.title,
                               skillDescription: skill.description,
-                              skillList: [],
                               point: skill.pointsCost.toString(),
+                              skills: skill.skillToLearn
+                                  .split(',')
+                                  .map((s) => s.trim())
+                                  .where((s) => s.isNotEmpty)
+                                  .toList(),
                               availabilityText:
                                   skill.availabilityRange != "Not specified"
                                   ? skill.availabilityRange

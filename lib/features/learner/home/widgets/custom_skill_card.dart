@@ -11,9 +11,9 @@ class CustomSkillCard extends StatelessWidget {
   final String categoryTitle;
   final String skillTitle;
   final String skillDescription;
-  final List<Widget> skillList;
   final void Function()? onTap;
   final String point;
+  final List<String>? skills;
   const CustomSkillCard({
     super.key,
     required this.userName,
@@ -21,10 +21,10 @@ class CustomSkillCard extends StatelessWidget {
     required this.categoryTitle,
     required this.skillTitle,
     required this.skillDescription,
-    required this.skillList,
     required this.point,
     this.availabilityText,
     this.slotInfo,
+    this.skills,
     this.onTap,
   });
 
@@ -152,12 +152,19 @@ class CustomSkillCard extends StatelessWidget {
               ),
             ],
             Text(
-              'Looking for:',
+              'Skill you will learn:',
               style: TextTheme.of(
                 context,
               ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            Wrap(spacing: 6, runSpacing: 6, children: skillList),
+            if (skills != null && skills!.isNotEmpty)
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: skills!
+                    .map((s) => CustomCategoryChip(chipText: s))
+                    .toList(),
+              ),
           ],
         ),
       ),

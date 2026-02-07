@@ -119,8 +119,12 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                               categoryTitle: post.category?.name ?? 'General',
                               skillTitle: post.title,
                               skillDescription: post.description,
-                              skillList: [],
                               point: post.pointsCost.toString(),
+                              skills: post.skillToLearn
+                                  .split(',')
+                                  .map((s) => s.trim())
+                                  .where((s) => s.isNotEmpty)
+                                  .toList(),
                               availabilityText:
                                   post.availabilityRange != "Not specified"
                                   ? post.availabilityRange

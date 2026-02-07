@@ -1,3 +1,5 @@
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
+
 class SkillSwapPostModel {
   final int id;
   final PostUserModel user;
@@ -66,12 +68,47 @@ class SkillSwapPostModel {
 
   String get availabilityRange {
     if (teachDate == null) return "Not specified";
-    String start = "$teachDate ${teachTime ?? ""}";
-    if (teachEndDate != null) {
-      String end = "$teachEndDate ${teachEndTime ?? ""}";
-      return "$start - $end";
+    try {
+      final startDate = DateTime.parse(teachDate!);
+      String startStr = DateTimeUtils.formatDate(startDate);
+      if (teachTime != null) {
+        final timeParts = teachTime!.split(':');
+        final startWithTime = DateTime(
+          startDate.year,
+          startDate.month,
+          startDate.day,
+          int.parse(timeParts[0]),
+          int.parse(timeParts[1]),
+        );
+        startStr = DateTimeUtils.formatDateTimeNoDay(startWithTime);
+      }
+
+      if (teachEndDate != null) {
+        final endDate = DateTime.parse(teachEndDate!);
+        String endStr = DateTimeUtils.formatDate(endDate);
+        if (teachEndTime != null) {
+          final timeParts = teachEndTime!.split(':');
+          final endWithTime = DateTime(
+            endDate.year,
+            endDate.month,
+            endDate.day,
+            int.parse(timeParts[0]),
+            int.parse(timeParts[1]),
+          );
+          endStr = DateTimeUtils.formatDateTimeNoDay(endWithTime);
+        }
+        return "$startStr - $endStr";
+      }
+      return startStr;
+    } catch (e) {
+      // Fallback to simple string concat if parsing fails
+      String start = "$teachDate ${teachTime ?? ""}";
+      if (teachEndDate != null) {
+        String end = "$teachEndDate ${teachEndTime ?? ""}";
+        return "$start - $end";
+      }
+      return start;
     }
-    return start;
   }
 }
 
