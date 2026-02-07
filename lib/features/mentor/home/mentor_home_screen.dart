@@ -121,6 +121,13 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
                               skillDescription: post.description,
                               skillList: [],
                               point: post.pointsCost.toString(),
+                              availabilityText:
+                                  post.availabilityRange != "Not specified"
+                                  ? post.availabilityRange
+                                  : null,
+                              slotInfo: post.totalSlotsCount != null
+                                  ? "${post.availableSlotsCount ?? 0}/${post.totalSlotsCount} slots"
+                                  : null,
                               onTap: () async {
                                 final result = await context.pushNamed(
                                   AppRoutesName.skillPostFormRoute,

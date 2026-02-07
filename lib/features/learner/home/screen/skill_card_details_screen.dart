@@ -158,7 +158,7 @@ class SkillCardDetailsScreen extends StatelessWidget {
                         const Icon(Icons.calendar_today, size: 16),
                         const SizedBox(width: 8),
                         Text(
-                          "${post.teachDate ?? "Not specified"} ${post.teachTime ?? ""}",
+                          post.availabilityRange,
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],

@@ -122,6 +122,13 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                                 skillDescription: skill.description,
                                 skillList: [],
                                 point: skill.pointsCost.toString(),
+                                availabilityText:
+                                    skill.availabilityRange != "Not specified"
+                                    ? skill.availabilityRange
+                                    : null,
+                                slotInfo: skill.totalSlotsCount != null
+                                    ? "${skill.availableSlotsCount ?? 0}/${skill.totalSlotsCount} slots"
+                                    : null,
                                 onTap: () {
                                   context.pushNamed(
                                     AppRoutesName.skillCardDetails,

@@ -48,6 +48,34 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
     _durationController = TextEditingController(text: '60');
     _selectedCategory = p?.category;
 
+    if (p != null && p.teachDate != null) {
+      _setAvailability = true;
+      _startDate = DateTime.tryParse(p.teachDate!);
+      if (p.teachTime != null) {
+        final timeParts = p.teachTime!.split(':');
+        if (timeParts.length >= 2) {
+          _startTime = TimeOfDay(
+            hour: int.parse(timeParts[0]),
+            minute: int.parse(timeParts[1]),
+          );
+        }
+      }
+
+      if (p.teachEndDate != null) {
+        _endDate = DateTime.tryParse(p.teachEndDate!);
+      }
+      if (p.teachEndTime != null) {
+        final timeParts = p.teachEndTime!.split(':');
+        if (timeParts.length >= 2) {
+          _endTime = TimeOfDay(
+            hour: int.parse(timeParts[0]),
+            minute: int.parse(timeParts[1]),
+          );
+        }
+      }
+      _durationController.text = p.durationMinutes.toString();
+    }
+
     context.read<GetCategoriesBloc>().add(
       const GetCategoriesEvent.getCategories(),
     );

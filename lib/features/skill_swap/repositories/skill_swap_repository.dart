@@ -183,7 +183,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
       data: {
         "title": title,
         "description": description,
-        "category": categoryId,
+        "category_id": categoryId,
         "skill_to_learn": skillToLearn,
         "points_cost": pointsCost,
         "availability": availability,
@@ -209,7 +209,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     final Map<String, dynamic> data = {
       if (title != null) "title": title,
       if (description != null) "description": description,
-      if (categoryId != null) "category": categoryId,
+      if (categoryId != null) "category_id": categoryId,
       if (skillToLearn != null) "skill_to_learn": skillToLearn,
       if (pointsCost != null) "points_cost": pointsCost,
       if (availability != null) "availability": availability,

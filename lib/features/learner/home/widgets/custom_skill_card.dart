@@ -23,11 +23,17 @@ class CustomSkillCard extends StatelessWidget {
     required this.skillDescription,
     required this.skillList,
     required this.point,
+    this.availabilityText,
+    this.slotInfo,
     this.onTap,
   });
 
+  final String? availabilityText;
+  final String? slotInfo;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return CustomPadding(
       vertical: 0,
       child: CustomContainer(
@@ -114,6 +120,37 @@ class CustomSkillCard extends StatelessWidget {
               textAlign: TextAlign.justify,
               style: TextTheme.of(context).bodySmall,
             ),
+            if (availabilityText != null || slotInfo != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  if (availabilityText != null) ...[
+                    const Icon(Icons.access_time, size: 14, color: Colors.blue),
+                    const SizedBox(width: 4),
+                    Text(
+                      availabilityText!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  if (availabilityText != null && slotInfo != null)
+                    const SizedBox(width: 12),
+                  if (slotInfo != null) ...[
+                    const Icon(Icons.event_seat, size: 14, color: Colors.green),
+                    const SizedBox(width: 4),
+                    Text(
+                      slotInfo!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ],
             Text(
               'Looking for:',
               style: TextTheme.of(
