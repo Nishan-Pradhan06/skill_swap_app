@@ -160,9 +160,11 @@ class SkillRequestCard extends StatelessWidget {
   Widget _buildStatusBadge(String status) {
     Color color;
     switch (status) {
+      case 'CONFIRMED':
       case 'ACCEPTED':
         color = Colors.green;
         break;
+      case 'CANCELLED':
       case 'REJECTED':
         color = Colors.red;
         break;

@@ -28,28 +28,47 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Incoming Requests"),
-        scrolledUnderElevation: 0,
-        centerTitle: false,
-      ),
-      body: BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            success: (message) {
-              CustomToast.showSuccess(message);
-              _fetchRequests(); // Refresh list after action
-            },
-            failure: (message) {
-              CustomToast.showError(message);
-            },
-            orElse: () {},
-          );
-        },
-        child: RefreshIndicator(
-          onRefresh: () async {
-            _fetchRequests();
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Incoming Requests"),
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TabBar(
+                isScrollable: true,
+                splashBorderRadius: const BorderRadius.all(Radius.circular(8)),
+                tabAlignment: TabAlignment.start,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 15),
+                dividerColor: Theme.of(context).colorScheme.surface,
+                labelColor: Theme.of(context).colorScheme.primary,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: 'Pending'),
+                  Tab(text: 'Active'),
+                  Tab(text: 'Completed'),
+                ],
+              ),
+            ),
+          ),
+        ),
+        body: BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
+          listener: (context, state) {
+            state.maybeWhen(
+              success: (message) {
+                CustomToast.showSuccess(message);
+                _fetchRequests(); // Refresh list after action
+              },
+              failure: (message) {
+                CustomToast.showError(message);
+              },
+              orElse: () {},
+            );
           },
           child: BlocBuilder<GetSessionsBloc, GetSessionsState>(
             builder: (context, state) {
@@ -58,50 +77,81 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 failure: (message) => Center(child: Text(message)),
                 success: (data) {
-                  final sessions = data
+                  final allSessions = data
                       .map(
                         (e) => SessionModel.fromJson(e as Map<String, dynamic>),
                       )
                       .toList();
 
-                  if (sessions.isEmpty) {
-                    return _buildEmptyState(context);
-                  }
-
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    itemCount: sessions.length,
-                    itemBuilder: (context, index) {
-                      final session = sessions[index];
-                      return SkillRequestCard(
-                        session: session,
-                        onAccept: () {
-                          context.read<HandleSessionActionBloc>().add(
-                            HandleSessionActionEvent.performAction(
-                              sessionId: session.id,
-                              action: 'accept',
-                            ),
-                          );
-                        },
-                        onReject: () {
-                          context.read<HandleSessionActionBloc>().add(
-                            HandleSessionActionEvent.performAction(
-                              sessionId: session.id,
-                              action: 'reject',
-                            ),
-                          );
-                        },
-                      );
-                    },
+                  return TabBarView(
+                    children: [
+                      _buildRequestList(
+                        context,
+                        allSessions
+                            .where((s) => s.status == 'PENDING')
+                            .toList(),
+                      ),
+                      _buildRequestList(
+                        context,
+                        allSessions
+                            .where((s) => s.status == 'CONFIRMED')
+                            .toList(),
+                      ),
+                      _buildRequestList(
+                        context,
+                        allSessions
+                            .where(
+                              (s) =>
+                                  s.status == 'COMPLETED' ||
+                                  s.status == 'CANCELLED',
+                            )
+                            .toList(),
+                      ),
+                    ],
                   );
                 },
               );
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRequestList(BuildContext context, List<SessionModel> sessions) {
+    if (sessions.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        _fetchRequests();
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: sessions.length,
+        itemBuilder: (context, index) {
+          final session = sessions[index];
+          return SkillRequestCard(
+            session: session,
+            onAccept: () {
+              context.read<HandleSessionActionBloc>().add(
+                HandleSessionActionEvent.performAction(
+                  sessionId: session.id,
+                  action: 'accept',
+                ),
+              );
+            },
+            onReject: () {
+              context.read<HandleSessionActionBloc>().add(
+                HandleSessionActionEvent.performAction(
+                  sessionId: session.id,
+                  action: 'reject',
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
