@@ -104,7 +104,7 @@ class CustomProfileHeader extends StatelessWidget {
                   children: [
                     Text(
                       NameSplitter.split(data?.fullName ?? ''),
-                      style: TextTheme.of(context).bodyLarge?.copyWith(
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w900,
                       ),
@@ -138,7 +138,7 @@ class CustomProfileHeader extends StatelessWidget {
                     children: [
                       Text(
                         (data?.points ?? 0).toString(),
-                        style: TextTheme.of(context).bodyLarge?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: AppTheme.backgroundLight,

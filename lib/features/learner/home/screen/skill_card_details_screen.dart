@@ -7,6 +7,8 @@ import 'package:skill_swap/features/learner/home/widgets/custom_cateogry_chip.da
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/skill_swap_post_model.dart';
 import 'package:skill_swap/features/skill_swap/pages/learner_booking_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 class SkillCardDetailsScreen extends StatelessWidget {
   final SkillSwapPostModel post;
@@ -78,42 +80,50 @@ class SkillCardDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   // Mentor Info
-                  Row(
-                    children: [
-                      ClipOval(
-                        child: (post.user.profileImage?.isNotEmpty ?? false)
-                            ? CachedNetworkImage(
-                                imageUrl: ImageUrlUtils.getImageUrl(
-                                  post.user.profileImage!,
+                  InkWell(
+                    onTap: () {
+                      context.pushNamed(
+                        AppRoutesName.publicProfileRoute,
+                        pathParameters: {'userId': post.user.id.toString()},
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        ClipOval(
+                          child: (post.user.profileImage?.isNotEmpty ?? false)
+                              ? CachedNetworkImage(
+                                  imageUrl: ImageUrlUtils.getImageUrl(
+                                    post.user.profileImage!,
+                                  ),
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/images/default_profile.png',
+                                  height: 40,
+                                  width: 40,
+                                  fit: BoxFit.cover,
                                 ),
-                                height: 40,
-                                width: 40,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset(
-                                'assets/images/default_profile.png',
-                                height: 40,
-                                width: 40,
-                                fit: BoxFit.cover,
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              post.user.fullName,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            post.user.fullName,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          Text(
-                            post.user.mainCategory ?? "Mentor",
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ],
+                            Text(
+                              post.user.mainCategory ?? "Mentor",
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 24),
                   Text(

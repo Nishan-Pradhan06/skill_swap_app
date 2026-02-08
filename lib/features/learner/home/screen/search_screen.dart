@@ -91,7 +91,7 @@ class _SearchScreenViewState extends State<_SearchScreenView> {
                           enabled: true,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 12.0),
-                            child: const CustomSkillCard(
+                            child: CustomSkillCard(
                               userName: "Skeleton User",
                               userProfileUrl: "",
                               categoryTitle: "Category",

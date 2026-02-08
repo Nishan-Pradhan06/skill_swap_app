@@ -9,6 +9,8 @@ import 'package:skill_swap/router/app_routes_names.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/core/di/dependency_injection.dart';
+import 'package:skill_swap/features/profile/bloc/get_public_profile/get_public_profile_bloc.dart';
+import 'package:skill_swap/features/profile/screen/public_profile_screen.dart';
 import 'package:skill_swap/features/reward/blocs/reward_bloc.dart';
 
 import '../features/shared/bottom_nav_bar/screens/learner_bottom_nav_bar.dart';
@@ -60,5 +62,18 @@ List<GoRoute> userAppRoutes = [
     path: AppRoutesName.mentorAllSkillsRoute.path,
     name: AppRoutesName.mentorAllSkillsRoute,
     builder: (context, state) => const MentorAllSkillsScreen(),
+  ),
+  GoRoute(
+    path: '${AppRoutesName.publicProfileRoute.path}/:userId',
+    name: AppRoutesName.publicProfileRoute,
+    builder: (context, state) {
+      final userId = int.parse(state.pathParameters['userId']!);
+      return BlocProvider(
+        create: (context) =>
+            sl<GetPublicProfileBloc>()
+              ..add(GetPublicProfileEvent.getProfile(userId)),
+        child: const PublicProfileScreen(),
+      );
+    },
   ),
 ];

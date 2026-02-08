@@ -35,8 +35,8 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    // final theme = Theme.of(context);
+    // final colorScheme = theme.colorScheme;
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(

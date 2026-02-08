@@ -409,9 +409,9 @@ class _DailyRewardScreenState extends State<DailyRewardScreen> {
     const numberOfPoints = 5;
     final halfWidth = size.width / 2;
     final externalRadius = halfWidth;
-    final internalRadius = halfWidth / 2.5;
+    // final internalRadius = halfWidth / 2.5;
     final degreesPerStep = 360 / numberOfPoints;
-    final halfDegreesPerStep = degreesPerStep / 2;
+    // final halfDegreesPerStep = degreesPerStep / 2;
     final path = Path();
     final fullAngle = degToRad(360);
     path.moveTo(size.width, halfWidth);

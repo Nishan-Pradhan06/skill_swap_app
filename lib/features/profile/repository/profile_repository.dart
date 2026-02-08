@@ -22,6 +22,7 @@ abstract interface class ProfileRepository {
     String? profileImagePath,
     String? bannerImagePath,
   });
+  FutureEither<ProfileDataModel> getPublicProfile(int userId);
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -204,6 +205,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
     return response.fold((failure) => Left(failure), (data) {
       return Right(data['message']);
+    });
+  }
+
+  @override
+  FutureEither<ProfileDataModel> getPublicProfile(int userId) async {
+    final response = await _apiService.get('profile/$userId/public/');
+
+    return response.fold((failure) => Left(failure), (data) {
+      final profileData = data['data'];
+      final profileModel = ProfileDataModel.fromMap(profileData);
+      return Right(profileModel);
     });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+export 'package:skill_swap/core/state/bloc_base_state.dart';
 import 'package:skill_swap/core/state/bloc_base_state.dart';
 import 'package:skill_swap/features/profile/model/profile_model.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';

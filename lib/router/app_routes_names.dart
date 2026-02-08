@@ -21,6 +21,7 @@ class AppRoutesName {
   static const String mentorPostsRoute = 'mentorPostsRoute';
   static const String skillPostFormRoute = 'skillPostFormRoute';
   static const String mentorAllSkillsRoute = 'mentorAllSkillsRoute';
+  static const String publicProfileRoute = 'publicProfileRoute';
 
   //#---------------SKILL SWAP ROUTES NAME--------------##
   static const String learnerBookingRoute = 'learnerBookingRoute';

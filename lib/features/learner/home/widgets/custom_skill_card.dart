@@ -43,7 +43,7 @@ class CustomSkillCard extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.surface,
         useIntrinsicHeight: true,
         child: Column(
-          spacing: 10,
+          spacing: 4,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
