@@ -91,4 +91,13 @@ class InputValidator {
     }
     return null;
   }
+
+  static String? validateOtp(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter the OTP code';
+    } else if (value.trim().length != 6) {
+      return 'OTP must be 6 digits';
+    }
+    return null;
+  }
 }

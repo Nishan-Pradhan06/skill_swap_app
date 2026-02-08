@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
+import 'package:skill_swap/features/auth/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 
 import '../../../core/helpers/validation_helpers.dart';
 import '../../../core/theme/app_theme.dart';
@@ -63,17 +68,45 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   controller: _emailController,
                   borderColor: Colors.transparent,
                   validator: InputValidator.validateEmail,
-
                   type: CustomTextFieldType.email,
                   fillColor: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0XFF272c29)
                       : AppTheme.surfaceLight,
                 ),
-
-                CustomButton(
-                  text: 'Get Code',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                SizedBox(height: 20),
+                BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
+                  listener: (context, state) {
+                    state.whenOrNull(
+                      loaded: (message) {
+                        CustomToast.showSuccess(message);
+                        context.pushNamed(
+                          AppRoutesName.authVerifyCodeScreenRoute,
+                          extra: _emailController.text.trim(),
+                        );
+                      },
+                      failure: (failure) {
+                        CustomToast.showError(failure.message);
+                      },
+                    );
+                  },
+                  builder: (context, state) {
+                    final isLoading = state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    );
+                    return CustomButton(
+                      text: 'Get Code',
+                      isLoading: isLoading,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<ForgotPasswordBloc>().add(
+                            ForgotPasswordEvent.submit(
+                              _emailController.text.trim(),
+                            ),
+                          );
+                        }
+                      },
+                    );
                   },
                 ),
               ],

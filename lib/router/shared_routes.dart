@@ -3,6 +3,8 @@ import 'package:skill_swap/common/extension/extension.dart';
 import 'package:skill_swap/features/auth/screens/forget_password_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_in_screen.dart';
 import 'package:skill_swap/features/auth/screens/sign_up_screen.dart';
+import 'package:skill_swap/features/auth/screens/verify_otp_screen.dart';
+import 'package:skill_swap/features/auth/screens/reset_password_screen.dart';
 import 'package:skill_swap/features/shared/menu/screen/personal_details_screen.dart';
 import 'package:skill_swap/features/profile/screen/profile_screen.dart';
 import 'package:skill_swap/features/shared/on_boarding/screen/on_boarding_screen.dart';
@@ -50,6 +52,19 @@ List<GoRoute> sharedAppRoutes = [
     path: AppRoutesName.authForgetPasswordScreenRoute.path,
     name: AppRoutesName.authForgetPasswordScreenRoute,
     builder: (context, state) => ForgetPasswordScreen(),
+  ),
+  GoRoute(
+    path: AppRoutesName.authVerifyCodeScreenRoute.path,
+    name: AppRoutesName.authVerifyCodeScreenRoute,
+    builder: (context, state) => VerifyOtpScreen(email: state.extra as String),
+  ),
+  GoRoute(
+    path: AppRoutesName.authResetPasswordScreenRoute.path,
+    name: AppRoutesName.authResetPasswordScreenRoute,
+    builder: (context, state) {
+      final data = state.extra as Map<String, dynamic>;
+      return ResetPasswordScreen(email: data['email'], code: data['code']);
+    },
   ),
   GoRoute(
     path: AppRoutesName.profileScreenRoute.path,

@@ -10,6 +10,9 @@ import '../../features/notifications/bloc/read_notifications/read_notifications_
 import '../../features/auth/bloc/bloc/sign_out_bloc.dart';
 import '../../features/auth/bloc/sign_in/sign_in_bloc.dart';
 import '../../features/auth/bloc/sign_up/sign_up_bloc.dart';
+import '../../features/auth/bloc/forgot_password/forgot_password_bloc.dart';
+import '../../features/auth/bloc/forgot_password/verify_otp_bloc.dart';
+import '../../features/auth/bloc/forgot_password/reset_password_bloc.dart';
 import '../../features/notifications/bloc/get_notifications/get_notification_bloc.dart';
 import '../../features/profile/bloc/get_profile/get_profile_bloc.dart';
 import '../../features/profile/bloc/profile_setup/profile_setup_bloc.dart';
@@ -70,6 +73,9 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<GetSessionsBloc>()),
         BlocProvider(create: (_) => sl<HandleSessionActionBloc>()),
         BlocProvider(create: (_) => sl<DailyRewardBloc>()),
+        BlocProvider(create: (_) => sl<ForgotPasswordBloc>()),
+        BlocProvider(create: (_) => sl<VerifyOtpBloc>()),
+        BlocProvider(create: (_) => sl<ResetPasswordBloc>()),
       ],
       child: child,
     );

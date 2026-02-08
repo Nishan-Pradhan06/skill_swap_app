@@ -4,6 +4,9 @@ import 'package:retry/retry.dart';
 import 'package:skill_swap/features/auth/bloc/bloc/sign_out_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_in/sign_in_bloc.dart';
 import 'package:skill_swap/features/auth/bloc/sign_up/sign_up_bloc.dart';
+import 'package:skill_swap/features/auth/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:skill_swap/features/auth/bloc/forgot_password/verify_otp_bloc.dart';
+import 'package:skill_swap/features/auth/bloc/forgot_password/reset_password_bloc.dart';
 import 'package:skill_swap/features/device_register_push_notification/bloc/device_register/device_register_bloc.dart';
 import 'package:skill_swap/features/device_register_push_notification/repository/device_register_repository.dart';
 import 'package:skill_swap/features/notifications/bloc/delete_notifications/delete_notification_bloc.dart';
@@ -94,6 +97,9 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory(() => HandleSessionActionBloc(repository: sl()));
   sl.registerFactory(() => RewardBloc(repository: sl()));
   sl.registerFactory(() => SkillSearchBloc(repository: sl()));
+  sl.registerFactory(() => ForgotPasswordBloc(repository: sl()));
+  sl.registerFactory(() => VerifyOtpBloc(repository: sl()));
+  sl.registerFactory(() => ResetPasswordBloc(repository: sl()));
 
   //###---------------EXTERNAL REPOSITORY SERVICES---------------###
 

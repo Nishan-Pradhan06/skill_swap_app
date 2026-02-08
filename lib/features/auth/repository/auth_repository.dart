@@ -11,6 +11,17 @@ abstract interface class AuthRepository {
   FutureEither<String> signIn({required SignInModel signInModel});
   FutureEither<String> signUp({required SignUpModel signUpModel});
   FutureEither<String> signOut();
+  FutureEither<String> forgotPassword({required String email});
+  FutureEither<String> verifyCode({
+    required String email,
+    required String code,
+  });
+  FutureEither<String> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -57,5 +68,57 @@ class AuthRepositoryImpl implements AuthRepository {
     await CacheServices.instance.clearAuthToken();
 
     return Right("Logout Successfully!!!");
+  }
+
+  @override
+  FutureEither<String> forgotPassword({required String email}) async {
+    final response = await _apiService.post<Map>(
+      'auth/forgot-password/',
+      data: {'email': email},
+    );
+
+    return response.fold(
+      (failure) => Left(failure),
+      (data) => Right(data['message']),
+    );
+  }
+
+  @override
+  FutureEither<String> verifyCode({
+    required String email,
+    required String code,
+  }) async {
+    final response = await _apiService.post<Map>(
+      'auth/verify-code/',
+      data: {'email': email, 'code': code},
+    );
+
+    return response.fold(
+      (failure) => Left(failure),
+      (data) => Right(data['message']),
+    );
+  }
+
+  @override
+  FutureEither<String> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final response = await _apiService.post<Map>(
+      'auth/reset-password/',
+      data: {
+        'email': email,
+        'code': code,
+        'new_password': newPassword,
+        'confirm_password': confirmPassword,
+      },
+    );
+
+    return response.fold(
+      (failure) => Left(failure),
+      (data) => Right(data['message']),
+    );
   }
 }
