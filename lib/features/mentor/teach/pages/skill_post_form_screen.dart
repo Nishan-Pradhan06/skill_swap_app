@@ -28,6 +28,8 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   late TextEditingController _pointsCostController;
   late TextEditingController _durationController;
 
+  List<String> _selectedSkills = [];
+
   PostCategoryModel? _selectedCategory;
   bool _setAvailability = false;
   DateTime? _startDate;
@@ -49,6 +51,10 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
     );
     _durationController = TextEditingController(text: '60');
     _selectedCategory = p?.category;
+
+    if (p?.skillToLearn != null && p!.skillToLearn.isNotEmpty) {
+      _selectedSkills = p.skillToLearn.split(',').map((s) => s.trim()).toList();
+    }
 
     if (p != null && p.teachDate != null) {
       _setAvailability = true;
@@ -177,7 +183,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillToLearn: _skillToLearnController.text,
+          skillToLearn: _selectedSkills.join(', '),
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -189,7 +195,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           title: _titleController.text,
           description: _descriptionController.text,
           categoryId: _selectedCategory!.id,
-          skillToLearn: _skillToLearnController.text,
+          skillToLearn: _selectedSkills.join(', '),
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
           availability: availabilityData,
         ),
@@ -250,6 +256,70 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                 }
               },
               child: const Text("Add"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addSkill(String skill) {
+    final s = skill.trim();
+    if (s.isNotEmpty && !_selectedSkills.contains(s)) {
+      setState(() {
+        _selectedSkills.add(s);
+        _skillToLearnController.clear();
+      });
+    }
+  }
+
+  void _removeSkill(String skill) {
+    setState(() {
+      _selectedSkills.remove(skill);
+    });
+  }
+
+  Future<void> _showSkillSelectionDialog(BuildContext context) async {
+    final categoriesState = context.read<GetCategoriesBloc>().state;
+    List<PostCategoryModel> categories = [];
+    categoriesState.whenOrNull(loaded: (cats) => categories = cats);
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text("Select Skills"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: categories.map((c) {
+                  final isSelected = _selectedSkills.contains(c.name);
+                  return ChoiceChip(
+                    label: Text(c.name),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      if (selected) {
+                        _addSkill(c.name);
+                      } else {
+                        _removeSkill(c.name);
+                      }
+                      Navigator.pop(dialogContext);
+                      _showSkillSelectionDialog(
+                        context,
+                      ); // Reopen to allow multiple
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text("Close"),
             ),
           ],
         );
@@ -416,17 +486,82 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  CustomTextField(
-                    label: "Skill you will learn",
-                    hint: "e.g. Python Programming",
-                    controller: _skillToLearnController,
-                    validator: (v) => v?.isEmpty ?? true ? "Required" : null,
-                    borderColor: Colors.transparent,
-
-                    fillColor: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0XFF272c29)
-                        : AppTheme.surfaceLight,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          label: "Skill you will learn",
+                          hint: "e.g. Python Programming",
+                          controller: _skillToLearnController,
+                          validator: (v) =>
+                              _selectedSkills.isEmpty && (v?.isEmpty ?? true)
+                              ? "Add at least one skill"
+                              : null,
+                          borderColor: Colors.transparent,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0XFF272c29)
+                              : AppTheme.surfaceLight,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          onPressed: () =>
+                              _addSkill(_skillToLearnController.text),
+                          icon: const Icon(Icons.add, color: Colors.white),
+                          tooltip: "Add custom skill",
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          onPressed: () => _showSkillSelectionDialog(context),
+                          icon: Icon(
+                            Icons.list,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          tooltip: "Select from list",
+                        ),
+                      ),
+                    ],
                   ),
+                  if (_selectedSkills.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _selectedSkills
+                          .map(
+                            (skill) => Chip(
+                              label: Text(skill),
+                              onDeleted: () => _removeSkill(skill),
+                              deleteIcon: const Icon(Icons.close, size: 16),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withOpacity(0.1),
+                              side: BorderSide.none,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   CustomTextField(
                     label: "Points Cost",

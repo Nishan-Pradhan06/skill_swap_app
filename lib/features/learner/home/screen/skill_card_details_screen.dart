@@ -140,7 +140,13 @@ class SkillCardDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
-                    children: [CustomCategoryChip(chipText: post.skillToLearn)],
+                    runSpacing: 8,
+                    children: post.skillToLearn
+                        .split(',')
+                        .map((s) => s.trim())
+                        .where((s) => s.isNotEmpty)
+                        .map((s) => CustomCategoryChip(chipText: s))
+                        .toList(),
                   ),
                   const SizedBox(height: 24),
 
