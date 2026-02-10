@@ -7,6 +7,7 @@ import 'package:skill_swap/features/skill_swap/blocs/booking_bloc.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 import 'package:skill_swap/features/skill_swap/models/availability_slot_model.dart';
 
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import '../../../core/utils/date_string_split_utils.dart';
 
 class LearnerBookingPage extends StatefulWidget {
@@ -131,72 +132,89 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
                     ),
 
                     Expanded(
-                      child: CustomPadding(
-                        child: ListView.builder(
-                          itemCount: _slots.length,
-                          itemBuilder: (context, index) {
-                            final slot = _slots[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 0,
-                              ),
-                              child: ListTile(
-                                title: Text(
-                                  DateTimeUtils.formatDateTimeNoDay(
-                                    slot.startTime,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  slot.isBooked ? "Booked" : "Available",
-                                ),
-                                trailing: slot.isBooked
-                                    ? const Text(
-                                        "Unavailable",
-                                        style: TextStyle(color: Colors.red),
-                                      )
-                                    : Builder(
-                                        builder: (context) {
-                                          final bookingState = context
-                                              .watch<BookingBloc>()
-                                              .state;
-                                          final isBooking = bookingState
-                                              .maybeWhen(
-                                                loading: () => true,
-                                                orElse: () => false,
-                                              );
+                      child: BlocBuilder<GetProfileBloc, GetProfileState>(
+                        builder: (context, profileState) {
+                          final userPoints = profileState.maybeWhen(
+                            loaded: (profile) => profile.points ?? 0,
+                            orElse: () => 0,
+                          );
 
-                                          return ElevatedButton(
-                                            onPressed: isBooking
-                                                ? null
-                                                : () {
-                                                    context
-                                                        .read<BookingBloc>()
-                                                        .add(
-                                                          BookingEvent.book(
-                                                            mentorId:
-                                                                widget.mentorId,
-                                                            slotId: slot.id,
-                                                            skill:
-                                                                widget
-                                                                    .skillTitle ??
-                                                                "General",
-                                                            points: widget
-                                                                .pointsCost,
-                                                            scheduledTime:
-                                                                slot.startTime,
-                                                            durationMinutes: 60,
-                                                          ),
-                                                        );
-                                                  },
-                                            child: const Text("Book"),
-                                          );
-                                        },
+                          return CustomPadding(
+                            child: ListView.builder(
+                              itemCount: _slots.length,
+                              itemBuilder: (context, index) {
+                                final slot = _slots[index];
+                                return Card(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 0,
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      DateTimeUtils.formatDateTimeNoDay(
+                                        slot.startTime,
                                       ),
-                              ),
-                            );
-                          },
-                        ),
+                                    ),
+                                    subtitle: Text(
+                                      slot.isBooked ? "Booked" : "Available",
+                                    ),
+                                    trailing: slot.isBooked
+                                        ? const Text(
+                                            "Unavailable",
+                                            style: TextStyle(color: Colors.red),
+                                          )
+                                        : Builder(
+                                            builder: (context) {
+                                              final bookingState = context
+                                                  .watch<BookingBloc>()
+                                                  .state;
+                                              final isBooking = bookingState
+                                                  .maybeWhen(
+                                                    loading: () => true,
+                                                    orElse: () => false,
+                                                  );
+
+                                              return ElevatedButton(
+                                                onPressed: isBooking
+                                                    ? null
+                                                    : () {
+                                                        if (userPoints <
+                                                            widget.pointsCost) {
+                                                          CustomToast.showError(
+                                                            "Insufficient points. You need ${widget.pointsCost} points to book this session.",
+                                                          );
+                                                          return;
+                                                        }
+                                                        context
+                                                            .read<BookingBloc>()
+                                                            .add(
+                                                              BookingEvent.book(
+                                                                mentorId: widget
+                                                                    .mentorId,
+                                                                slotId: slot.id,
+                                                                skill:
+                                                                    widget
+                                                                        .skillTitle ??
+                                                                    "General",
+                                                                points: widget
+                                                                    .pointsCost,
+                                                                scheduledTime:
+                                                                    slot.startTime,
+                                                                durationMinutes:
+                                                                    60,
+                                                              ),
+                                                            );
+                                                      },
+                                                child: const Text("Book"),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

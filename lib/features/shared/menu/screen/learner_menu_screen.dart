@@ -40,9 +40,7 @@ class LearnerMenuScreen extends StatelessWidget {
             },
             builder: (context, state) {
               return IconButton(
-                onPressed: () {
-                  sl<SignOutBloc>().add(SignOutEvent.signOut());
-                },
+                onPressed: () => _showLogoutDialog(context),
                 icon: const Icon(Icons.exit_to_app_rounded),
               );
             },
@@ -187,6 +185,48 @@ class LearnerMenuScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => BlocBuilder<SignOutBloc, SignOutState>(
+        builder: (context, state) {
+          final isLoading = state.maybeWhen(
+            loading: () => true,
+            orElse: () => false,
+          );
+          return AlertDialog(
+            title: const Text('Logout'),
+            content: const Text('Are you sure you want to sign out?'),
+            actions: [
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomOutlineButton(
+                      text: 'Cancel',
+                      isDisabled: isLoading,
+                      onPressed: () => Navigator.pop(ctx),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomButton(
+                      text: 'Logout',
+                      isLoading: isLoading,
+                      onPressed: () {
+                        sl<SignOutBloc>().add(const SignOutEvent.signOut());
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
