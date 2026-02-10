@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
+import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import 'widgets/skill_request_card.dart';
 
 class MentorRequestsScreen extends StatefulWidget {
@@ -63,6 +64,9 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
               success: (message) {
                 CustomToast.showSuccess(message);
                 _fetchRequests(); // Refresh list after action
+                context.read<GetProfileBloc>().add(
+                  const GetProfileEvent.getProfile(),
+                ); // Refresh profile points
               },
               failure: (message) {
                 CustomToast.showError(message);
