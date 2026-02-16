@@ -32,6 +32,7 @@ import 'package:skill_swap/features/skill_swap/blocs/get_categories_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/skill_search_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_bloc.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 
 import '../../features/auth/repository/auth_repository.dart';
@@ -97,6 +98,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory(() => HandleSessionActionBloc(repository: sl()));
   sl.registerFactory(() => RewardBloc(repository: sl()));
   sl.registerFactory(() => SkillSearchBloc(repository: sl()));
+  sl.registerFactory(() => UpdateMeetingLinkBloc(repository: sl()));
   sl.registerFactory(() => ForgotPasswordBloc(repository: sl()));
   sl.registerFactory(() => VerifyOtpBloc(repository: sl()));
   sl.registerFactory(() => ResetPasswordBloc(repository: sl()));

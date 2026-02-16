@@ -3,6 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
+import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_event.dart';
+import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_state.dart';
+import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
+import 'package:skill_swap/features/mentor/meeting_links/meeting_links_list_screen.dart';
 
 class MyStudentsScreen extends StatefulWidget {
   const MyStudentsScreen({super.key});
@@ -28,61 +33,203 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Students"),
+        title: const Text("My Students"),
         scrolledUnderElevation: 0,
         centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MeetingLinksListScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.link),
+            tooltip: 'View Meeting Links',
+          ),
+        ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _fetchSessions();
+      body: BlocListener<UpdateMeetingLinkBloc, UpdateMeetingLinkState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            success: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.green),
+              );
+              _fetchSessions();
+            },
+            failure: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.red),
+              );
+            },
+          );
         },
-        child: BlocBuilder<GetSessionsBloc, GetSessionsState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const SizedBox.shrink(),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              failure: (message) => Center(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            _fetchSessions();
+          },
+          child: BlocBuilder<GetSessionsBloc, GetSessionsState>(
+            builder: (context, state) {
+              return state.when(
+                initial: () => const SizedBox.shrink(),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                failure: (message) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 60,
+                        color: Colors.red[300],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        message,
+                        style: TextStyle(color: Colors.red[300]),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                success: (data) {
+                  final sessions = data
+                      .map(
+                        (e) => SessionModel.fromJson(e as Map<String, dynamic>),
+                      )
+                      .where((session) => session.status == 'CONFIRMED')
+                      .toList();
+
+                  if (sessions.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: sessions.length,
+                    itemBuilder: (context, index) {
+                      final session = sessions[index];
+                      return _buildStudentCard(session);
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ),
+      floatingActionButton: BlocBuilder<GetSessionsBloc, GetSessionsState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            success: (data) {
+              final sessions = data
+                  .map((e) => SessionModel.fromJson(e as Map<String, dynamic>))
+                  .where((session) => session.status == 'CONFIRMED')
+                  .toList();
+
+              if (sessions.isEmpty) return const SizedBox.shrink();
+
+              return FloatingActionButton.extended(
+                onPressed: () => _showMeetingLinkDialog(context, sessions),
+                label: const Text("Set Meet Link"),
+                icon: const Icon(Icons.video_call),
+              );
+            },
+            orElse: () => const SizedBox.shrink(),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showMeetingLinkDialog(
+    BuildContext context,
+    List<SessionModel> sessions,
+  ) {
+    final skills = sessions.map((s) => s.skill).toSet().toList();
+    String? selectedSkill = skills.isNotEmpty ? skills[0] : null;
+    final urlController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Set Meeting Link"),
+              content: Form(
+                key: formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
+                    DropdownButtonFormField<String>(
+                      value: selectedSkill,
+                      decoration: const InputDecoration(
+                        labelText: "Select Skill",
+                      ),
+                      items: skills.map((skill) {
+                        return DropdownMenuItem(
+                          value: skill,
+                          child: Text(skill),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setDialogState(() {
+                          selectedSkill = value;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 16),
-                    Text(
-                      message,
-                      style: TextStyle(color: Colors.red[300]),
-                      textAlign: TextAlign.center,
+                    TextFormField(
+                      controller: urlController,
+                      decoration: const InputDecoration(
+                        labelText: "Meeting URL",
+                        hintText: "https://meet.jit.si/...",
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter a URL";
+                        }
+                        if (!Uri.parse(value).isAbsolute) {
+                          return "Please enter a valid URL";
+                        }
+                        return null;
+                      },
                     ),
                   ],
                 ),
               ),
-              success: (data) {
-                final sessions = data
-                    .map(
-                      (e) => SessionModel.fromJson(e as Map<String, dynamic>),
-                    )
-                    .where((session) => session.status == 'CONFIRMED')
-                    .toList();
-
-                if (sessions.isEmpty) {
-                  return _buildEmptyState(context);
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  itemCount: sessions.length,
-                  itemBuilder: (context, index) {
-                    final session = sessions[index];
-                    return _buildStudentCard(session);
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate() &&
+                        selectedSkill != null) {
+                      context.read<UpdateMeetingLinkBloc>().add(
+                        UpdateMeetingLinkEvent.update(
+                          skill: selectedSkill!,
+                          meetingLink: urlController.text,
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
                   },
-                );
-              },
+                  child: const Text("Update"),
+                ),
+              ],
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -179,18 +326,38 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             const SizedBox(height: 8),
             _buildInfoRow(Icons.stars, 'Points', '${session.points} pts'),
             if (session.meetingLink != null && session.meetingLink!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO: Open meeting link
-                  },
-                  icon: const Icon(Icons.video_call),
-                  label: const Text('Join Meeting'),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 44),
-                  ),
-                ),
+              Builder(
+                builder: (context) {
+                  final now = DateTime.now();
+                  final startTime = session.scheduledTime.subtract(
+                    const Duration(minutes: 15),
+                  );
+                  final endTime = session.scheduledTime.add(
+                    Duration(minutes: session.durationMinutes),
+                  );
+
+                  final isLive =
+                      now.isAfter(startTime) && now.isBefore(endTime);
+
+                  if (!isLive) return const SizedBox.shrink();
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        final uri = Uri.parse(session.meetingLink!);
+                        urlLauncherWithFallback(context, uri);
+                      },
+                      icon: const Icon(Icons.video_call),
+                      label: const Text('Join Meeting'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 44),
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  );
+                },
               ),
           ],
         ),

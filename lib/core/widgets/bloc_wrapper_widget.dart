@@ -26,6 +26,7 @@ import '../../features/skill_swap/blocs/get_mentor_posts_bloc.dart';
 import '../../features/skill_swap/blocs/get_categories_bloc.dart';
 import '../../features/skill_swap/blocs/get_sessions_bloc.dart';
 import '../../features/skill_swap/blocs/handle_session_action_bloc.dart';
+import '../../features/skill_swap/blocs/update_meeting_link_bloc.dart';
 import '../di/dependency_injection.dart';
 import '../services/once_cache_service.dart';
 
@@ -76,6 +77,7 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<ForgotPasswordBloc>()),
         BlocProvider(create: (_) => sl<VerifyOtpBloc>()),
         BlocProvider(create: (_) => sl<ResetPasswordBloc>()),
+        BlocProvider(create: (_) => sl<UpdateMeetingLinkBloc>()),
       ],
       child: child,
     );

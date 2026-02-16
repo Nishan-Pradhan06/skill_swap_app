@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
+import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 
 class SkillRequestCard extends StatelessWidget {
   final SessionModel session;
@@ -136,6 +137,24 @@ class SkillRequestCard extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          if (session.status == 'CONFIRMED' && session.meetingLink != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  final uri = Uri.parse(session.meetingLink!);
+                  urlLauncherWithFallback(context, uri);
+                },
+                icon: const Icon(Icons.video_call),
+                label: const Text("Join Meeting"),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 45),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
             ),
         ],
       ),

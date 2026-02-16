@@ -9,7 +9,8 @@ import 'router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await AppInitializer.init();
+  // Initialize app with router for push notification navigation
+  await AppInitializer.init(router: appRoute);
 
   runApp(const SkillSwap());
 }
