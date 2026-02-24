@@ -44,16 +44,38 @@ class SkillRequestCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: learner['profile_image'] != null
-                    ? CachedNetworkImageProvider(
-                        ImageUrlUtils.getImageUrl(learner['profile_image']),
-                      )
-                    : null,
-                child: learner['profile_image'] == null
-                    ? const Icon(Icons.person)
-                    : null,
+              SizedBox(
+                height: 48,
+                width: 48,
+                child: ClipOval(
+                  child: learner['profile_image'] != null
+                      ? CachedNetworkImage(
+                          imageUrl: ImageUrlUtils.getImageUrl(
+                            learner['profile_image'],
+                          ),
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: theme.colorScheme.surfaceVariant,
+                            child: const Center(
+                              child: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: theme.colorScheme.surfaceVariant,
+                            child: const Icon(Icons.person),
+                          ),
+                        )
+                      : Container(
+                          color: theme.colorScheme.surfaceVariant,
+                          child: const Icon(Icons.person),
+                        ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(

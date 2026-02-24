@@ -131,6 +131,7 @@ class _MentorPostsScreenState extends State<MentorPostsScreen> {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
+          heroTag: 'mentor_posts_fab',
           onPressed: () async {
             final result = await context.pushNamed(
               AppRoutesName.skillPostFormRoute,

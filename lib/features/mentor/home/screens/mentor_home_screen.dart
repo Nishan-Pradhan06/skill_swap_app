@@ -197,6 +197,7 @@ class _MentorHomeScreenState extends State<MentorHomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'mentor_home_fab',
         onPressed: () async {
           final result = await context.pushNamed(
             AppRoutesName.skillPostFormRoute,

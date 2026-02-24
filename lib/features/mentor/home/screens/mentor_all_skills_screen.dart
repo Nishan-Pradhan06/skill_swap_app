@@ -169,6 +169,7 @@ class _MentorAllSkillsScreenState extends State<MentorAllSkillsScreen> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'mentor_all_skills_fab',
           onPressed: () async {
             final result = await context.pushNamed(
               AppRoutesName.skillPostFormRoute,

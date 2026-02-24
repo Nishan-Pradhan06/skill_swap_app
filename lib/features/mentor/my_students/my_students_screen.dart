@@ -135,6 +135,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
               if (sessions.isEmpty) return const SizedBox.shrink();
 
               return FloatingActionButton.extended(
+                heroTag: 'my_students_fab',
                 onPressed: () => _showMeetingLinkDialog(context, sessions),
                 label: const Text("Set Meet Link"),
                 icon: const Icon(Icons.video_call),
