@@ -32,6 +32,7 @@ abstract interface class SkillSwapRepository {
     required String skillToLearn,
     required int pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   });
 
   FutureEither<String> updatePost({
@@ -42,6 +43,7 @@ abstract interface class SkillSwapRepository {
     String? skillToLearn,
     int? pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   });
 
   FutureEither<String> deletePost(int postId);
@@ -182,6 +184,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     required String skillToLearn,
     required int pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   }) async {
     final response = await _apiService.post<Map>(
       'skillswap/posts/create/',
@@ -192,6 +195,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
         "skill_to_learn": skillToLearn,
         "points_cost": pointsCost,
         "availability": availability,
+        "availabilities": availabilities,
       },
     );
 
@@ -210,6 +214,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     String? skillToLearn,
     int? pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   }) async {
     final Map<String, dynamic> data = {
       if (title != null) "title": title,
@@ -218,6 +223,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
       if (skillToLearn != null) "skill_to_learn": skillToLearn,
       if (pointsCost != null) "points_cost": pointsCost,
       if (availability != null) "availability": availability,
+      if (availabilities != null) "availabilities": availabilities,
     };
 
     final response = await _apiService.patch<Map>(

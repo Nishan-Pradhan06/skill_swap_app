@@ -9,7 +9,7 @@ import 'package:skill_swap/features/skill_swap/blocs/manage_skill_post_bloc.dart
 import 'package:skill_swap/core/di/dependency_injection.dart';
 import 'package:skill_swap/features/skill_swap/repositories/skill_swap_repository.dart';
 import 'package:skill_swap/features/skill_swap/models/skill_swap_post_model.dart';
-
+import 'package:skill_swap/features/skill_swap/models/availability_range_model.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class SkillPostFormScreen extends StatefulWidget {
@@ -29,13 +29,10 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   late TextEditingController _durationController;
 
   List<String> _selectedSkills = [];
-
   PostCategoryModel? _selectedCategory;
   bool _setAvailability = false;
-  DateTime? _startDate;
-  TimeOfDay? _startTime;
-  DateTime? _endDate;
-  TimeOfDay? _endTime;
+  List<AvailabilityRangeModel> _availabilityRanges = [];
+  Set<DateTime> _selectedSlots = {}; // Tracks exact start times of selected slots
 
   @override
   void initState() {
@@ -58,35 +55,65 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
 
     if (p != null && p.teachDate != null) {
       _setAvailability = true;
-      _startDate = DateTime.tryParse(p.teachDate!);
-      if (p.teachTime != null) {
-        final timeParts = p.teachTime!.split(':');
-        if (timeParts.length >= 2) {
-          _startTime = TimeOfDay(
-            hour: int.parse(timeParts[0]),
-            minute: int.parse(timeParts[1]),
-          );
+      // Note: Existing posts might only have legacy data.
+      // For now, if it's an edit, we can't easily fetch full range list if not stored.
+      // But we can reconstruct the first one.
+      try {
+        final start = DateTime.parse(p.teachDate!);
+        DateTime? end;
+        if (p.teachEndDate != null) {
+          end = DateTime.parse(p.teachEndDate!);
         }
-      }
 
-      if (p.teachEndDate != null) {
-        _endDate = DateTime.tryParse(p.teachEndDate!);
-      }
-      if (p.teachEndTime != null) {
-        final timeParts = p.teachEndTime!.split(':');
-        if (timeParts.length >= 2) {
-          _endTime = TimeOfDay(
-            hour: int.parse(timeParts[0]),
-            minute: int.parse(timeParts[1]),
+        if (p.teachTime != null) {
+          final timeParts = p.teachTime!.split(':');
+          final s = DateTime(
+            start.year,
+            start.month,
+            start.day,
+            int.parse(timeParts[0]),
+            int.parse(timeParts[1]),
           );
+
+          DateTime? e;
+          if (end != null && p.teachEndTime != null) {
+            final endTimeParts = p.teachEndTime!.split(':');
+            e = DateTime(
+              end.year,
+              end.month,
+              end.day,
+              int.parse(endTimeParts[0]),
+              int.parse(endTimeParts[1]),
+            );
+          } else {
+            e = s.add(Duration(minutes: p.durationMinutes));
+          }
+
+          final range = AvailabilityRangeModel(
+            startTime: s,
+            endTime: e,
+            durationMinutes: p.durationMinutes,
+          );
+          _availabilityRanges.add(range);
+          _generateSlotsForRange(range);
         }
+      } catch (e) {
+        debugPrint("Error parsing legacy availability: $e");
       }
       _durationController.text = p.durationMinutes.toString();
     }
-
     context.read<GetCategoriesBloc>().add(
       const GetCategoriesEvent.getCategories(),
     );
+  }
+
+  void _generateSlotsForRange(AvailabilityRangeModel range) {
+    DateTime current = range.startTime;
+    while (current.add(Duration(minutes: range.durationMinutes)).isBefore(range.endTime) ||
+        current.add(Duration(minutes: range.durationMinutes)).isAtSameMomentAs(range.endTime)) {
+      _selectedSlots.add(current);
+      current = current.add(Duration(minutes: range.durationMinutes));
+    }
   }
 
   @override
@@ -99,38 +126,129 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context, bool isStart) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _addAvailabilityRange() async {
+    DateTime? selectedDate = DateTime.now();
+    TimeOfDay startTime = const TimeOfDay(hour: 9, minute: 0);
+    TimeOfDay endTime = const TimeOfDay(hour: 17, minute: 0);
+
+    await showDialog(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 90)),
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Add Availability Range"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: const Text("Date"),
+                    subtitle: Text(
+                      DateFormat('yyyy-MM-dd').format(selectedDate!),
+                    ),
+                    trailing: const Icon(Icons.calendar_today),
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate!,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 90)),
+                      );
+                      if (picked != null) {
+                        setDialogState(() => selectedDate = picked);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("Start Time"),
+                    subtitle: Text(startTime.format(context)),
+                    trailing: const Icon(Icons.access_time),
+                    onTap: () async {
+                      final picked = await showTimePicker(
+                        context: context,
+                        initialTime: startTime,
+                      );
+                      if (picked != null) {
+                        setDialogState(() => startTime = picked);
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: const Text("End Time"),
+                    subtitle: Text(endTime.format(context)),
+                    trailing: const Icon(Icons.access_time),
+                    onTap: () async {
+                      final picked = await showTimePicker(
+                        context: context,
+                        initialTime: endTime,
+                      );
+                      if (picked != null) {
+                        setDialogState(() => endTime = picked);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final start = DateTime(
+                      selectedDate!.year,
+                      selectedDate!.month,
+                      selectedDate!.day,
+                      startTime.hour,
+                      startTime.minute,
+                    );
+                    final end = DateTime(
+                      selectedDate!.year,
+                      selectedDate!.month,
+                      selectedDate!.day,
+                      endTime.hour,
+                      endTime.minute,
+                    );
+
+                    if (end.isBefore(start)) {
+                      CustomToast.showError(
+                        "End time must be after start time",
+                      );
+                      return;
+                    }
+
+                    setState(() {
+                      final range = AvailabilityRangeModel(
+                        startTime: start,
+                        endTime: end,
+                        durationMinutes: int.tryParse(_durationController.text) ?? 60,
+                      );
+                      _availabilityRanges.add(range);
+                      _generateSlotsForRange(range);
+                      _availabilityRanges.sort((a, b) => a.startTime.compareTo(b.startTime));
+                    });
+                    Navigator.pop(dialogContext);
+                  },
+                  child: const Text("Add"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
-    if (picked != null) {
-      setState(() {
-        if (isStart) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
-      });
-    }
   }
 
-  Future<void> _selectTime(BuildContext context, bool isStart) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isStart) {
-          _startTime = picked;
-        } else {
-          _endTime = picked;
-        }
-      });
+  Map<DateTime, List<DateTime>> _getGroupedSelectedSlots() {
+    final Map<DateTime, List<DateTime>> groupedSlots = {};
+    final sortedSlots = _selectedSlots.toList()..sort();
+
+    for (final slotTime in sortedSlots) {
+      final date = DateTime(slotTime.year, slotTime.month, slotTime.day);
+      groupedSlots.putIfAbsent(date, () => []).add(slotTime);
     }
+    return groupedSlots;
   }
 
   void _submit() {
@@ -140,41 +258,21 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
       return;
     }
 
-    Map<String, dynamic>? availabilityData;
+    List<Map<String, dynamic>>? availabilitiesData;
     if (_setAvailability) {
-      if (_startDate == null ||
-          _startTime == null ||
-          _endDate == null ||
-          _endTime == null) {
-        CustomToast.showError("Please complete availability settings");
+      if (_selectedSlots.isEmpty) {
+        CustomToast.showError("Please select at least one availability slot");
         return;
       }
-
-      final startDateTime = DateTime(
-        _startDate!.year,
-        _startDate!.month,
-        _startDate!.day,
-        _startTime!.hour,
-        _startTime!.minute,
-      );
-      final endDateTime = DateTime(
-        _endDate!.year,
-        _endDate!.month,
-        _endDate!.day,
-        _endTime!.hour,
-        _endTime!.minute,
-      );
-
-      if (endDateTime.isBefore(startDateTime)) {
-        CustomToast.showError("End time must be after start time");
-        return;
-      }
-
-      availabilityData = {
-        "start_time": startDateTime.toIso8601String(),
-        "end_time": endDateTime.toIso8601String(),
-        "duration_minutes": int.tryParse(_durationController.text) ?? 60,
-      };
+      
+      final duration = int.tryParse(_durationController.text) ?? 60;
+      availabilitiesData = _selectedSlots.map((startTime) {
+        return {
+          "start_time": startTime.toIso8601String(),
+          "end_time": startTime.add(Duration(minutes: duration)).toIso8601String(),
+          "duration_minutes": duration,
+        };
+      }).toList();
     }
 
     if (widget.post == null) {
@@ -185,7 +283,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           categoryId: _selectedCategory!.id,
           skillToLearn: _selectedSkills.join(', '),
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
-          availability: availabilityData,
+          availabilities: availabilitiesData,
         ),
       );
     } else {
@@ -197,7 +295,7 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
           categoryId: _selectedCategory!.id,
           skillToLearn: _selectedSkills.join(', '),
           pointsCost: int.tryParse(_pointsCostController.text) ?? 0,
-          availability: availabilityData,
+          availabilities: availabilitiesData,
         ),
       );
     }
@@ -590,75 +688,120 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                   ),
                   if (_setAvailability) ...[
                     const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => _selectDate(context, true),
-                            icon: const Icon(Icons.calendar_today),
-                            label: Text(
-                              _startDate == null
-                                  ? "Start Date"
-                                  : DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(_startDate!),
+                    ..._availabilityRanges.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final range = entry.value;
+                      final dateStr = DateFormat(
+                        'MMM dd, yyyy',
+                      ).format(range.startTime);
+                      final startStr = DateFormat(
+                        'HH:mm',
+                      ).format(range.startTime);
+                      final endStr = DateFormat('HH:mm').format(range.endTime);
+
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: ListTile(
+                          title: Text("$dateStr: $startStr - $endStr"),
+                          subtitle: Text("${range.durationMinutes} min slots"),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => setState(
+                              () {
+                                _availabilityRanges.removeAt(index);
+                                // Re-generate _selectedSlots from remaining ranges
+                                _selectedSlots.clear();
+                                for (var r in _availabilityRanges) {
+                                  _generateSlotsForRange(r);
+                                }
+                              },
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => _selectTime(context, true),
-                            icon: const Icon(Icons.access_time),
-                            label: Text(
-                              _startTime == null
-                                  ? "Start Time"
-                                  : _startTime!.format(context),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    }).toList(),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: () => _selectDate(context, false),
-                            icon: const Icon(Icons.calendar_today),
-                            label: Text(
-                              _endDate == null
-                                  ? "End Date"
-                                  : DateFormat('yyyy-MM-dd').format(_endDate!),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => _selectTime(context, false),
-                            icon: const Icon(Icons.access_time),
-                            label: Text(
-                              _endTime == null
-                                  ? "End Time"
-                                  : _endTime!.format(context),
-                            ),
+                            onPressed: _addAvailabilityRange,
+                            icon: const Icon(Icons.add),
+                            label: const Text("Add Availability Range"),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     CustomTextField(
-                      label: "Slot Duration (minutes)",
+                      label: "Default Slot Duration (minutes)",
                       hint: "60",
                       controller: _durationController,
                       type: CustomTextFieldType.number,
                       borderColor: Colors.transparent,
-
                       fillColor: Theme.of(context).brightness == Brightness.dark
                           ? const Color(0XFF272c29)
                           : AppTheme.surfaceLight,
                     ),
+                    if (_availabilityRanges.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Manage Individual Slots:",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      const Text(
+                        "Tap to toggle slots on/off",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 12),
+                      ..._getGroupedSelectedSlots().entries.map((group) {
+                        final date = group.key;
+                        final slots = group.value;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                DateFormat('EEEE, MMM dd').format(date),
+                                style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: slots.map((slotTime) {
+                                final isSelected = _selectedSlots.contains(slotTime);
+                                final duration = int.tryParse(_durationController.text) ?? 60;
+                                return FilterChip(
+                                  label: Text(
+                                    "${DateFormat('HH:mm').format(slotTime)} - ${DateFormat('HH:mm').format(slotTime.add(Duration(minutes: duration)))}",
+                                    style: TextStyle(
+                                      decoration: isSelected ? null : TextDecoration.lineThrough,
+                                      color: isSelected ? null : Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  selected: isSelected,
+                                  onSelected: (val) {
+                                    setState(() {
+                                      if (val) {
+                                        _selectedSlots.add(slotTime);
+                                      } else {
+                                        _selectedSlots.remove(slotTime);
+                                      }
+                                    });
+                                  },
+                                  selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                                  checkmarkColor: Theme.of(context).colorScheme.primary,
+                                );
+                              }).toList(),
+                            ),
+                            const Divider(height: 24),
+                          ],
+                        );
+                      }).toList(),
+                    ],
                   ],
                   const SizedBox(height: 48),
                   BlocBuilder<GetCategoriesBloc, GetCategoriesState>(

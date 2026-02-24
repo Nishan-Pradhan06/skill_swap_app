@@ -125,11 +125,11 @@ return delete(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability)?  create,TResult Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability)?  update,TResult Function( int postId)?  delete,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)?  create,TResult Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)?  update,TResult Function( int postId)?  delete,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Create() when create != null:
-return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Update() when update != null:
-return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Delete() when delete != null:
+return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Update() when update != null:
+return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Delete() when delete != null:
 return delete(_that.postId);case _:
   return orElse();
 
@@ -148,11 +148,11 @@ return delete(_that.postId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability)  create,required TResult Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability)  update,required TResult Function( int postId)  delete,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)  create,required TResult Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)  update,required TResult Function( int postId)  delete,}) {final _that = this;
 switch (_that) {
 case _Create():
-return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Update():
-return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Delete():
+return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Update():
+return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Delete():
 return delete(_that.postId);case _:
   throw StateError('Unexpected subclass');
 
@@ -170,11 +170,11 @@ return delete(_that.postId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability)?  create,TResult? Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability)?  update,TResult? Function( int postId)?  delete,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String title,  String description,  int categoryId,  String skillToLearn,  int pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)?  create,TResult? Function( int postId,  String? title,  String? description,  int? categoryId,  String? skillToLearn,  int? pointsCost,  Map<String, dynamic>? availability,  List<Map<String, dynamic>>? availabilities)?  update,TResult? Function( int postId)?  delete,}) {final _that = this;
 switch (_that) {
 case _Create() when create != null:
-return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Update() when update != null:
-return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability);case _Delete() when delete != null:
+return create(_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Update() when update != null:
+return update(_that.postId,_that.title,_that.description,_that.categoryId,_that.skillToLearn,_that.pointsCost,_that.availability,_that.availabilities);case _Delete() when delete != null:
 return delete(_that.postId);case _:
   return null;
 
@@ -187,7 +187,7 @@ return delete(_that.postId);case _:
 
 
 class _Create implements ManageSkillPostEvent {
-  const _Create({required this.title, required this.description, required this.categoryId, required this.skillToLearn, required this.pointsCost, final  Map<String, dynamic>? availability}): _availability = availability;
+  const _Create({required this.title, required this.description, required this.categoryId, required this.skillToLearn, required this.pointsCost, final  Map<String, dynamic>? availability, final  List<Map<String, dynamic>>? availabilities}): _availability = availability,_availabilities = availabilities;
   
 
  final  String title;
@@ -204,6 +204,15 @@ class _Create implements ManageSkillPostEvent {
   return EqualUnmodifiableMapView(value);
 }
 
+ final  List<Map<String, dynamic>>? _availabilities;
+ List<Map<String, dynamic>>? get availabilities {
+  final value = _availabilities;
+  if (value == null) return null;
+  if (_availabilities is EqualUnmodifiableListView) return _availabilities;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of ManageSkillPostEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -215,16 +224,16 @@ _$CreateCopyWith<_Create> get copyWith => __$CreateCopyWithImpl<_Create>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Create&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.skillToLearn, skillToLearn) || other.skillToLearn == skillToLearn)&&(identical(other.pointsCost, pointsCost) || other.pointsCost == pointsCost)&&const DeepCollectionEquality().equals(other._availability, _availability));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Create&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.skillToLearn, skillToLearn) || other.skillToLearn == skillToLearn)&&(identical(other.pointsCost, pointsCost) || other.pointsCost == pointsCost)&&const DeepCollectionEquality().equals(other._availability, _availability)&&const DeepCollectionEquality().equals(other._availabilities, _availabilities));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,categoryId,skillToLearn,pointsCost,const DeepCollectionEquality().hash(_availability));
+int get hashCode => Object.hash(runtimeType,title,description,categoryId,skillToLearn,pointsCost,const DeepCollectionEquality().hash(_availability),const DeepCollectionEquality().hash(_availabilities));
 
 @override
 String toString() {
-  return 'ManageSkillPostEvent.create(title: $title, description: $description, categoryId: $categoryId, skillToLearn: $skillToLearn, pointsCost: $pointsCost, availability: $availability)';
+  return 'ManageSkillPostEvent.create(title: $title, description: $description, categoryId: $categoryId, skillToLearn: $skillToLearn, pointsCost: $pointsCost, availability: $availability, availabilities: $availabilities)';
 }
 
 
@@ -235,7 +244,7 @@ abstract mixin class _$CreateCopyWith<$Res> implements $ManageSkillPostEventCopy
   factory _$CreateCopyWith(_Create value, $Res Function(_Create) _then) = __$CreateCopyWithImpl;
 @useResult
 $Res call({
- String title, String description, int categoryId, String skillToLearn, int pointsCost, Map<String, dynamic>? availability
+ String title, String description, int categoryId, String skillToLearn, int pointsCost, Map<String, dynamic>? availability, List<Map<String, dynamic>>? availabilities
 });
 
 
@@ -252,7 +261,7 @@ class __$CreateCopyWithImpl<$Res>
 
 /// Create a copy of ManageSkillPostEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = null,Object? categoryId = null,Object? skillToLearn = null,Object? pointsCost = null,Object? availability = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = null,Object? categoryId = null,Object? skillToLearn = null,Object? pointsCost = null,Object? availability = freezed,Object? availabilities = freezed,}) {
   return _then(_Create(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -260,7 +269,8 @@ as String,categoryId: null == categoryId ? _self.categoryId : categoryId // igno
 as int,skillToLearn: null == skillToLearn ? _self.skillToLearn : skillToLearn // ignore: cast_nullable_to_non_nullable
 as String,pointsCost: null == pointsCost ? _self.pointsCost : pointsCost // ignore: cast_nullable_to_non_nullable
 as int,availability: freezed == availability ? _self._availability : availability // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,availabilities: freezed == availabilities ? _self._availabilities : availabilities // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 
@@ -271,7 +281,7 @@ as Map<String, dynamic>?,
 
 
 class _Update implements ManageSkillPostEvent {
-  const _Update({required this.postId, this.title, this.description, this.categoryId, this.skillToLearn, this.pointsCost, final  Map<String, dynamic>? availability}): _availability = availability;
+  const _Update({required this.postId, this.title, this.description, this.categoryId, this.skillToLearn, this.pointsCost, final  Map<String, dynamic>? availability, final  List<Map<String, dynamic>>? availabilities}): _availability = availability,_availabilities = availabilities;
   
 
  final  int postId;
@@ -289,6 +299,15 @@ class _Update implements ManageSkillPostEvent {
   return EqualUnmodifiableMapView(value);
 }
 
+ final  List<Map<String, dynamic>>? _availabilities;
+ List<Map<String, dynamic>>? get availabilities {
+  final value = _availabilities;
+  if (value == null) return null;
+  if (_availabilities is EqualUnmodifiableListView) return _availabilities;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of ManageSkillPostEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -300,16 +319,16 @@ _$UpdateCopyWith<_Update> get copyWith => __$UpdateCopyWithImpl<_Update>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Update&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.skillToLearn, skillToLearn) || other.skillToLearn == skillToLearn)&&(identical(other.pointsCost, pointsCost) || other.pointsCost == pointsCost)&&const DeepCollectionEquality().equals(other._availability, _availability));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Update&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryId, categoryId) || other.categoryId == categoryId)&&(identical(other.skillToLearn, skillToLearn) || other.skillToLearn == skillToLearn)&&(identical(other.pointsCost, pointsCost) || other.pointsCost == pointsCost)&&const DeepCollectionEquality().equals(other._availability, _availability)&&const DeepCollectionEquality().equals(other._availabilities, _availabilities));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,postId,title,description,categoryId,skillToLearn,pointsCost,const DeepCollectionEquality().hash(_availability));
+int get hashCode => Object.hash(runtimeType,postId,title,description,categoryId,skillToLearn,pointsCost,const DeepCollectionEquality().hash(_availability),const DeepCollectionEquality().hash(_availabilities));
 
 @override
 String toString() {
-  return 'ManageSkillPostEvent.update(postId: $postId, title: $title, description: $description, categoryId: $categoryId, skillToLearn: $skillToLearn, pointsCost: $pointsCost, availability: $availability)';
+  return 'ManageSkillPostEvent.update(postId: $postId, title: $title, description: $description, categoryId: $categoryId, skillToLearn: $skillToLearn, pointsCost: $pointsCost, availability: $availability, availabilities: $availabilities)';
 }
 
 
@@ -320,7 +339,7 @@ abstract mixin class _$UpdateCopyWith<$Res> implements $ManageSkillPostEventCopy
   factory _$UpdateCopyWith(_Update value, $Res Function(_Update) _then) = __$UpdateCopyWithImpl;
 @useResult
 $Res call({
- int postId, String? title, String? description, int? categoryId, String? skillToLearn, int? pointsCost, Map<String, dynamic>? availability
+ int postId, String? title, String? description, int? categoryId, String? skillToLearn, int? pointsCost, Map<String, dynamic>? availability, List<Map<String, dynamic>>? availabilities
 });
 
 
@@ -337,7 +356,7 @@ class __$UpdateCopyWithImpl<$Res>
 
 /// Create a copy of ManageSkillPostEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? postId = null,Object? title = freezed,Object? description = freezed,Object? categoryId = freezed,Object? skillToLearn = freezed,Object? pointsCost = freezed,Object? availability = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? postId = null,Object? title = freezed,Object? description = freezed,Object? categoryId = freezed,Object? skillToLearn = freezed,Object? pointsCost = freezed,Object? availability = freezed,Object? availabilities = freezed,}) {
   return _then(_Update(
 postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
 as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -346,7 +365,8 @@ as String?,categoryId: freezed == categoryId ? _self.categoryId : categoryId // 
 as int?,skillToLearn: freezed == skillToLearn ? _self.skillToLearn : skillToLearn // ignore: cast_nullable_to_non_nullable
 as String?,pointsCost: freezed == pointsCost ? _self.pointsCost : pointsCost // ignore: cast_nullable_to_non_nullable
 as int?,availability: freezed == availability ? _self._availability : availability // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>?,
+as Map<String, dynamic>?,availabilities: freezed == availabilities ? _self._availabilities : availabilities // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 

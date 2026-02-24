@@ -13,6 +13,7 @@ class ManageSkillPostEvent with _$ManageSkillPostEvent {
     required String skillToLearn,
     required int pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   }) = _Create;
 
   const factory ManageSkillPostEvent.update({
@@ -23,6 +24,7 @@ class ManageSkillPostEvent with _$ManageSkillPostEvent {
     String? skillToLearn,
     int? pointsCost,
     Map<String, dynamic>? availability,
+    List<Map<String, dynamic>>? availabilities,
   }) = _Update;
 
   const factory ManageSkillPostEvent.delete(int postId) = _Delete;
@@ -60,6 +62,7 @@ class ManageSkillPostBloc
       skillToLearn: event.skillToLearn,
       pointsCost: event.pointsCost,
       availability: event.availability,
+      availabilities: event.availabilities,
     );
     result.fold(
       (failure) => emit(ManageSkillPostState.failure(failure.message)),
@@ -80,6 +83,7 @@ class ManageSkillPostBloc
       skillToLearn: event.skillToLearn,
       pointsCost: event.pointsCost,
       availability: event.availability,
+      availabilities: event.availabilities,
     );
     result.fold(
       (failure) => emit(ManageSkillPostState.failure(failure.message)),
