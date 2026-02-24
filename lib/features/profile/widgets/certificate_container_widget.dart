@@ -26,17 +26,20 @@ class ContainerWithImageWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Stack(
         children: [
-          certificateImageUrl.startsWith('http')
-              ? Image.network(
-                  ImageUrlUtils.getImageUrl(certificateImageUrl),
-                  height: 200,
-                  fit: BoxFit.cover,
-                )
-              : Image.file(
-                  File(certificateImageUrl),
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+          () {
+            final String fullUrl = ImageUrlUtils.getImageUrl(
+              certificateImageUrl,
+            );
+            if (fullUrl.startsWith('http')) {
+              return Image.network(fullUrl, height: 200, fit: BoxFit.cover);
+            } else {
+              return Image.file(
+                File(certificateImageUrl),
+                height: 200,
+                fit: BoxFit.cover,
+              );
+            }
+          }(),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(

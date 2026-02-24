@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
+import 'package:skill_swap/core/utils/image_url_utils.dart';
 
 class SkillRequestCard extends StatelessWidget {
   final SessionModel session;
@@ -46,7 +47,9 @@ class SkillRequestCard extends StatelessWidget {
               CircleAvatar(
                 radius: 24,
                 backgroundImage: learner['profile_image'] != null
-                    ? CachedNetworkImageProvider(learner['profile_image'])
+                    ? CachedNetworkImageProvider(
+                        ImageUrlUtils.getImageUrl(learner['profile_image']),
+                      )
                     : null,
                 child: learner['profile_image'] == null
                     ? const Icon(Icons.person)

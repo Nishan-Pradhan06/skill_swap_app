@@ -24,19 +24,24 @@ class WorkingExprienceList extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        imageUrl.startsWith('http')
-            ? Image.network(
-                ImageUrlUtils.getImageUrl(imageUrl),
-                height: 60,
-                width: 60,
-                fit: BoxFit.cover,
-              )
-            : Image.file(
-                File(imageUrl),
-                height: 60,
-                width: 60,
-                fit: BoxFit.cover,
-              ),
+        () {
+          final String fullUrl = ImageUrlUtils.getImageUrl(imageUrl);
+          if (fullUrl.startsWith('http')) {
+            return Image.network(
+              fullUrl,
+              height: 60,
+              width: 60,
+              fit: BoxFit.cover,
+            );
+          } else {
+            return Image.file(
+              File(imageUrl),
+              height: 60,
+              width: 60,
+              fit: BoxFit.cover,
+            );
+          }
+        }(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
