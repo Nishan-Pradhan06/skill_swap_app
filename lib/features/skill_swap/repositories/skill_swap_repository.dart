@@ -42,6 +42,7 @@ abstract interface class SkillSwapRepository {
     int? categoryId,
     String? skillToLearn,
     int? pointsCost,
+    bool? isActive,
     Map<String, dynamic>? availability,
     List<Map<String, dynamic>>? availabilities,
   });
@@ -213,6 +214,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     int? categoryId,
     String? skillToLearn,
     int? pointsCost,
+    bool? isActive,
     Map<String, dynamic>? availability,
     List<Map<String, dynamic>>? availabilities,
   }) async {
@@ -222,6 +224,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
       if (categoryId != null) "category_id": categoryId,
       if (skillToLearn != null) "skill_to_learn": skillToLearn,
       if (pointsCost != null) "points_cost": pointsCost,
+      if (isActive != null) "is_active": isActive,
       if (availability != null) "availability": availability,
       if (availabilities != null) "availabilities": availabilities,
     };

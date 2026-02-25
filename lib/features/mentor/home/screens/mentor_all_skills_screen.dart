@@ -57,6 +57,36 @@ class _MentorAllSkillsScreenState extends State<MentorAllSkillsScreen> {
     );
   }
 
+  void _showCloseDialog(int postId, bool close) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(close ? "Close Skill" : "Open Skill"),
+        content: Text(
+          "Are you sure you want to ${close ? 'close' : 'open'} this skill post?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<ManageSkillPostBloc>().add(
+                ManageSkillPostEvent.update(postId: postId, isActive: !close),
+              );
+            },
+            child: Text(
+              close ? "Close" : "Open",
+              style: TextStyle(color: close ? Colors.orange : Colors.green),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ManageSkillPostBloc, ManageSkillPostState>(
@@ -130,14 +160,36 @@ class _MentorAllSkillsScreenState extends State<MentorAllSkillsScreen> {
                               skillTitle: post.title,
                               skillDescription: post.description,
                               point: post.pointsCost.toString(),
-                              trailing: IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.red,
-                                ),
-                                onPressed: () => _showDeleteDialog(post.id),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    icon: Icon(
+                                      post.isActive
+                                          ? Icons.visibility_off_outlined
+                                          : Icons.visibility_outlined,
+                                      color: post.isActive
+                                          ? Colors.orange
+                                          : Colors.green,
+                                    ),
+                                    onPressed: () => _showCloseDialog(
+                                      post.id,
+                                      post.isActive,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                    icon: const Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () => _showDeleteDialog(post.id),
+                                  ),
+                                ],
                               ),
                               skills: post.skillToLearn
                                   .split(',')

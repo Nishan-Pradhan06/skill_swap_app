@@ -23,6 +23,7 @@ class ManageSkillPostEvent with _$ManageSkillPostEvent {
     int? categoryId,
     String? skillToLearn,
     int? pointsCost,
+    bool? isActive,
     Map<String, dynamic>? availability,
     List<Map<String, dynamic>>? availabilities,
   }) = _Update;
@@ -82,6 +83,7 @@ class ManageSkillPostBloc
       categoryId: event.categoryId,
       skillToLearn: event.skillToLearn,
       pointsCost: event.pointsCost,
+      isActive: event.isActive,
       availability: event.availability,
       availabilities: event.availabilities,
     );
