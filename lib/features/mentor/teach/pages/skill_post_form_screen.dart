@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_text_form_field.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
@@ -32,7 +32,8 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
   PostCategoryModel? _selectedCategory;
   bool _setAvailability = false;
   List<AvailabilityRangeModel> _availabilityRanges = [];
-  Set<DateTime> _selectedSlots = {}; // Tracks exact start times of selected slots
+  Set<DateTime> _selectedSlots =
+      {}; // Tracks exact start times of selected slots
 
   @override
   void initState() {
@@ -53,54 +54,84 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
       _selectedSkills = p.skillToLearn.split(',').map((s) => s.trim()).toList();
     }
 
-    if (p != null && p.teachDate != null) {
-      _setAvailability = true;
-      // Note: Existing posts might only have legacy data.
-      // For now, if it's an edit, we can't easily fetch full range list if not stored.
-      // But we can reconstruct the first one.
-      try {
-        final start = DateTime.parse(p.teachDate!);
-        DateTime? end;
-        if (p.teachEndDate != null) {
-          end = DateTime.parse(p.teachEndDate!);
+    if (p != null) {
+      if (p.availabilitySlots != null && p.availabilitySlots!.isNotEmpty) {
+        _setAvailability = true;
+        _durationController.text = p.durationMinutes.toString();
+
+        // Populate selected slots
+        for (var slot in p.availabilitySlots!) {
+          _selectedSlots.add(slot.startTime.toLocal());
         }
 
-        if (p.teachTime != null) {
-          final timeParts = p.teachTime!.split(':');
-          final s = DateTime(
-            start.year,
-            start.month,
-            start.day,
-            int.parse(timeParts[0]),
-            int.parse(timeParts[1]),
-          );
+        // Reconstruct ranges for UI
+        final sortedSlots = p.availabilitySlots!.toList()
+          ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-          DateTime? e;
-          if (end != null && p.teachEndTime != null) {
-            final endTimeParts = p.teachEndTime!.split(':');
-            e = DateTime(
-              end.year,
-              end.month,
-              end.day,
-              int.parse(endTimeParts[0]),
-              int.parse(endTimeParts[1]),
-            );
-          } else {
-            e = s.add(Duration(minutes: p.durationMinutes));
+        if (sortedSlots.isNotEmpty) {
+          DateTime rangeStart = sortedSlots[0].startTime.toLocal();
+          DateTime rangeEnd = sortedSlots[0].endTime.toLocal();
+
+          for (int i = 1; i < sortedSlots.length; i++) {
+            final currentStart = sortedSlots[i].startTime.toLocal();
+            final currentEnd = sortedSlots[i].endTime.toLocal();
+
+            // If contiguous and same date
+            if (currentStart.isAtSameMomentAs(rangeEnd) &&
+                currentStart.day == rangeStart.day) {
+              rangeEnd = currentEnd;
+            } else {
+              _availabilityRanges.add(
+                AvailabilityRangeModel(
+                  startTime: rangeStart,
+                  endTime: rangeEnd,
+                  durationMinutes: p.durationMinutes,
+                ),
+              );
+              rangeStart = currentStart;
+              rangeEnd = currentEnd;
+            }
           }
-
-          final range = AvailabilityRangeModel(
-            startTime: s,
-            endTime: e,
-            durationMinutes: p.durationMinutes,
+          // Add the last range
+          _availabilityRanges.add(
+            AvailabilityRangeModel(
+              startTime: rangeStart,
+              endTime: rangeEnd,
+              durationMinutes: p.durationMinutes,
+            ),
           );
-          _availabilityRanges.add(range);
-          _generateSlotsForRange(range);
         }
-      } catch (e) {
-        debugPrint("Error parsing legacy availability: $e");
+      } else if (p.teachDate != null) {
+        _setAvailability = true;
+        // Legacy support
+        try {
+          if (p.teachTime != null) {
+            final s = DateTime.parse(
+              "${p.teachDate!}T${p.teachTime!}Z",
+            ).toLocal();
+
+            DateTime? e;
+            if (p.teachEndDate != null && p.teachEndTime != null) {
+              e = DateTime.parse(
+                "${p.teachEndDate!}T${p.teachEndTime!}Z",
+              ).toLocal();
+            } else {
+              e = s.add(Duration(minutes: p.durationMinutes));
+            }
+
+            final range = AvailabilityRangeModel(
+              startTime: s,
+              endTime: e,
+              durationMinutes: p.durationMinutes,
+            );
+            _availabilityRanges.add(range);
+            _generateSlotsForRange(range);
+          }
+        } catch (e) {
+          debugPrint("Error parsing legacy availability: $e");
+        }
+        _durationController.text = p.durationMinutes.toString();
       }
-      _durationController.text = p.durationMinutes.toString();
     }
     context.read<GetCategoriesBloc>().add(
       const GetCategoriesEvent.getCategories(),
@@ -109,8 +140,12 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
 
   void _generateSlotsForRange(AvailabilityRangeModel range) {
     DateTime current = range.startTime;
-    while (current.add(Duration(minutes: range.durationMinutes)).isBefore(range.endTime) ||
-        current.add(Duration(minutes: range.durationMinutes)).isAtSameMomentAs(range.endTime)) {
+    while (current
+            .add(Duration(minutes: range.durationMinutes))
+            .isBefore(range.endTime) ||
+        current
+            .add(Duration(minutes: range.durationMinutes))
+            .isAtSameMomentAs(range.endTime)) {
       _selectedSlots.add(current);
       current = current.add(Duration(minutes: range.durationMinutes));
     }
@@ -144,7 +179,10 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                   ListTile(
                     title: const Text("Date"),
                     subtitle: Text(
-                      DateFormat('yyyy-MM-dd').format(selectedDate!),
+                      DateTimeUtils.formatDatePattern(
+                        selectedDate!,
+                        'yyyy-MM-dd',
+                      ),
                     ),
                     trailing: const Icon(Icons.calendar_today),
                     onTap: () async {
@@ -222,11 +260,14 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                       final range = AvailabilityRangeModel(
                         startTime: start,
                         endTime: end,
-                        durationMinutes: int.tryParse(_durationController.text) ?? 60,
+                        durationMinutes:
+                            int.tryParse(_durationController.text) ?? 60,
                       );
                       _availabilityRanges.add(range);
                       _generateSlotsForRange(range);
-                      _availabilityRanges.sort((a, b) => a.startTime.compareTo(b.startTime));
+                      _availabilityRanges.sort(
+                        (a, b) => a.startTime.compareTo(b.startTime),
+                      );
                     });
                     Navigator.pop(dialogContext);
                   },
@@ -264,12 +305,15 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
         CustomToast.showError("Please select at least one availability slot");
         return;
       }
-      
+
       final duration = int.tryParse(_durationController.text) ?? 60;
       availabilitiesData = _selectedSlots.map((startTime) {
         return {
-          "start_time": startTime.toIso8601String(),
-          "end_time": startTime.add(Duration(minutes: duration)).toIso8601String(),
+          "start_time": startTime.toUtc().toIso8601String(),
+          "end_time": startTime
+              .add(Duration(minutes: duration))
+              .toUtc()
+              .toIso8601String(),
           "duration_minutes": duration,
         };
       }).toList();
@@ -691,13 +735,14 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                     ..._availabilityRanges.asMap().entries.map((entry) {
                       final index = entry.key;
                       final range = entry.value;
-                      final dateStr = DateFormat(
+                      final dateStr = DateTimeUtils.formatDatePattern(
+                        range.startTime,
                         'MMM dd, yyyy',
-                      ).format(range.startTime);
-                      final startStr = DateFormat(
-                        'HH:mm',
-                      ).format(range.startTime);
-                      final endStr = DateFormat('HH:mm').format(range.endTime);
+                      );
+                      final startStr = DateTimeUtils.formatTime12h(
+                        range.startTime,
+                      );
+                      final endStr = DateTimeUtils.formatTime12h(range.endTime);
 
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
@@ -706,16 +751,14 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                           subtitle: Text("${range.durationMinutes} min slots"),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => setState(
-                              () {
-                                _availabilityRanges.removeAt(index);
-                                // Re-generate _selectedSlots from remaining ranges
-                                _selectedSlots.clear();
-                                for (var r in _availabilityRanges) {
-                                  _generateSlotsForRange(r);
-                                }
-                              },
-                            ),
+                            onPressed: () => setState(() {
+                              _availabilityRanges.removeAt(index);
+                              // Re-generate _selectedSlots from remaining ranges
+                              _selectedSlots.clear();
+                              for (var r in _availabilityRanges) {
+                                _generateSlotsForRange(r);
+                              }
+                            }),
                           ),
                         ),
                       );
@@ -747,7 +790,10 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                       const SizedBox(height: 16),
                       const Text(
                         "Manage Individual Slots:",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       const Text(
                         "Tap to toggle slots on/off",
@@ -761,23 +807,36 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
                               child: Text(
-                                DateFormat('EEEE, MMM dd').format(date),
-                                style: const TextStyle(fontWeight: FontWeight.w600),
+                                DateTimeUtils.formatDatePattern(
+                                  date,
+                                  'EEEE, MMM dd',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             Wrap(
                               spacing: 8,
                               runSpacing: 8,
                               children: slots.map((slotTime) {
-                                final isSelected = _selectedSlots.contains(slotTime);
-                                final duration = int.tryParse(_durationController.text) ?? 60;
+                                final isSelected = _selectedSlots.contains(
+                                  slotTime,
+                                );
+                                final duration =
+                                    int.tryParse(_durationController.text) ??
+                                    60;
                                 return FilterChip(
                                   label: Text(
-                                    "${DateFormat('HH:mm').format(slotTime)} - ${DateFormat('HH:mm').format(slotTime.add(Duration(minutes: duration)))}",
+                                    "${DateTimeUtils.formatTime12h(slotTime)} - ${DateTimeUtils.formatTime12h(slotTime.add(Duration(minutes: duration)))}",
                                     style: TextStyle(
-                                      decoration: isSelected ? null : TextDecoration.lineThrough,
+                                      decoration: isSelected
+                                          ? null
+                                          : TextDecoration.lineThrough,
                                       color: isSelected ? null : Colors.grey,
                                       fontSize: 12,
                                     ),
@@ -792,8 +851,12 @@ class _SkillPostFormScreenState extends State<SkillPostFormScreen> {
                                       }
                                     });
                                   },
-                                  selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                                  checkmarkColor: Theme.of(context).colorScheme.primary,
+                                  selectedColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary.withOpacity(0.2),
+                                  checkmarkColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
                                 );
                               }).toList(),
                             ),

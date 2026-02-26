@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/core/utils/image_url_utils.dart';
@@ -110,13 +110,13 @@ class SkillRequestCard extends StatelessWidget {
               _buildInfoItem(
                 context,
                 Icons.calendar_today_outlined,
-                DateFormat('MMM dd, yyyy').format(scheduledTime),
+                DateTimeUtils.formatDatePattern(scheduledTime, 'MMM dd, yyyy'),
               ),
               const SizedBox(width: 20),
               _buildInfoItem(
                 context,
                 Icons.access_time,
-                DateFormat('hh:mm a').format(scheduledTime),
+                DateTimeUtils.formatTime12h(scheduledTime),
               ),
             ],
           ),

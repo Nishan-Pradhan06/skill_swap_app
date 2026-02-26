@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_bloc.dart';
@@ -8,6 +8,7 @@ import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_event.d
 import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_state.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/features/mentor/meeting_links/meeting_links_list_screen.dart';
+import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 
 class MyStudentsScreen extends StatefulWidget {
   const MyStudentsScreen({super.key});
@@ -51,22 +52,55 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           ),
         ],
       ),
-      body: BlocListener<UpdateMeetingLinkBloc, UpdateMeetingLinkState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            success: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.green),
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<UpdateMeetingLinkBloc, UpdateMeetingLinkState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                success: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  _fetchSessions();
+                },
+                failure: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                },
               );
-              _fetchSessions();
             },
-            failure: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.red),
+          ),
+          BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                success: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  _fetchSessions();
+                },
+                failure: (message) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ],
         child: RefreshIndicator(
           onRefresh: () async {
             _fetchSessions();
@@ -240,10 +274,11 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
         session.learner['email'] ??
         'Unknown Student';
     final learnerEmail = session.learner['email'] ?? '';
-    final formattedDate = DateFormat(
+    final formattedDate = DateTimeUtils.formatDatePattern(
+      session.scheduledTime,
       'MMM dd, yyyy',
-    ).format(session.scheduledTime);
-    final formattedTime = DateFormat('hh:mm a').format(session.scheduledTime);
+    );
+    final formattedTime = DateTimeUtils.formatTime12h(session.scheduledTime);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -333,29 +368,39 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                   final startTime = session.scheduledTime.subtract(
                     const Duration(minutes: 15),
                   );
-                  final endTime = session.scheduledTime.add(
-                    Duration(minutes: session.durationMinutes),
-                  );
 
-                  final isLive =
-                      now.isAfter(startTime) && now.isBefore(endTime);
-
-                  if (!isLive) return const SizedBox.shrink();
+                  if (now.isBefore(startTime)) return const SizedBox.shrink();
 
                   return Padding(
                     padding: const EdgeInsets.only(top: 12),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        final uri = Uri.parse(session.meetingLink!);
-                        urlLauncherWithFallback(context, uri);
-                      },
-                      icon: const Icon(Icons.video_call),
-                      label: const Text('Join Meeting'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 44),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            final uri = Uri.parse(session.meetingLink!);
+                            urlLauncherWithFallback(context, uri);
+                          },
+                          icon: const Icon(Icons.video_call),
+                          label: const Text('Join Meeting'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            _showCompletionDialog(context, session);
+                          },
+                          icon: const Icon(Icons.check_circle_outline),
+                          label: const Text("Mark as Complete"),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.green,
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -363,6 +408,40 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showCompletionDialog(BuildContext context, SessionModel session) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Complete Session"),
+          content: const Text(
+            "Have you finished teaching this session? Marking it as complete will notify the learner to release your points.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(dialogContext); // Close dialog
+                // Trigger action
+                context.read<HandleSessionActionBloc>().add(
+                  HandleSessionActionEvent.performAction(
+                    sessionId: session.id,
+                    action: 'complete',
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
     );
   }
 

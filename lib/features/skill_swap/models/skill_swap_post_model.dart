@@ -1,4 +1,5 @@
 import 'package:skill_swap/core/utils/date_string_split_utils.dart';
+import 'package:skill_swap/features/skill_swap/models/availability_slot_model.dart';
 
 class SkillSwapPostModel {
   final int id;
@@ -19,6 +20,7 @@ class SkillSwapPostModel {
   final DateTime createdAt;
   final int? availableSlotsCount;
   final int? totalSlotsCount;
+  final List<AvailabilitySlotModel>? availabilitySlots;
 
   SkillSwapPostModel({
     required this.id,
@@ -39,6 +41,7 @@ class SkillSwapPostModel {
     required this.createdAt,
     this.availableSlotsCount,
     this.totalSlotsCount,
+    this.availabilitySlots,
   });
 
   factory SkillSwapPostModel.fromJson(Map<String, dynamic> json) {
@@ -63,6 +66,11 @@ class SkillSwapPostModel {
       createdAt: DateTime.parse(json['created_at']),
       availableSlotsCount: json['available_slots_count'],
       totalSlotsCount: json['total_slots_count'],
+      availabilitySlots: json['availability_slots'] != null
+          ? (json['availability_slots'] as List)
+                .map((i) => AvailabilitySlotModel.fromJson(i))
+                .toList()
+          : null,
     );
   }
 
@@ -72,14 +80,9 @@ class SkillSwapPostModel {
       final startDate = DateTime.parse(teachDate!);
       String startStr = DateTimeUtils.getDay(startDate);
       if (teachTime != null) {
-        final timeParts = teachTime!.split(':');
-        final startWithTime = DateTime(
-          startDate.year,
-          startDate.month,
-          startDate.day,
-          int.parse(timeParts[0]),
-          int.parse(timeParts[1]),
-        );
+        final startWithTime = DateTime.parse(
+          "${teachDate}T${teachTime}Z",
+        ).toLocal();
         startStr = DateTimeUtils.formatDateTimeNoDay(startWithTime);
       }
 
@@ -87,14 +90,9 @@ class SkillSwapPostModel {
         final endDate = DateTime.parse(teachEndDate!);
         String endStr = DateTimeUtils.formatDate(endDate);
         if (teachEndTime != null) {
-          final timeParts = teachEndTime!.split(':');
-          final endWithTime = DateTime(
-            endDate.year,
-            endDate.month,
-            endDate.day,
-            int.parse(timeParts[0]),
-            int.parse(timeParts[1]),
-          );
+          final endWithTime = DateTime.parse(
+            "${teachEndDate}T${teachEndTime}Z",
+          ).toLocal();
           endStr = DateTimeUtils.formatDateTimeNoDay(endWithTime);
         }
         return "$startStr - $endStr";

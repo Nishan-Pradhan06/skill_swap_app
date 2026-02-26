@@ -12,6 +12,7 @@ class ProfileDataModel {
   final bool? phoneVerified;
   final String fullName;
   final int? points;
+  final int? heldPoints;
   final String? profileDescription;
   final String? bio;
   final String? locationProvince;
@@ -36,6 +37,7 @@ class ProfileDataModel {
     required this.phoneNumber,
     this.phoneVerified,
     this.points,
+    this.heldPoints,
     required this.fullName,
     this.profileDescription,
     this.bio,
@@ -112,6 +114,9 @@ class ProfileDataModel {
       points: map['points'] is int
           ? map['points']
           : int.tryParse(map['points']?.toString() ?? ''),
+      heldPoints: map['held_points'] is int
+          ? map['held_points']
+          : int.tryParse(map['held_points']?.toString() ?? ''),
       fullName: map['full_name']?.toString() ?? '',
       profileDescription: map['profile_description'] as String?,
       bio: map['bio'] as String?,
@@ -144,6 +149,7 @@ class ProfileDataModel {
       'phone_number': phoneNumber,
       'phone_verified': phoneVerified,
       'points': points,
+      'held_points': heldPoints,
       'full_name': fullName,
       'profile_description': profileDescription,
       'bio': bio,
@@ -172,6 +178,7 @@ class ProfileDataModel {
     String? email,
     String? phoneNumber,
     int? points,
+    int? heldPoints,
     bool? phoneVerified,
     String? fullName,
     String? bio,
@@ -196,6 +203,7 @@ class ProfileDataModel {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       phoneVerified: phoneVerified ?? this.phoneVerified,
       points: points ?? this.points,
+      heldPoints: heldPoints ?? this.heldPoints,
       fullName: fullName ?? this.fullName,
       profileDescription: profileDescription ?? this.profileDescription,
       bio: bio ?? this.bio,

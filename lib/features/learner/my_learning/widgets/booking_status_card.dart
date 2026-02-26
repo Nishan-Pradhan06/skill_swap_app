@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/core/utils/image_url_utils.dart';
@@ -77,12 +79,12 @@ class BookingStatusCard extends StatelessWidget {
               _buildInfoItem(
                 context,
                 Icons.calendar_today_outlined,
-                DateFormat('MMM dd').format(scheduledTime),
+                DateTimeUtils.formatDatePattern(scheduledTime, 'MMM dd'),
               ),
               _buildInfoItem(
                 context,
                 Icons.access_time,
-                DateFormat('hh:mm a').format(scheduledTime),
+                DateTimeUtils.formatTime12h(scheduledTime),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -103,21 +105,6 @@ class BookingStatusCard extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          // Debug logging
-          Builder(
-            builder: (context) {
-              print('=== Session Debug Info ===');
-              print('Session ID: ${session.id}');
-              print('Status: ${session.status}');
-              print('Meeting Link: ${session.meetingLink}');
-              print('Meeting Link isEmpty: ${session.meetingLink?.isEmpty}');
-              print(
-                'Condition check: ${session.status == 'CONFIRMED' && session.meetingLink != null && session.meetingLink!.isNotEmpty}',
-              );
-              print('========================');
-              return const SizedBox.shrink();
-            },
           ),
           if (session.status == 'CONFIRMED' &&
               session.meetingLink != null &&
@@ -197,14 +184,8 @@ class BookingStatusCard extends StatelessWidget {
                         final startTime = session.scheduledTime.subtract(
                           const Duration(minutes: 15),
                         );
-                        final endTime = session.scheduledTime.add(
-                          Duration(minutes: session.durationMinutes),
-                        );
 
-                        final isLive =
-                            now.isAfter(startTime) && now.isBefore(endTime);
-
-                        if (!isLive) {
+                        if (now.isBefore(startTime)) {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
@@ -220,21 +201,45 @@ class BookingStatusCard extends StatelessWidget {
 
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              final uri = Uri.parse(session.meetingLink!);
-                              urlLauncherWithFallback(context, uri);
-                            },
-                            icon: const Icon(Icons.video_call, size: 18),
-                            label: const Text("Join Session"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(double.infinity, 36),
-                              backgroundColor: theme.colorScheme.primary,
-                              foregroundColor: theme.colorScheme.onPrimary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  final uri = Uri.parse(session.meetingLink!);
+                                  urlLauncherWithFallback(context, uri);
+                                },
+                                icon: const Icon(Icons.video_call, size: 18),
+                                label: const Text("Join Session"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: theme.colorScheme.primary,
+                                  foregroundColor: theme.colorScheme.onPrimary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              OutlinedButton.icon(
+                                onPressed: () {
+                                  _showCompletionDialog(context);
+                                },
+                                icon: const Icon(
+                                  Icons.check_circle_outline,
+                                  size: 18,
+                                ),
+                                label: const Text("Mark as Complete"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: theme.colorScheme.primary,
+                                  side: BorderSide(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -243,8 +248,95 @@ class BookingStatusCard extends StatelessWidget {
                 ),
               ),
             ),
+          if (session.status == 'PENDING')
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    _showCancelDialog(context);
+                  },
+                  icon: const Icon(Icons.cancel_outlined, size: 18),
+                  label: const Text("Cancel Booking"),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
+    );
+  }
+
+  void _showCancelDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Cancel Booking"),
+          content: const Text(
+            "Are you sure you want to cancel this booking request? Your points will be immediately refunded.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text("No, keep it"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(dialogContext); // Close dialog
+                context.read<HandleSessionActionBloc>().add(
+                  HandleSessionActionEvent.performAction(
+                    sessionId: session.id,
+                    action: 'cancel',
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text("Yes, Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showCompletionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text("Complete Session"),
+          content: const Text(
+            "Have you finished this session? Marking it as complete will release your held points to the mentor.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(dialogContext); // Close dialog
+                context.read<HandleSessionActionBloc>().add(
+                  HandleSessionActionEvent.performAction(
+                    sessionId: session.id,
+                    action: 'complete',
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
     );
   }
 

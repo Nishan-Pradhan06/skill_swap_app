@@ -101,8 +101,8 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
     final response = await _apiService.post<Map>(
       'availability/set/',
       data: {
-        "start_time": startTime.toIso8601String(),
-        "end_time": endTime.toIso8601String(),
+        "start_time": startTime.toUtc().toIso8601String(),
+        "end_time": endTime.toUtc().toIso8601String(),
         "duration_minutes": durationMinutes,
         "post_id": postId,
       },
@@ -268,7 +268,7 @@ class SkillSwapRepositoryImpl implements SkillSwapRepository {
         "availability_slot_id": slotId,
         "skill": skill,
         "points": points,
-        "scheduled_time": scheduledTime.toIso8601String(),
+        "scheduled_time": scheduledTime.toUtc().toIso8601String(),
         "duration_minutes": durationMinutes,
       },
     );

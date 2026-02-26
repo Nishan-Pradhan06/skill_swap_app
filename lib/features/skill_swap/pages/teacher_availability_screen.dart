@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:skill_swap/core/utils/date_string_split_utils.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
 import 'package:skill_swap/features/skill_swap/blocs/availability_bloc.dart';
@@ -180,7 +180,10 @@ class _TeacherAvailabilityScreenState extends State<TeacherAvailabilityScreen> {
                         child: Text(
                           _startDate == null
                               ? "Start Date"
-                              : DateFormat('yyyy-MM-dd').format(_startDate!),
+                              : DateTimeUtils.formatDatePattern(
+                                  _startDate!,
+                                  'yyyy-MM-dd',
+                                ),
                         ),
                       ),
                     ),
@@ -206,7 +209,10 @@ class _TeacherAvailabilityScreenState extends State<TeacherAvailabilityScreen> {
                         child: Text(
                           _endDate == null
                               ? "End Date"
-                              : DateFormat('yyyy-MM-dd').format(_endDate!),
+                              : DateTimeUtils.formatDatePattern(
+                                  _endDate!,
+                                  'yyyy-MM-dd',
+                                ),
                         ),
                       ),
                     ),
@@ -271,9 +277,10 @@ class _TeacherAvailabilityScreenState extends State<TeacherAvailabilityScreen> {
                           return Card(
                             child: ListTile(
                               title: Text(
-                                DateFormat(
-                                  'MMM dd, yyyy - HH:mm',
-                                ).format(slot.startTime),
+                                DateTimeUtils.formatDatePattern(
+                                  slot.startTime,
+                                  'MMM dd, yyyy - hh:mm a',
+                                ),
                               ),
                               subtitle: Text(
                                 "${slot.isBooked ? "Booked" : "Available"} ${slot.postId != null ? "(Post #${slot.postId})" : ""}",

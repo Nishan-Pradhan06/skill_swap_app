@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import '../widgets/booking_status_card.dart';
+import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 
 class LearnerMyLearningScreen extends StatefulWidget {
   const LearnerMyLearningScreen({super.key});
@@ -33,40 +34,58 @@ class _LearnerMyLearningScreenState extends State<LearnerMyLearningScreen> {
         scrolledUnderElevation: 0,
         centerTitle: false,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _fetchBookings();
+      body: BlocListener<HandleSessionActionBloc, HandleSessionActionState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            success: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.green),
+              );
+              _fetchBookings();
+            },
+            failure: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.red),
+              );
+            },
+          );
         },
-        child: BlocBuilder<GetSessionsBloc, GetSessionsState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const SizedBox.shrink(),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              failure: (message) => Center(child: Text(message)),
-              success: (data) {
-                final sessions = data
-                    .map(
-                      (e) => SessionModel.fromJson(e as Map<String, dynamic>),
-                    )
-                    .toList();
-
-                if (sessions.isEmpty) {
-                  return _buildEmptyState(context);
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  itemCount: sessions.length,
-                  itemBuilder: (context, index) {
-                    return BookingStatusCard(session: sessions[index]);
-                  },
-                );
-              },
-            );
+        child: RefreshIndicator(
+          onRefresh: () async {
+            _fetchBookings();
           },
+          child: BlocBuilder<GetSessionsBloc, GetSessionsState>(
+            builder: (context, state) {
+              return state.when(
+                initial: () => const SizedBox.shrink(),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                failure: (message) => Center(child: Text(message)),
+                success: (data) {
+                  final sessions = data
+                      .map(
+                        (e) => SessionModel.fromJson(e as Map<String, dynamic>),
+                      )
+                      .where((s) => s.status == 'CONFIRMED')
+                      .toList();
+
+                  if (sessions.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: sessions.length,
+                    itemBuilder: (context, index) {
+                      return BookingStatusCard(session: sessions[index]);
+                    },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
