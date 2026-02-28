@@ -228,26 +228,26 @@ class _DailyRewardScreenState extends State<DailyRewardScreen> {
           ),
 
           // Confetti
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              shouldLoop: false,
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.pink,
-                Colors.orange,
-                Colors.purple,
-                Colors.amber,
-              ],
-              createParticlePath: drawStar,
-              emissionFrequency: 0.05,
-              numberOfParticles: 20,
-              gravity: 0.2,
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topCenter,
+          //   child: ConfettiWidget(
+          //     confettiController: _confettiController,
+          //     blastDirectionality: BlastDirectionality.explosive,
+          //     shouldLoop: false,
+          //     colors: const [
+          //       Colors.green,
+          //       Colors.blue,
+          //       Colors.pink,
+          //       Colors.orange,
+          //       Colors.purple,
+          //       Colors.amber,
+          //     ],
+          //     createParticlePath: drawStar,
+          //     emissionFrequency: 0.05,
+          //     numberOfParticles: 20,
+          //     gravity: 0.2,
+          //   ),
+          // ),
         ],
       ),
     );
