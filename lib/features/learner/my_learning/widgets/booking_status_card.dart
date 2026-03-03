@@ -7,6 +7,7 @@ import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/core/utils/image_url_utils.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 
 class BookingStatusCard extends StatelessWidget {
   final SessionModel session;
@@ -147,12 +148,7 @@ class BookingStatusCard extends StatelessWidget {
                             Clipboard.setData(
                               ClipboardData(text: session.meetingLink!),
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Link copied to clipboard'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
+                            CustomToast.showSuccess('Link copied to clipboard');
                           },
                           icon: const Icon(Icons.copy, size: 16),
                           tooltip: 'Copy link',

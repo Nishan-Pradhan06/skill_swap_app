@@ -9,6 +9,7 @@ import 'package:skill_swap/features/skill_swap/blocs/update_meeting_link_state.d
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/features/mentor/meeting_links/meeting_links_list_screen.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 
 class MyStudentsScreen extends StatefulWidget {
   const MyStudentsScreen({super.key});
@@ -58,21 +59,10 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             listener: (context, state) {
               state.whenOrNull(
                 success: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
                   _fetchSessions();
                 },
                 failure: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  CustomToast.showError(message);
                 },
               );
             },
@@ -81,21 +71,10 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             listener: (context, state) {
               state.whenOrNull(
                 success: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
                   _fetchSessions();
                 },
                 failure: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  CustomToast.showError(message);
                 },
               );
             },
@@ -437,7 +416,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text("Confirm"),
+              child: const Text("Confirmdd"),
             ),
           ],
         );

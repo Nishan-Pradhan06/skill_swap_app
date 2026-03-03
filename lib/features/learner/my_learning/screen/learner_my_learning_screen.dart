@@ -4,6 +4,7 @@ import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import '../widgets/booking_status_card.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 
 class LearnerMyLearningScreen extends StatefulWidget {
   const LearnerMyLearningScreen({super.key});
@@ -38,15 +39,11 @@ class _LearnerMyLearningScreenState extends State<LearnerMyLearningScreen> {
         listener: (context, state) {
           state.whenOrNull(
             success: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.green),
-              );
+              CustomToast.showSuccess(message);
               _fetchBookings();
             },
             failure: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.red),
-              );
+              CustomToast.showError(message);
             },
           );
         },

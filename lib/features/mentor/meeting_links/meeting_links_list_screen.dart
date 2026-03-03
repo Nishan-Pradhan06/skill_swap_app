@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/get_sessions_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
+import 'package:skill_swap/core/widgets/custom_toast.dart';
 
 class MeetingLinksListScreen extends StatelessWidget {
   const MeetingLinksListScreen({super.key});
@@ -171,11 +172,8 @@ class MeetingLinksListScreen extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: meetingLink));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Meeting link copied to clipboard'),
-                          duration: Duration(seconds: 2),
-                        ),
+                      CustomToast.showSuccess(
+                        'Meeting link copied to clipboard',
                       );
                     },
                     icon: const Icon(Icons.copy, size: 18),
