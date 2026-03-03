@@ -34,6 +34,11 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
   final _provincesController = TextEditingController();
   final _skillOfferedController = TextEditingController();
 
+  // Form keys for validation
+  final _profileInfoFormKey = GlobalKey<FormState>();
+  final _phoneFormKey = GlobalKey<FormState>();
+  final _basicInfoFormKey = GlobalKey<FormState>();
+
   // Store user data
   String? profilePicture;
   String profileTitle = '';
@@ -148,23 +153,38 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                       },
                       children: [
                         ProfileInfoScreen(
+                          formKey: _profileInfoFormKey,
                           profileTitleController: _profileTitleController,
                           profileDesController: _profileDesController,
                           onPressedSkip: () => _skipPage(),
-                          onPressedDone: () => _nextPage(),
+                          onPressedDone: () {
+                            if (_profileInfoFormKey.currentState!.validate()) {
+                              _nextPage();
+                            }
+                          },
                         ),
                         PhoneVerificationScreen(
+                          formKey: _phoneFormKey,
                           phoneNumberController: _phoneNumberController,
-                          onPressedDone: _nextPage,
+                          onPressedDone: () {
+                            if (_phoneFormKey.currentState!.validate()) {
+                              _nextPage();
+                            }
+                          },
                           onPressedSkip: _skipPage,
                         ),
                         BasicInfoScreen(
+                          formKey: _basicInfoFormKey,
                           fullNameController: _fullNameController,
                           bioController: _bioController,
                           provinces: provinces,
                           provincesController: _provincesController,
                           onPressedSkip: _skipPage,
-                          onPressedDone: _nextPage,
+                          onPressedDone: () {
+                            if (_basicInfoFormKey.currentState!.validate()) {
+                              _nextPage();
+                            }
+                          },
                         ),
                         SkilledOfferedScreen(
                           skillOfferedController: _skillOfferedController,
@@ -199,7 +219,15 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                             );
                           }).toList(),
                           onPressedSkip: () => _skipPage(),
-                          onPressedDone: () => _nextPage(),
+                          onPressedDone: () {
+                            if (skillsOffered.isEmpty) {
+                              CustomToast.showError(
+                                "Please select at least one skill you offer",
+                              );
+                              return;
+                            }
+                            _nextPage();
+                          },
                         ),
 
                         SkilledWantedScreen(
@@ -236,6 +264,12 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                           }).toList(),
                           onPressedSkip: () => _previousPage(),
                           onPressedDone: () async {
+                            if (skillsWanted.isEmpty) {
+                              CustomToast.showError(
+                                "Please select at least one skill you want to learn",
+                              );
+                              return;
+                            }
                             sl<ProfileSetupBloc>().add(
                               ProfileSetupEvent.userProfileSetUp(
                                 UserProfileSetUpModel(
@@ -252,7 +286,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                                 ),
                               ),
                             );
-                            // Removed local cache call - backend now trac                                 ks completion
+                            // Removed local cache call - backend now tracks completion
                           },
                         ),
                       ],
