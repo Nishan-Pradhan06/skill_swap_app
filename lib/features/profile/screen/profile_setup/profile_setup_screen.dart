@@ -91,10 +91,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
     }
   }
 
-  void _skipPage() {
-    _nextPage();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +152,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                           formKey: _profileInfoFormKey,
                           profileTitleController: _profileTitleController,
                           profileDesController: _profileDesController,
-                          onPressedSkip: () => _skipPage(),
                           onPressedDone: () {
                             if (_profileInfoFormKey.currentState!.validate()) {
                               _nextPage();
@@ -171,7 +166,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               _nextPage();
                             }
                           },
-                          onPressedSkip: _skipPage,
+                          onPressedPrevious: _previousPage,
                         ),
                         BasicInfoScreen(
                           formKey: _basicInfoFormKey,
@@ -179,7 +174,7 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                           bioController: _bioController,
                           provinces: provinces,
                           provincesController: _provincesController,
-                          onPressedSkip: _skipPage,
+                          onPressedPrevious: _previousPage,
                           onPressedDone: () {
                             if (_basicInfoFormKey.currentState!.validate()) {
                               _nextPage();
@@ -188,6 +183,16 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                         ),
                         SkilledOfferedScreen(
                           skillOfferedController: _skillOfferedController,
+                          onPressedPrevious: _previousPage,
+                          onPressedDone: () {
+                            if (skillsOffered.isEmpty) {
+                              CustomToast.showError(
+                                "Please select at least one skill you offer",
+                              );
+                              return;
+                            }
+                            _nextPage();
+                          },
                           children: availableSkills.map((skill) {
                             final isSelected = skillsOffered.contains(skill);
                             return FilterChip(
@@ -218,20 +223,36 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               ).colorScheme.primary,
                             );
                           }).toList(),
-                          onPressedSkip: () => _skipPage(),
-                          onPressedDone: () {
-                            if (skillsOffered.isEmpty) {
-                              CustomToast.showError(
-                                "Please select at least one skill you offer",
-                              );
-                              return;
-                            }
-                            _nextPage();
-                          },
                         ),
 
                         SkilledWantedScreen(
                           skillOfferedController: _skillOfferedController,
+                          onPressedPrevious: _previousPage,
+                          onPressedDone: () async {
+                            if (skillsWanted.isEmpty) {
+                              CustomToast.showError(
+                                "Please select at least one skill you want to learn",
+                              );
+                              return;
+                            }
+                            sl<ProfileSetupBloc>().add(
+                              ProfileSetupEvent.userProfileSetUp(
+                                UserProfileSetUpModel(
+                                  profileTitle: _profileTitleController.text,
+                                  profileDescription:
+                                      _profileDesController.text,
+                                  phoneNumber: _phoneNumberController.text,
+                                  fullName: _fullNameController.text,
+                                  bio: _bioController.text,
+                                  locationProvince: _provincesController.text,
+
+                                  skillYouOffer: skillsOffered,
+                                  skillYouWantToLearn: skillsWanted,
+                                ),
+                              ),
+                            );
+                            // Removed local cache call - backend now tracks completion
+                          },
                           children: availableSkills.map((skill) {
                             final isSelected = skillsWanted.contains(skill);
                             return FilterChip(
@@ -262,32 +283,6 @@ class _ProfileSetupFlowState extends State<ProfileSetupFlow> {
                               ).colorScheme.primary,
                             );
                           }).toList(),
-                          onPressedSkip: () => _previousPage(),
-                          onPressedDone: () async {
-                            if (skillsWanted.isEmpty) {
-                              CustomToast.showError(
-                                "Please select at least one skill you want to learn",
-                              );
-                              return;
-                            }
-                            sl<ProfileSetupBloc>().add(
-                              ProfileSetupEvent.userProfileSetUp(
-                                UserProfileSetUpModel(
-                                  profileTitle: _profileTitleController.text,
-                                  profileDescription:
-                                      _profileDesController.text,
-                                  phoneNumber: _phoneNumberController.text,
-                                  fullName: _fullNameController.text,
-                                  bio: _bioController.text,
-                                  locationProvince: _provincesController.text,
-
-                                  skillYouOffer: skillsOffered,
-                                  skillYouWantToLearn: skillsWanted,
-                                ),
-                              ),
-                            );
-                            // Removed local cache call - backend now tracks completion
-                          },
                         ),
                       ],
                     ),

@@ -11,7 +11,7 @@ class BasicInfoScreen extends StatelessWidget {
   final TextEditingController bioController;
   final TextEditingController provincesController;
   final List<String> provinces;
-  final void Function() onPressedSkip;
+  final void Function() onPressedPrevious;
   final void Function() onPressedDone;
 
   const BasicInfoScreen({
@@ -22,7 +22,7 @@ class BasicInfoScreen extends StatelessWidget {
     required this.provincesController,
     required this.provinces,
     required this.onPressedDone,
-    required this.onPressedSkip,
+    required this.onPressedPrevious,
   });
 
   @override
@@ -109,8 +109,8 @@ class BasicInfoScreen extends StatelessWidget {
           children: [
             Expanded(
               child: CustomOutlineButton(
-                text: 'Skip',
-                onPressed: onPressedSkip,
+                text: 'Previous',
+                onPressed: onPressedPrevious,
               ),
             ),
             Expanded(

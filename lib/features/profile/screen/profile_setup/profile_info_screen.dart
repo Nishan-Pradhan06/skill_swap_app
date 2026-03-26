@@ -9,7 +9,6 @@ class ProfileInfoScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController profileTitleController;
   final TextEditingController profileDesController;
-  final void Function() onPressedSkip;
   final void Function() onPressedDone;
 
   const ProfileInfoScreen({
@@ -18,7 +17,6 @@ class ProfileInfoScreen extends StatelessWidget {
     required this.profileDesController,
     required this.profileTitleController,
     required this.onPressedDone,
-    required this.onPressedSkip,
   });
 
   @override
@@ -125,13 +123,7 @@ class ProfileInfoScreen extends StatelessWidget {
           spacing: 10,
           children: [
             Expanded(
-              child: CustomOutlineButton(
-                text: 'Skip',
-                onPressed: onPressedSkip,
-              ),
-            ),
-            Expanded(
-              child: CustomButton(text: 'Done', onPressed: onPressedDone),
+              child: CustomButton(text: 'Next', onPressed: onPressedDone),
             ),
           ],
         ),

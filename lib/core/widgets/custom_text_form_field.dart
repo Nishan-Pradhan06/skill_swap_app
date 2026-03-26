@@ -78,7 +78,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
     if (widget.type == CustomTextFieldType.dropdown &&
         widget.dropdownItems != null &&
         widget.dropdownItems!.isNotEmpty) {
-      _dropdownValue = widget.dropdownItems!.first;
+      if (widget.controller != null &&
+          widget.controller!.text.isNotEmpty &&
+          widget.dropdownItems!.contains(widget.controller!.text)) {
+        _dropdownValue = widget.controller!.text;
+      } else {
+        _dropdownValue = widget.dropdownItems!.first;
+        if (widget.controller != null) {
+          widget.controller!.text = _dropdownValue!;
+        }
+      }
     }
   }
 
@@ -115,7 +124,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             onChanged: (value) {
               setState(() => _dropdownValue = value);
               widget.onDropdownChanged?.call(value);
+              if (widget.controller != null && value != null) {
+                widget.controller!.text = value;
+              }
             },
+            validator: widget.validator,
           ),
         ],
       );

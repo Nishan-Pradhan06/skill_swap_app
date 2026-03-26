@@ -7,7 +7,7 @@ import '../../../../core/widgets/custom_button.dart';
 
 class SkilledWantedScreen extends StatelessWidget {
   final List<Widget> children;
-  final void Function() onPressedSkip;
+  final void Function() onPressedPrevious;
   final void Function() onPressedDone;
   final TextEditingController skillOfferedController;
 
@@ -15,7 +15,7 @@ class SkilledWantedScreen extends StatelessWidget {
     super.key,
     required this.children,
     required this.onPressedDone,
-    required this.onPressedSkip,
+    required this.onPressedPrevious,
     required this.skillOfferedController,
   });
 
@@ -73,7 +73,7 @@ class SkilledWantedScreen extends StatelessWidget {
             Expanded(
               child: CustomOutlineButton(
                 text: 'Previous',
-                onPressed: onPressedSkip,
+                onPressed: onPressedPrevious,
               ),
             ),
             Expanded(

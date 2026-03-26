@@ -8,14 +8,14 @@ import '../../../../core/widgets/custom_button.dart';
 class PhoneVerificationScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController phoneNumberController;
-  final void Function() onPressedSkip;
+  final void Function() onPressedPrevious;
   final void Function() onPressedDone;
   const PhoneVerificationScreen({
     super.key,
     required this.formKey,
     required this.phoneNumberController,
     required this.onPressedDone,
-    required this.onPressedSkip,
+    required this.onPressedPrevious,
   });
 
   @override
@@ -93,8 +93,8 @@ class PhoneVerificationScreen extends StatelessWidget {
           children: [
             Expanded(
               child: CustomOutlineButton(
-                text: 'Skip',
-                onPressed: onPressedSkip,
+                text: 'Previous',
+                onPressed: onPressedPrevious,
               ),
             ),
             Expanded(
