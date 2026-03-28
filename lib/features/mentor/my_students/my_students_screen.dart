@@ -11,6 +11,8 @@ import 'package:skill_swap/features/mentor/meeting_links/meeting_links_list_scre
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/core/widgets/custom_toast.dart';
 
+import '../../reward/blocs/bloc/daily_reward_bloc.dart';
+
 class MyStudentsScreen extends StatefulWidget {
   const MyStudentsScreen({super.key});
 
@@ -116,7 +118,20 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                       .toList();
 
                   if (sessions.isEmpty) {
-                    return _buildEmptyState(context);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        _fetchSessions();
+                      },
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: _buildEmptyState(context),
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
                   return ListView.builder(
@@ -345,7 +360,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                 builder: (context) {
                   final now = DateTime.now();
                   final startTime = session.scheduledTime.subtract(
-                    const Duration(minutes: 15),
+                    const Duration(minutes: 30),
                   );
 
                   if (now.isBefore(startTime)) return const SizedBox.shrink();
@@ -414,9 +429,15 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                     action: 'complete',
                   ),
                 );
+                //trigger new points for mentors
+                context.read<DailyRewardBloc>().add(
+                  DailyRewardEvent.dailyReward(),
+                );
+                //refresh the sessions
+                _fetchSessions();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text("Confirmdd"),
+              child: const Text("Confirm"),
             ),
           ],
         );

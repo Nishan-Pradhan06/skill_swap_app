@@ -124,7 +124,20 @@ class _MentorRequestsScreenState extends State<MentorRequestsScreen> {
 
   Widget _buildRequestList(BuildContext context, List<SessionModel> sessions) {
     if (sessions.isEmpty) {
-      return _buildEmptyState(context);
+      return RefreshIndicator(
+        onRefresh: () async {
+          _fetchRequests();
+        },
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: _buildEmptyState(context),
+            ),
+          ],
+        ),
+      );
     }
 
     return RefreshIndicator(

@@ -64,7 +64,7 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
             slivers: [
               SliverAppBar(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                expandedHeight: 180,
+                expandedHeight: 200,
                 elevation: 0,
                 floating: true,
                 snap: true,
@@ -236,22 +236,22 @@ class _LearnerHomeScreenState extends State<LearnerHomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 35,
-        width: 45,
-        child: FloatingActionButton.extended(
-          onPressed: () {},
-          label: Icon(
-            Icons.message_rounded,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 10,
-          backgroundColor: ColorScheme.of(context).onInverseSurface,
-        ),
-      ),
+      // floatingActionButton: SizedBox(
+      //   height: 35,
+      //   width: 45,
+      //   child: FloatingActionButton.extended(
+      //     onPressed: () {},
+      //     label: Icon(
+      //       Icons.message_rounded,
+      //       color: Theme.of(context).colorScheme.onSurface,
+      //     ),
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(12),
+      //     ),
+      //     elevation: 10,
+      //     backgroundColor: ColorScheme.of(context).onInverseSurface,
+      //   ),
+      // ),
     );
   }
 }

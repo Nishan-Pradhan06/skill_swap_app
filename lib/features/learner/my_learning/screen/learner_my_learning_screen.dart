@@ -66,7 +66,20 @@ class _LearnerMyLearningScreenState extends State<LearnerMyLearningScreen> {
                       .toList();
 
                   if (sessions.isEmpty) {
-                    return _buildEmptyState(context);
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        _fetchBookings();
+                      },
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: _buildEmptyState(context),
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
                   return ListView.builder(
@@ -90,34 +103,37 @@ class _LearnerMyLearningScreenState extends State<LearnerMyLearningScreen> {
 
   Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.school_outlined, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text(
-            "No bookings yet",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[500],
-              fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.school_outlined, size: 80, color: Colors.grey[300]),
+            const SizedBox(height: 16),
+            Text(
+              "No bookings yet",
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.grey[500],
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Book a session with a mentor to start your learning journey!",
-            textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              // Navigate to home or discovery
-            },
-            child: const Text("Explore Skills"),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              "Book a session with a mentor to start your learning journey!",
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to home or discovery
+              },
+              child: const Text("Explore Skills"),
+            ),
+          ],
+        ),
       ),
     );
   }

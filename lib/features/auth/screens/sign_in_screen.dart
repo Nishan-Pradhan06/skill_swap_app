@@ -243,74 +243,74 @@ class _SignInScreenState extends State<SignInScreen> {
                   },
                 ),
 
-                Row(
-                  children: [
-                    Expanded(child: Divider()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'OR',
-                        style: TextTheme.of(
-                          context,
-                        ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Expanded(child: Divider()),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(child: Divider()),
+                //     Padding(
+                //       padding: const EdgeInsets.symmetric(horizontal: 10),
+                //       child: Text(
+                //         'OR',
+                //         style: TextTheme.of(
+                //           context,
+                //         ).bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                //       ),
+                //     ),
+                //     Expanded(child: Divider()),
+                //   ],
+                // ),
 
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Biometric Button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {},
-                          borderRadius: BorderRadius.circular(20),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Fingerprint icon with frame corners
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    // Corner frames
-                                    SizedBox(
-                                      width: 65,
-                                      height: 70,
-                                      child: CustomPaint(
-                                        painter: CornerFramePainter(),
-                                      ),
-                                    ),
-                                    // Fingerprint icon
-                                    const Icon(
-                                      Icons.fingerprint,
-                                      size: 45,
-                                      color: AppTheme.primaryRed,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'USE BIOMETRIC',
-                                  style: TextTheme.of(context).bodyLarge
-                                      ?.copyWith(
-                                        color: AppTheme.primaryRed,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Center(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       // Biometric Button
+                //       Material(
+                //         color: Colors.transparent,
+                //         child: InkWell(
+                //           onTap: () {},
+                //           borderRadius: BorderRadius.circular(20),
+                //           child: Padding(
+                //             padding: const EdgeInsets.all(20),
+                //             child: Column(
+                //               mainAxisAlignment: MainAxisAlignment.center,
+                //               children: [
+                //                 // Fingerprint icon with frame corners
+                //                 Stack(
+                //                   alignment: Alignment.center,
+                //                   children: [
+                //                     // Corner frames
+                //                     SizedBox(
+                //                       width: 65,
+                //                       height: 70,
+                //                       child: CustomPaint(
+                //                         painter: CornerFramePainter(),
+                //                       ),
+                //                     ),
+                //                     // Fingerprint icon
+                //                     const Icon(
+                //                       Icons.fingerprint,
+                //                       size: 45,
+                //                       color: AppTheme.primaryRed,
+                //                     ),
+                //                   ],
+                //                 ),
+                //                 const SizedBox(height: 12),
+                //                 Text(
+                //                   'USE BIOMETRIC',
+                //                   style: TextTheme.of(context).bodyLarge
+                //                       ?.copyWith(
+                //                         color: AppTheme.primaryRed,
+                //                         fontWeight: FontWeight.bold,
+                //                       ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

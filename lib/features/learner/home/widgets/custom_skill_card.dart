@@ -142,11 +142,15 @@ class CustomSkillCard extends StatelessWidget {
                           color: Colors.blue,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          availabilityText!,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            availabilityText!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

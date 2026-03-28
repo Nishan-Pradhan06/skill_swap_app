@@ -9,6 +9,8 @@ import 'package:skill_swap/features/skill_swap/models/availability_slot_model.da
 
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
 import '../../../core/utils/date_string_split_utils.dart';
+import '../../notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
+import '../../notifications/bloc/get_notifications/get_notification_bloc.dart';
 
 class LearnerBookingPage extends StatefulWidget {
   final int mentorId;
@@ -67,6 +69,12 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
               success: (message) {
                 CustomToast.showSuccess(message);
                 _loadSlots(); // Reload slots
+                context.read<GetNotificationBloc>().add(
+                  const GetNotificationEvent.getNotification(),
+                );
+                context.read<GetNotificationCountBloc>().add(
+                  const GetNotificationCountEvent.getNotificationCount(),
+                );
               },
               failure: (message) => CustomToast.showError(message),
             );

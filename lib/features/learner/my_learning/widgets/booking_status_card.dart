@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:skill_swap/core/utils/date_string_split_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skill_swap/features/reward/blocs/bloc/daily_reward_bloc.dart';
 import 'package:skill_swap/features/skill_swap/blocs/handle_session_action_bloc.dart';
 import 'package:skill_swap/features/skill_swap/models/session_model.dart';
 import 'package:skill_swap/core/helpers/url_launcher_helper.dart';
 import 'package:skill_swap/core/utils/image_url_utils.dart';
-import 'package:skill_swap/core/widgets/custom_toast.dart';
+
+import '../../../notifications/bloc/get_notification_count/get_notification_count_bloc.dart';
+import '../../../notifications/bloc/get_notifications/get_notification_bloc.dart';
+import '../../../skill_swap/blocs/get_sessions_bloc.dart';
 
 class BookingStatusCard extends StatelessWidget {
   final SessionModel session;
@@ -126,59 +129,60 @@ class BookingStatusCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.link,
-                          size: 16,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Meeting Link',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            Clipboard.setData(
-                              ClipboardData(text: session.meetingLink!),
-                            );
-                            CustomToast.showSuccess('Link copied to clipboard');
-                          },
-                          icon: const Icon(Icons.copy, size: 16),
-                          tooltip: 'Copy link',
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    GestureDetector(
-                      onTap: () {
-                        final uri = Uri.parse(session.meetingLink!);
-                        urlLauncherWithFallback(context, uri);
-                      },
-                      child: Text(
-                        session.meetingLink!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: theme.colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Icon(
+                    //       Icons.link,
+                    //       size: 16,
+                    //       color: theme.colorScheme.primary,
+                    //     ),
+                    //     const SizedBox(width: 6),
+                    //     Text(
+                    //       'Meeting Link',
+                    //       style: TextStyle(
+                    //         fontSize: 12,
+                    //         fontWeight: FontWeight.w600,
+                    //         color: theme.colorScheme.primary,
+                    //       ),
+                    //     ),
+                    //     const Spacer(),
+                    //     IconButton(
+                    //       onPressed: () {
+                    //         Clipboard.setData(
+                    //           ClipboardData(text: session.meetingLink!),
+                    //         );
+                    //         CustomToast.showSuccess('Link copied to clipboard');
+                    //       },
+                    //       icon: const Icon(Icons.copy, size: 16),
+                    //       tooltip: 'Copy link',
+                    //       padding: EdgeInsets.zero,
+                    //       constraints: const BoxConstraints(),
+                    //     ),
+                    //   ],
+                    // ),
+
+                    //TODO: enable this when we have a way to handle the link
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     final uri = Uri.parse(session.meetingLink!);
+                    //     urlLauncherWithFallback(context, uri);
+                    //   },
+                    //   child: Text(
+                    //     session.meetingLink!,
+                    //     style: TextStyle(
+                    //       fontSize: 12,
+                    //       color: theme.colorScheme.primary,
+                    //       decoration: TextDecoration.underline,
+                    //     ),
+                    //     maxLines: 1,
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    // ),
                     Builder(
                       builder: (context) {
                         final now = DateTime.now();
                         final startTime = session.scheduledTime.subtract(
-                          const Duration(minutes: 15),
+                          const Duration(minutes: 30),
                         );
 
                         if (now.isBefore(startTime)) {
@@ -325,6 +329,22 @@ class BookingStatusCard extends StatelessWidget {
                     sessionId: session.id,
                     action: 'complete',
                   ),
+                );
+                //called after complettions..
+                context.read<GetSessionsBloc>().add(
+                  const GetSessionsEvent.fetch(role: 'learner'),
+                );
+                //fetch the notirications
+                context.read<GetNotificationBloc>().add(
+                  const GetNotificationEvent.getNotification(),
+                );
+                context.read<GetNotificationCountBloc>().add(
+                  const GetNotificationCountEvent.getNotificationCount(),
+                );
+
+                //fetch reward points
+                context.read<DailyRewardBloc>().add(
+                  const DailyRewardEvent.dailyReward(),
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
