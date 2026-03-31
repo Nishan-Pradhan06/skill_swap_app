@@ -21,6 +21,8 @@ import 'package:skill_swap/features/profile/bloc/profile_setup/profile_setup_blo
 import 'package:skill_swap/features/profile/bloc/switch_role/switch_role_bloc.dart';
 import 'package:skill_swap/features/profile/bloc/edit_profile/edit_profile_bloc.dart';
 import 'package:skill_swap/features/profile/repository/profile_repository.dart';
+import 'package:skill_swap/features/purchase_point/blocs/purchase_point_bloc.dart';
+import 'package:skill_swap/features/purchase_point/repositories/purchase_point_repository.dart';
 import 'package:skill_swap/features/reward/blocs/reward_bloc.dart';
 import 'package:skill_swap/features/reward/repository/reward_repository.dart';
 import 'package:skill_swap/features/skill_swap/blocs/availability_bloc.dart';
@@ -86,6 +88,9 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SkillSwapRepository>(
     () => SkillSwapRepositoryImpl(apiService: sl()),
   );
+  sl.registerLazySingleton<PurchasePointRepository>(
+    () => PurchasePointRepositoryImpl(apiService: sl()),
+  );
 
   //###---------------FEATURE BLOCS---------------------###
   sl.registerFactory(() => AvailabilityBloc(repository: sl()));
@@ -102,6 +107,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory(() => ForgotPasswordBloc(repository: sl()));
   sl.registerFactory(() => VerifyOtpBloc(repository: sl()));
   sl.registerFactory(() => ResetPasswordBloc(repository: sl()));
+  sl.registerFactory(() => PurchasePointBloc(repository: sl()));
 
   //###---------------EXTERNAL REPOSITORY SERVICES---------------###
 

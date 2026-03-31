@@ -18,6 +18,7 @@ class AppRoutesName {
   static const String learnerBottomNavBar = 'learnerBottomNavBar';
   static const String skillCardDetails = 'skillCardDetails';
   static const String dailyRewardScreenRoute = 'dailyRewardScreenRoute';
+  static const String purchasePointScreenRoute = 'purchasePointScreenRoute';
 
   //#---------------MENTOR ROUTES NAME--------------##
   static const String mentorBottomNavBar = 'mentorBottomNavBar';

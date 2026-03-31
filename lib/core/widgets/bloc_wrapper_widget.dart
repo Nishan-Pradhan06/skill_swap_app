@@ -17,6 +17,7 @@ import '../../features/notifications/bloc/get_notifications/get_notification_blo
 import '../../features/profile/bloc/get_profile/get_profile_bloc.dart';
 import '../../features/profile/bloc/profile_setup/profile_setup_bloc.dart';
 import '../../features/profile/cubit/theme_appearance_cubit.dart';
+import '../../features/purchase_point/blocs/purchase_point_bloc.dart';
 import '../../features/shared/on_boarding/cubit/on_boarding_cubit.dart';
 import '../../features/skill_swap/blocs/availability_bloc.dart';
 import '../../features/skill_swap/blocs/booking_bloc.dart';
@@ -78,6 +79,7 @@ class BlocWrapperWidget extends StatelessWidget {
         BlocProvider(create: (_) => sl<VerifyOtpBloc>()),
         BlocProvider(create: (_) => sl<ResetPasswordBloc>()),
         BlocProvider(create: (_) => sl<UpdateMeetingLinkBloc>()),
+        BlocProvider(create: (_) => sl<PurchasePointBloc>()),
       ],
       child: child,
     );

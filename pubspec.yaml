@@ -51,6 +51,7 @@ dependencies:
   image_cropper: ^11.0.0
   pinput: ^6.0.2
   nepali_utils: ^3.0.8
+  khalti_checkout_flutter: ^1.0.0-dev.9
 
 dev_dependencies:
   flutter_test:

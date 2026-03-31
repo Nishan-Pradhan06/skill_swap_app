@@ -16,6 +16,7 @@ import 'package:skill_swap/features/reward/blocs/reward_bloc.dart';
 import '../features/shared/bottom_nav_bar/screens/learner_bottom_nav_bar.dart';
 import '../features/shared/bottom_nav_bar/screens/mentor_bottom_nav_bar.dart';
 import 'package:skill_swap/features/reward/screens/daily_reward_screen.dart';
+import 'package:skill_swap/features/purchase_point/pages/purchase_point_screen.dart';
 
 List<GoRoute> userAppRoutes = [
   GoRoute(
@@ -57,6 +58,11 @@ List<GoRoute> userAppRoutes = [
       create: (context) => sl<RewardBloc>(),
       child: const DailyRewardScreen(),
     ),
+  ),
+  GoRoute(
+    path: AppRoutesName.purchasePointScreenRoute.path,
+    name: AppRoutesName.purchasePointScreenRoute,
+    builder: (context, state) => const PurchasePointScreen(),
   ),
   GoRoute(
     path: AppRoutesName.mentorAllSkillsRoute.path,

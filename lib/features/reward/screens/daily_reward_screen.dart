@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:skill_swap/features/profile/bloc/get_profile/get_profile_bloc.dart';
+import 'package:skill_swap/router/app_routes_names.dart';
 import '../blocs/reward_bloc.dart';
 
 class DailyRewardScreen extends StatefulWidget {
@@ -222,6 +223,34 @@ class _DailyRewardScreenState extends State<DailyRewardScreen> {
                       },
                     );
                   },
+                ),
+                const SizedBox(height: 20),
+
+                // Navigate to Purchase Points
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      context.pushNamed(AppRoutesName.purchasePointScreenRoute);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Get More Points',
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
