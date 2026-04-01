@@ -74,11 +74,15 @@ class ErrorHandler {
             exception: exception,
           );
         } else if (statusCode == 422 || statusCode == 400) {
+          final errorMessage = _extractErrorMessage(responseData);
+          final fieldErrors = _extractFieldErrors(responseData);
+
           return ValidationFailure(
-            message:
-                _extractFieldErrors(responseData)?.values.first ??
-                'Validation Failed!',
-            fieldErrors: _extractFieldErrors(responseData),
+            message: errorMessage ??
+                (fieldErrors != null && fieldErrors.isNotEmpty
+                    ? fieldErrors.values.first
+                    : 'Validation Failed!'),
+            fieldErrors: fieldErrors,
             exception: exception,
           );
         } else if (statusCode == 500 || statusCode == 503) {
@@ -131,9 +135,13 @@ class ErrorHandler {
       if (responseData is Map) {
         // Try common error message fields
         return responseData['message'] ??
+            responseData['detail'] ??
             responseData['error'] ??
             responseData['error_message'] ??
-            responseData['error_description'];
+            responseData['error_description'] ??
+            (responseData['non_field_errors'] is List
+                ? (responseData['non_field_errors'] as List).first.toString()
+                : responseData['non_field_errors']?.toString());
       } else if (responseData is String) {
         return responseData;
       }
@@ -146,32 +154,51 @@ class ErrorHandler {
 
   /// Extracts field-specific validation errors (dynamic keys)
   static Map<String, String>? _extractFieldErrors(dynamic responseData) {
-    if (responseData == null) return null;
+    if (responseData == null || responseData is! Map) return null;
 
     try {
-      if (responseData is Map && responseData.containsKey('errors')) {
-        final errors = responseData['errors'];
-
-        if (errors is Map) {
-          final Map<String, String> extractedErrors = {};
-
-          errors.forEach((key, value) {
-            if (value is List && value.isNotEmpty) {
-              extractedErrors[key.toString()] = value.first.toString();
-            } else if (value is String) {
-              extractedErrors[key.toString()] = value;
-            } else {
-              extractedErrors[key.toString()] = 'Invalid value';
-            }
-          });
-
-          return extractedErrors.isNotEmpty ? extractedErrors : null;
-        }
+      final Map<String, dynamic> errorsSource;
+      if (responseData.containsKey('errors') && responseData['errors'] is Map) {
+        errorsSource = responseData['errors'];
+      } else {
+        // Assume the entire response might be a field error map
+        errorsSource = Map<String, dynamic>.from(responseData);
       }
+
+      final Map<String, String> extractedErrors = {};
+
+      errorsSource.forEach((key, value) {
+        // Skip common general message keys so they aren't treated as field names
+        if ([
+          'message',
+          'detail',
+          'error',
+          'error_message',
+          'error_description',
+          'non_field_errors',
+          'status_code',
+          'success',
+          'data'
+        ].contains(key)) {
+          return;
+        }
+
+        if (value is List && value.isNotEmpty) {
+          extractedErrors[key.toString()] = value.first.toString();
+        } else if (value is String) {
+          extractedErrors[key.toString()] = value;
+        } else if (value is Map) {
+          // Nested errors
+          final nested = _extractFieldErrors(value);
+          if (nested != null && nested.isNotEmpty) {
+            extractedErrors[key.toString()] = nested.values.first;
+          }
+        }
+      });
+
+      return extractedErrors.isNotEmpty ? extractedErrors : null;
     } catch (_) {
       return null;
     }
-
-    return null;
   }
 }
