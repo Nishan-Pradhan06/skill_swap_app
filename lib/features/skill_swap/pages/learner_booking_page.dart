@@ -42,7 +42,7 @@ class _LearnerBookingPageState extends State<LearnerBookingPage> {
   Future<void> _loadSlots() async {
     final result = await sl<SkillSwapRepository>().getAvailability(
       mentorId: widget.mentorId,
-      postId: widget.postId,
+      // postId: widget.postId,
     );
     result.fold(
       (failure) => CustomToast.showError(failure.message),
