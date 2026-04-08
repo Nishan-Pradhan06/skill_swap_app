@@ -106,11 +106,7 @@ class CustomBackButton extends StatelessWidget {
               Navigator.pop(context);
             }
           },
-      child: Icon(
-        Icons.arrow_back,
-        size: size,
-        color: color ?? colorScheme.onPrimary,
-      ),
+      child: Icon(Icons.arrow_back, size: size, color: colorScheme.onSecondary),
     );
   }
 }
