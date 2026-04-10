@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skill_swap/core/widgets/custom_button.dart';
 import 'package:skill_swap/core/widgets/custom_padding.dart';
@@ -31,14 +30,14 @@ class AuthOptionScreen extends StatelessWidget {
             ),
             // SizedBox(child: SvgPicture.asset('assets/logo/logo.svg')),
             Spacer(),
-            CustomButton(
-              leadingIcon: SvgPicture.asset(
-                'assets/svg/icons/google.svg',
-                height: 18,
-              ),
-              text: 'Continue with Google',
-              onPressed: () {},
-            ),
+            // CustomButton(
+            //   leadingIcon: SvgPicture.asset(
+            //     'assets/svg/icons/google.svg',
+            //     height: 18,
+            //   ),
+            //   text: 'Continue with Google',
+            //   onPressed: () {},
+            // ),
             CustomButton(
               text: 'Continue with Email',
               textColor: Theme.of(context).brightness == Brightness.dark
