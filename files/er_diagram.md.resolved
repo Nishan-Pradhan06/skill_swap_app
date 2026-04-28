@@ -1,0 +1,105 @@
+# Entity Relationship Diagram
+
+This diagram represents the current database schema of the SkillSwap project after the recent refactoring (merging [Device](file:///d:/6thsem/backend/skillswap/myapp/models.py#167-185) and [PasswordResetCode](file:///d:/6thsem/backend/skillswap/myapp/models.py#141-149) into [User](file:///d:/6thsem/backend/skillswap/myapp/models.py#35-81), and removing `Dispute` and `PointTransaction`).
+
+```mermaid
+erDiagram
+    USER ||--|| USER_PROFILE : "has"
+    USER ||--o{ NOTIFICATION : "receives"
+    USER ||--o{ SKILL_SWAP_POST : "creates"
+    USER ||--o{ SKILL_SWAP_REQUEST : "sends"
+    USER ||--o{ MENTOR_AVAILABILITY : "sets"
+    USER ||--o{ SESSION : "participates (Learner/Mentor)"
+
+    USER_PROFILE ||--o{ CERTIFICATION : "has"
+    USER_PROFILE ||--o{ WORKING_EXPERIENCE : "has"
+    USER_PROFILE ||--o{ PORTFOLIO : "has"
+
+    SKILL_SWAP_CATEGORY ||--o{ SKILL_SWAP_POST : "categorizes"
+    SKILL_SWAP_POST ||--o{ SKILL_SWAP_REQUEST : "receives"
+    SKILL_SWAP_POST ||--o{ MENTOR_AVAILABILITY : "linked to"
+
+    MENTOR_AVAILABILITY ||--o{ SESSION : "slots used in"
+
+    USER {
+        string email PK
+        string full_name
+        json roles
+        json fcm_tokens
+        string password_reset_code
+        datetime password_reset_code_created_at
+        boolean is_active
+        boolean is_staff
+        datetime created_at
+    }
+
+    USER_PROFILE {
+        int user_id FK
+        int points
+        int held_points
+        string profile_title
+        text bio
+        string location_province
+        json skill_you_offer
+        json skill_you_want_to_learn
+    }
+
+    SKILL_SWAP_POST {
+        int user_id FK
+        int category_id FK
+        string title
+        text description
+        string skill_to_learn
+        int points_cost
+        boolean is_active
+    }
+
+    SESSION {
+        int learner_id FK
+        int mentor_id FK
+        int availability_slot_id FK
+        string skill
+        datetime scheduled_time
+        string status
+        string meeting_link
+    }
+
+    MENTOR_AVAILABILITY {
+        int mentor_id FK
+        int post_id FK
+        datetime start_time
+        datetime end_time
+        boolean is_booked
+    }
+
+    SKILL_SWAP_REQUEST {
+        int post_id FK
+        int requester_id FK
+        string status
+        datetime requested_at
+    }
+
+    CERTIFICATION {
+        int user_profile_id FK
+        string title
+    }
+
+    WORKING_EXPERIENCE {
+        int user_profile_id FK
+        string title
+        string companyName
+    }
+
+    PORTFOLIO {
+        int user_profile_id FK
+        string title
+        string url
+    }
+
+    NOTIFICATION {
+        int user_id FK
+        string title
+        text message
+        boolean is_read
+    }
+```

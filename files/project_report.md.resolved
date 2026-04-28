@@ -1,0 +1,101 @@
+# SkillSwap Project Report
+
+## 🌟 Project Overview
+SkillSwap is a peer-to-peer platform designed for knowledge sharing and skill exchange. Users can offer their expertise (Mentor role) in exchange for points, which they can then use to learn new skills from others (Learner role). The platform features real-time notifications, a robust points management system, and structured session scheduling.
+
+## 🛠 Technology Stack
+- **Frontend**: Flutter (Dart)
+    - **State Management**: BLoC (Business Logic Component) & Cubit
+    - **Dependency Injection**: GetIt
+    - **Navigation**: GoRouter
+    - **Networking**: Dio
+- **Backend**: Django (Python)
+    - **API Framework**: Django Rest Framework (DRF)
+    - **Authentication**: JWT (SimpleJWT) & Firebase (Google Login)
+    - **Database**: PostgreSQL (implied by standard Django production setups)
+    - **Push Notifications**: Firebase Cloud Messaging (FCM)
+
+---
+
+## 🏗 Backend Architecture
+
+### 📂 Folder Structure
+The backend follows a standard Django structure with the core logic residing in `myapp/`.
+```text
+backend/skillswap/
+├── manage.py
+├── skillswap/          # Project configuration (settings, wsgi, asgi)
+└── myapp/              # Main application logic
+    ├── management/     # Custom commands (e.g., auto_release_points)
+    ├── migrations/     # Database schema history
+    ├── models.py       # Data models (User, Profile, SkillSwapPost, Session)
+    ├── serializers.py  # Data validation and transformation
+    ├── views.py        # API endpoint controllers
+    ├── urls.py         # API routing
+    └── fcm_utils.py    # Firebase notification helpers
+```
+
+### 🧠 Core Logic & Workflows
+#### 1. Points & Rewards System
+- **Registration Bonus**: New users receive 100 points upon signup.
+- **Daily Reward**: Users can claim 10 points daily for logging in ([DailyRewardView](file:///d:/6thsem/backend/skillswap/myapp/views.py#130-174)).
+- **Profile Setup Reward**: Users receive points for completing their profile setup.
+- **Transaction Flow**:
+    - When a learner requests a session, points are moved from [points](file:///d:/6thsem/backend/skillswap/myapp/serializers.py#205-211) to `held_points`.
+    - Upon successful session completion (confirmed by both parties or auto-released), points are transferred from the learner's `held_points` to the mentor's [points](file:///d:/6thsem/backend/skillswap/myapp/serializers.py#205-211).
+
+#### 2. Session Management
+- **Booking**: Learners select an availability slot from a mentor's post.
+- **Dual Confirmation**: Both mentor and learner must confirm completion for points to be released manually.
+- **Auto-Release Logic**: A scheduled management command ([auto_release_points.py](file:///d:/6thsem/backend/skillswap/myapp/management/commands/auto_release_points.py)) handles stale sessions:
+    - **Confirmed > 3 days**: Auto-completed, points released to mentor.
+    - **Pending > Scheduled Time**: Auto-cancelled, points refunded to learner.
+
+#### 3. Role-Based Access
+Users can switch between **MENTOR** and **LEARNER** roles. The system is additive, allowing a user to possess multiple roles simultaneously.
+
+---
+
+## 📱 Frontend Architecture
+
+### 📂 Folder Structure (Feature-First)
+The frontend follows a modern, scalable `features/` directory pattern.
+```text
+lib/
+├── core/               # Shared logic (DI, Theme, Networking, Init)
+├── common/             # Reusable extensions and types
+├── router/             # GoRouter configuration
+└── features/           # Independent feature modules
+    ├── auth/           # Login, Signup, Forgot Password
+    ├── profile/        # User Profile, Role Switching, Theme
+    ├── skill_swap/     # Posts, Availability, Booking, Sessions
+    ├── learner/        # Learner-specific screens (My Learning)
+    ├── mentor/         # Mentor-specific screens (Teach)
+    └── notifications/  # Notification center
+```
+
+### 🧩 Architectural Patterns
+#### 1. State Management (BLoC & Cubit)
+- **BLoC**: Used for API interactions and side effects (e.g., `SignInBloc`, `BookingBloc`). States are defined with **Freezed** for immutability.
+- **Cubit**: Used for local UI states, such as form validation or theme toggling (e.g., `ThemeAppearanceCubit`).
+
+#### 2. Dependency Injection (GetIt)
+All services, repositories, and BLoCs are registered in [dependency_injection.dart](file:///d:/6thsem/skill_swap/lib/core/di/dependency_injection.dart) and accessed via the service locator `sl<T>()`. This ensures easy testing and loose coupling.
+
+#### 3. Navigation (GoRouter)
+A centralized `appRoute` configuration handles all navigation, including deep linking and complex slide transitions. Routing is split into `shared_routes`, `user_router`, and `admin_routes`.
+
+#### 4. Design System
+- **Theme**: Supports both light and dark modes via [AppTheme](file:///d:/6thsem/skill_swap/lib/core/theme/app_theme.dart#7-778).
+- **Typography**: Uses **Google Fonts (Poppins)** as the primary font family.
+- **Colors**: Curated palette (Primary Red, Accent Gold/Teal) defined as theme tokens.
+- **Widgets**: UI is built using small, reusable widgets to maintain consistency and reduce code duplication.
+
+---
+
+## ⚡ Key Features Summary
+- **Skill Swap Marketplace**: Discover and book sessions based on available mentor slots.
+- **Point Economy**: Earn, hold, and trade points for learning opportunities.
+- **Push Notifications**: Real-time alerts for booking updates, rewards, and system messages.
+- **Profile Excellence**: Showcase skills, certifications, and portfolios to build trust.
+- **Automated Operations**: Backend crons ensure the ecosystem remains healthy by cleaning up stale sessions.
